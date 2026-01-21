@@ -1,12 +1,11 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import Link from 'next/link';
-import { useRouter, usePathname } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import ProtectedRoute from '@/components/ProtectedRoute';
 import { billingAPI, authAPI } from '@/lib/api';
-import { CreditCounter } from '@/components/CreditCounter';
-import { Check, LayoutDashboard, Sparkles, Image as ImageIcon, CreditCard, User, LogOut } from 'lucide-react';
+import { Sidebar } from '@/components/Sidebar';
+import { Check } from 'lucide-react';
 import toast from 'react-hot-toast';
 
 export default function BillingPage() {
@@ -19,18 +18,9 @@ export default function BillingPage() {
 
 function BillingContent() {
   const router = useRouter();
-  const pathname = usePathname();
   const [user, setUser] = useState<any>(null);
   const [pricing, setPricing] = useState<any>(null);
   const [loading, setLoading] = useState(true);
-
-  const navItems = [
-    { href: '/dashboard', icon: LayoutDashboard, label: 'Dashboard', active: pathname === '/dashboard' },
-    { href: '/try-on', icon: Sparkles, label: 'Try-On', active: pathname === '/try-on' },
-    { href: '/gallery', icon: ImageIcon, label: 'Gallery', active: pathname === '/gallery' },
-    { href: '/billing', icon: CreditCard, label: 'Billing', active: pathname === '/billing' },
-    { href: '/profile', icon: User, label: 'Profile', active: pathname === '/profile' },
-  ];
 
   useEffect(() => {
     fetchData();
@@ -65,65 +55,7 @@ function BillingContent() {
 
   return (
     <div className="flex min-h-screen bg-slate-950 text-slate-50">
-      {/* Sidebar */}
-      <aside className="w-64 border-r border-slate-800/80 bg-slate-950/95 backdrop-blur">
-        <div className="flex h-full flex-col">
-          {/* Logo */}
-          <div className="flex h-16 items-center gap-3 border-b border-slate-800/80 px-4">
-            <span className="h-8 w-8 shrink-0 rounded-xl bg-primary-500/90 shadow-lg shadow-primary-500/40" />
-            <span className="text-sm font-semibold tracking-tight text-slate-100">
-              Virtual Try-On
-            </span>
-          </div>
-
-          {/* Navigation */}
-          <nav className="flex-1 space-y-1 p-4">
-            {navItems.map((item) => {
-              const Icon = item.icon;
-              return (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  className={`flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors ${
-                    item.active
-                      ? 'bg-primary-500/10 text-primary-300'
-                      : 'text-slate-400 hover:bg-slate-900/50 hover:text-slate-200'
-                  }`}
-                >
-                  <Icon className="h-5 w-5 shrink-0" />
-                  <span>{item.label}</span>
-                </Link>
-              );
-            })}
-          </nav>
-
-          {/* User section */}
-          <div className="border-t border-slate-800/80 p-4">
-            <div className="mb-3 flex items-center gap-3">
-              <div className="h-8 w-8 shrink-0 rounded-full bg-gradient-to-br from-primary-400 to-sky-400" />
-              <div className="min-w-0 flex-1">
-                <p className="truncate text-xs font-medium text-slate-200">
-                  {user?.name || user?.email || 'User'}
-                </p>
-                <p className="truncate text-[10px] text-slate-500">
-                  {user?.email || 'demo@tryon.dev'}
-                </p>
-              </div>
-            </div>
-            <CreditCounter credits={user?.credits || 0} />
-            <button
-              onClick={async () => {
-                await authAPI.logout();
-                router.push('/');
-              }}
-              className="mt-3 flex w-full items-center gap-2 rounded-lg px-3 py-2 text-xs font-medium text-slate-400 transition-colors hover:bg-slate-900/50 hover:text-slate-200"
-            >
-              <LogOut className="h-4 w-4" />
-              <span>Sign out</span>
-            </button>
-          </div>
-        </div>
-      </aside>
+      <Sidebar user={user} />
 
       {/* Main content */}
       <main className="flex-1 overflow-auto">
