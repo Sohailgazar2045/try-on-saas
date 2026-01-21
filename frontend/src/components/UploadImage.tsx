@@ -49,27 +49,27 @@ export function UploadImage({ onUpload, currentImage }: UploadImageProps) {
       />
       
       {displayImage ? (
-        <div className="relative w-full h-64 border-2 border-gray-300 rounded-lg overflow-hidden">
+        <div className="relative h-60 w-full overflow-hidden rounded-2xl border border-slate-700 bg-slate-900/80">
           <img
             src={displayImage}
             alt="Preview"
-            className="w-full h-full object-cover"
+            className="h-full w-full object-cover"
           />
           <button
             onClick={handleRemove}
-            className="absolute top-2 right-2 p-2 bg-red-500 text-white rounded-full hover:bg-red-600 transition"
+            className="absolute right-2 top-2 rounded-full bg-red-600/90 p-1.5 text-white shadow-sm hover:bg-red-500"
           >
-            <X className="w-4 h-4" />
+            <X className="h-4 w-4" />
           </button>
         </div>
       ) : (
         <button
           onClick={handleClick}
-          className="w-full h-64 border-2 border-dashed border-gray-300 rounded-lg flex flex-col items-center justify-center hover:border-primary-500 transition"
+          className="flex h-60 w-full flex-col items-center justify-center rounded-2xl border border-dashed border-slate-700 bg-slate-900/60 text-center text-xs text-slate-300 transition hover:border-primary-500 hover:bg-slate-900"
         >
-          <Upload className="w-12 h-12 text-gray-400 mb-2" />
-          <p className="text-gray-600">Click to upload</p>
-          <p className="text-sm text-gray-400 mt-1">PNG, JPG, WEBP up to 5MB</p>
+          <Upload className="mb-2 h-8 w-8 text-slate-400" />
+          <p>Click to upload</p>
+          <p className="mt-1 text-[11px] text-slate-500">PNG, JPG, WEBP up to 5MB</p>
         </button>
       )}
     </div>

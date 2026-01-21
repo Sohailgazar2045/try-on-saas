@@ -13,16 +13,16 @@ export function GenerateButton({ onClick, disabled, loading }: GenerateButtonPro
     <button
       onClick={onClick}
       disabled={disabled || loading}
-      className="px-8 py-4 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 text-lg font-semibold"
+      className="inline-flex items-center gap-2 rounded-full bg-primary-500 px-8 py-3 text-sm font-semibold text-white shadow-lg shadow-primary-500/30 transition hover:bg-primary-400 disabled:cursor-not-allowed disabled:opacity-60"
     >
       {loading ? (
         <>
-          <Loader2 className="w-5 h-5 animate-spin" />
+          <Loader2 className="h-4 w-4 animate-spin" />
           Generating...
         </>
       ) : (
         <>
-          <Sparkles className="w-5 h-5" />
+          <Sparkles className="h-4 w-4" />
           Generate Try-On
         </>
       )}

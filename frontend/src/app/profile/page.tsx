@@ -1,11 +1,13 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
+import Link from 'next/link';
+import { useRouter, usePathname } from 'next/navigation';
 import ProtectedRoute from '@/components/ProtectedRoute';
 import { userAPI, authAPI } from '@/lib/api';
 import { CreditCounter } from '@/components/CreditCounter';
 import { useForm } from 'react-hook-form';
+import { LayoutDashboard, Sparkles, Image as ImageIcon, CreditCard, User as UserIcon, LogOut } from 'lucide-react';
 import toast from 'react-hot-toast';
 
 export default function ProfilePage() {
@@ -18,9 +20,18 @@ export default function ProfilePage() {
 
 function ProfileContent() {
   const router = useRouter();
+  const pathname = usePathname();
   const [user, setUser] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const { register, handleSubmit, formState: { errors } } = useForm();
+
+  const navItems = [
+    { href: '/dashboard', icon: LayoutDashboard, label: 'Dashboard', active: pathname === '/dashboard' },
+    { href: '/try-on', icon: Sparkles, label: 'Try-On', active: pathname === '/try-on' },
+    { href: '/gallery', icon: ImageIcon, label: 'Gallery', active: pathname === '/gallery' },
+    { href: '/billing', icon: CreditCard, label: 'Billing', active: pathname === '/billing' },
+    { href: '/profile', icon: UserIcon, label: 'Profile', active: pathname === '/profile' },
+  ];
 
   useEffect(() => {
     fetchProfile();
@@ -28,10 +39,11 @@ function ProfileContent() {
 
   const fetchProfile = async () => {
     try {
-      const response = await userAPI.getProfile();
+      // Use the mocked auth profile in this demo environment
+      const response = await authAPI.getProfile();
       setUser(response.data.user);
     } catch (error) {
-      router.push('/login');
+      console.error('Failed to load profile (demo mode):', error);
     } finally {
       setLoading(false);
     }
@@ -61,62 +73,114 @@ function ProfileContent() {
     }
   };
 
-  if (loading) {
-    return <div className="min-h-screen flex items-center justify-center">Loading...</div>;
-  }
-
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Navigation */}
-      <nav className="bg-white shadow-sm">
-        <div className="container mx-auto px-4 py-4 flex justify-between items-center">
-          <a href="/dashboard" className="text-2xl font-bold text-primary-700">
-            Virtual Try-On
-          </a>
-          <div className="flex gap-4 items-center">
+    <div className="flex min-h-screen bg-slate-950 text-slate-50">
+      {/* Sidebar */}
+      <aside className="w-64 border-r border-slate-800/80 bg-slate-950/95 backdrop-blur">
+        <div className="flex h-full flex-col">
+          {/* Logo */}
+          <div className="flex h-16 items-center gap-3 border-b border-slate-800/80 px-4">
+            <span className="h-8 w-8 shrink-0 rounded-xl bg-primary-500/90 shadow-lg shadow-primary-500/40" />
+            <span className="text-sm font-semibold tracking-tight text-slate-100">
+              Virtual Try-On
+            </span>
+          </div>
+
+          {/* Navigation */}
+          <nav className="flex-1 space-y-1 p-4">
+            {navItems.map((item) => {
+              const Icon = item.icon;
+              return (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className={`flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors ${
+                    item.active
+                      ? 'bg-primary-500/10 text-primary-300'
+                      : 'text-slate-400 hover:bg-slate-900/50 hover:text-slate-200'
+                  }`}
+                >
+                  <Icon className="h-5 w-5 shrink-0" />
+                  <span>{item.label}</span>
+                </Link>
+              );
+            })}
+          </nav>
+
+          {/* User section */}
+          <div className="border-t border-slate-800/80 p-4">
+            <div className="mb-3 flex items-center gap-3">
+              <div className="h-8 w-8 shrink-0 rounded-full bg-gradient-to-br from-primary-400 to-sky-400" />
+              <div className="min-w-0 flex-1">
+                <p className="truncate text-xs font-medium text-slate-200">
+                  {user?.name || user?.email || 'User'}
+                </p>
+                <p className="truncate text-[10px] text-slate-500">
+                  {user?.email || 'demo@tryon.dev'}
+                </p>
+              </div>
+            </div>
             <CreditCounter credits={user?.credits || 0} />
-            <a href="/dashboard" className="text-gray-700 hover:text-gray-900">
-              Dashboard
-            </a>
+            <button
+              onClick={async () => {
+                await authAPI.logout();
+                router.push('/');
+              }}
+              className="mt-3 flex w-full items-center gap-2 rounded-lg px-3 py-2 text-xs font-medium text-slate-400 transition-colors hover:bg-slate-900/50 hover:text-slate-200"
+            >
+              <LogOut className="h-4 w-4" />
+              <span>Sign out</span>
+            </button>
           </div>
         </div>
-      </nav>
+      </aside>
 
-      <main className="container mx-auto px-4 py-12 max-w-2xl">
-        <h1 className="text-4xl font-bold mb-8 text-gray-900">Profile Settings</h1>
+      {/* Main content */}
+      <main className="flex-1 overflow-auto">
+        <header className="sticky top-0 z-10 border-b border-slate-800/80 bg-slate-950/80 backdrop-blur">
+          <div className="flex h-16 items-center justify-between px-6">
+            <div>
+              <h1 className="text-lg font-semibold text-slate-100">Profile settings</h1>
+              <p className="text-xs text-slate-500">
+                Keep your workspace details up to date for smoother collaboration.
+              </p>
+            </div>
+          </div>
+        </header>
 
-        <div className="bg-white p-6 rounded-lg shadow-md mb-6">
-          <h2 className="text-xl font-semibold mb-4">Account Information</h2>
+        <div className="mx-auto max-w-2xl px-6 py-6">
+        <div className="mb-6 rounded-2xl border border-slate-800 bg-slate-900/70 p-6 shadow-sm">
+          <h2 className="mb-4 text-sm font-semibold text-slate-100">Account information</h2>
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="mb-1 block text-xs font-medium text-slate-200">
                 Name
               </label>
               <input
                 type="text"
                 defaultValue={user?.name || ''}
                 {...register('name')}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500"
+                className="input-field"
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="mb-1 block text-xs font-medium text-slate-200">
                 Email
               </label>
               <input
                 type="email"
                 defaultValue={user?.email || ''}
                 {...register('email', { required: 'Email is required' })}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500"
+                className="input-field"
               />
               {errors.email && (
-                <p className="text-red-500 text-sm mt-1">{errors.email.message as string}</p>
+                <p className="mt-1 text-xs text-red-400">{errors.email.message as string}</p>
               )}
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="mb-1 block text-xs font-medium text-slate-200">
                 New Password (leave blank to keep current)
               </label>
               <input
@@ -124,33 +188,34 @@ function ProfileContent() {
                 {...register('password', {
                   minLength: { value: 6, message: 'Password must be at least 6 characters' }
                 })}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500"
+                className="input-field"
               />
               {errors.password && (
-                <p className="text-red-500 text-sm mt-1">{errors.password.message as string}</p>
+                <p className="mt-1 text-xs text-red-400">{errors.password.message as string}</p>
               )}
             </div>
 
             <button
               type="submit"
-              className="w-full py-3 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition"
+              className="primary-button mt-2 w-full justify-center"
             >
               Update Profile
             </button>
           </form>
         </div>
 
-        <div className="bg-white p-6 rounded-lg shadow-md">
-          <h2 className="text-xl font-semibold mb-4 text-red-600">Danger Zone</h2>
+        <div className="rounded-2xl border border-red-900/70 bg-red-950/40 p-6 shadow-sm">
+          <h2 className="mb-2 text-sm font-semibold text-red-200">Danger zone</h2>
           <button
             onClick={handleDeleteAccount}
-            className="px-6 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition"
+            className="rounded-lg bg-red-600 px-5 py-2 text-xs font-semibold text-white hover:bg-red-500"
           >
             Delete Account
           </button>
-          <p className="text-sm text-gray-600 mt-2">
+          <p className="mt-2 text-xs text-red-200/80">
             This will permanently delete your account and all associated data.
           </p>
+        </div>
         </div>
       </main>
     </div>

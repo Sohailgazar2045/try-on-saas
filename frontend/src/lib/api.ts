@@ -20,28 +20,111 @@ api.interceptors.request.use((config) => {
   return config;
 });
 
-// Handle auth errors
+// Handle errors – in this demo frontend we don't auto-redirect on 401s
 api.interceptors.response.use(
   (response) => response,
   (error) => {
-    if (error.response?.status === 401) {
-      Cookies.remove('token');
-      if (typeof window !== 'undefined') {
-        window.location.href = '/login';
-      }
-    }
     return Promise.reject(error);
   }
 );
 
-// Auth API
+// ---- Frontend-only / mocked Auth API ------------------------------------
+// This lets you log in without running the backend by using hardcoded
+// demo credentials and a fake profile.
+
+type LoginPayload = { email: string; password: string };
+type RegisterPayload = { email: string; password: string; name?: string };
+
+const DEMO_EMAIL = 'demo@tryon.dev';
+const DEMO_PASSWORD = 'Password123!';
+
+const demoUser = {
+  id: 'demo-user-1',
+  name: 'Demo User',
+  email: DEMO_EMAIL,
+  credits: 42,
+  subscription: 'Pro',
+  createdAt: new Date().toISOString(),
+};
+
+const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+
 export const authAPI = {
-  register: (data: { email: string; password: string; name?: string }) =>
-    api.post('/auth/register', data),
-  login: (data: { email: string; password: string }) =>
-    api.post('/auth/login', data),
-  logout: () => api.post('/auth/logout'),
-  getProfile: () => api.get('/auth/profile'),
+  // Kept for API compatibility, but acts like a no-op that always succeeds
+  register: async (_data: RegisterPayload) => {
+    await delay(400);
+    return {
+      data: {
+        user: demoUser,
+        token: 'demo-token',
+      },
+    };
+  },
+
+  login: async (data: LoginPayload) => {
+    await delay(400);
+
+    const valid =
+      data.email.trim().toLowerCase() === DEMO_EMAIL &&
+      data.password === DEMO_PASSWORD;
+
+    if (!valid) {
+      return Promise.reject({
+        response: {
+          data: { message: 'Invalid demo credentials' },
+        },
+      });
+    }
+
+    // Persist a simple demo token so existing auth helpers keep working
+    Cookies.set('token', 'demo-token', {
+      expires: 7,
+      secure: true,
+      sameSite: 'strict',
+    });
+
+    if (typeof window !== 'undefined') {
+      window.localStorage.setItem('demoUser', JSON.stringify(demoUser));
+    }
+
+    return {
+      data: {
+        user: demoUser,
+        token: 'demo-token',
+      },
+    };
+  },
+
+  logout: async () => {
+    await delay(200);
+    Cookies.remove('token');
+    if (typeof window !== 'undefined') {
+      window.localStorage.removeItem('demoUser');
+    }
+    return { data: { success: true } };
+  },
+
+  getProfile: async () => {
+    await delay(200);
+
+    if (typeof window !== 'undefined') {
+      const stored = window.localStorage.getItem('demoUser');
+      if (stored) {
+        try {
+          const parsed = JSON.parse(stored);
+          return { data: { user: parsed } };
+        } catch {
+          // fall through to default demoUser
+        }
+      }
+    }
+
+    return {
+      data: {
+        user: demoUser,
+      },
+    };
+  },
 };
 
 // Image API
