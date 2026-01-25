@@ -18,6 +18,10 @@ export const generateTryOnImage = async (req, res, next) => {
       where: { id: req.userId }
     });
 
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
     if (user.credits < CREDIT_COSTS.TRY_ON) {
       return res.status(402).json({ 
         message: 'Insufficient credits. Please purchase more credits.',
@@ -36,12 +40,14 @@ export const generateTryOnImage = async (req, res, next) => {
       return res.status(404).json({ message: 'One or both images not found' });
     }
 
+    // Verify ownership
     if (personImage.userId !== req.userId || outfitImage.userId !== req.userId) {
       return res.status(403).json({ message: 'Not authorized to use these images' });
     }
 
+    // Validate image types
     if (personImage.type !== 'user') {
-      return res.status(400).json({ message: 'First image must be a user photo' });
+      return res.status(400).json({ message: 'First image must be a user/person photo' });
     }
 
     if (outfitImage.type !== 'outfit') {
@@ -53,7 +59,6 @@ export const generateTryOnImage = async (req, res, next) => {
     try {
       resultImageUrl = await generateTryOn(personImage.url, outfitImage.url);
     } catch (aiError) {
-      // If AI service fails, return a placeholder or error
       console.error('AI generation failed:', aiError);
       return res.status(500).json({ 
         message: 'AI generation failed. Please try again later.',
@@ -65,7 +70,7 @@ export const generateTryOnImage = async (req, res, next) => {
     let finalUrl = resultImageUrl;
     let cloudinaryId = null;
     
-    if (!resultImageUrl.startsWith('http')) {
+    if (!resultImageUrl.startsWith('http') && !resultImageUrl.startsWith('data:')) {
       // If result is a buffer, upload it
       const uploadResult = await uploadToCloudinary(resultImageUrl, 'generated');
       finalUrl = uploadResult.secure_url;
@@ -98,6 +103,20 @@ export const generateTryOnImage = async (req, res, next) => {
       where: { id: req.userId },
       select: { credits: true }
     });
+
+    res.json({
+      message: 'Try-on generated successfully',
+      image: {
+        id: generatedImage.id,
+        url: generatedImage.url,
+        createdAt: generatedImage.createdAt
+      },
+      creditsRemaining: updatedUser.credits
+    });
+  } catch (error) {
+    next(error);
+  }
+};
 
     res.json({
       message: 'Try-on generated successfully',

@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link'
-import { ArrowRight, Sparkles, Shield, Zap, Upload, Image as ImageIcon, CheckCircle2, Users, TrendingUp, Clock, Globe, Lock, Star, HelpCircle, Menu, X } from 'lucide-react'
+import { ArrowRight, Sparkles, Shield, Zap, Upload, Image as ImageIcon, CheckCircle2, Users, TrendingUp, Clock, Globe, Lock, Star, HelpCircle, Menu, X, ChevronRight, Award, Rocket } from 'lucide-react'
 
 export default function Home() {
   const [mounted, setMounted] = useState(false);
@@ -230,8 +230,38 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Trust Badges Section */}
+      <section className="relative border-b border-slate-800/80 bg-gradient-to-r from-slate-900/50 to-slate-950/50 py-12 backdrop-blur-sm">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className={`text-center mb-8 transition-all duration-1000 ${
+            mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
+          }`} style={{ transitionDelay: '300ms' }}>
+            <p className="text-xs font-bold uppercase tracking-wider text-slate-400">Trusted by leading fashion brands</p>
+          </div>
+          <div className={`grid grid-cols-2 gap-4 md:grid-cols-4 lg:grid-cols-5 transition-all duration-1000 ${
+            mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
+          }`} style={{ transitionDelay: '400ms' }}>
+            {[
+              { icon: Award, label: 'Enterprise Grade' },
+              { icon: Shield, label: '99.9% Uptime' },
+              { icon: Zap, label: 'Lightning Fast' },
+              { icon: Lock, label: 'Secure & Private' },
+              { icon: Users, label: '10k+ Users' }
+            ].map((badge, idx) => {
+              const Icon = badge.icon;
+              return (
+                <div key={idx} className="group flex flex-col items-center rounded-lg border border-slate-800/50 bg-slate-900/30 p-3 text-center transition-all duration-300 hover:border-primary-500/50 hover:bg-slate-900/50">
+                  <Icon className="h-5 w-5 text-primary-400 transition-transform duration-300 group-hover:scale-110" />
+                  <p className="mt-2 text-xs font-semibold text-slate-300">{badge.label}</p>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
       {/* How It Works with animations */}
-      <section className="relative border-y border-slate-800/80 bg-slate-900/30 py-16 backdrop-blur-sm">
+      <section className="relative border-b border-slate-800/80 bg-slate-900/30 py-16 backdrop-blur-sm">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className={`text-center transition-all duration-1000 ${
             mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'

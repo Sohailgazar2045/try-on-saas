@@ -4,12 +4,82 @@ import { createCheckoutSession, handleWebhook, getPricing } from '../controllers
 
 const router = express.Router();
 
-// Webhook doesn't need auth (uses Stripe signature)
-router.post('/webhook', express.raw({ type: 'application/json' }), handleWebhook);
-
-// Other routes need authentication
+/**
+ * @swagger
+ * /api/billing/pricing:
+ *   get:
+ *     summary: Get pricing and plans
+ *     tags: [Billing]
+ *     responses:
+ *       200:
+ *         description: Pricing information
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 subscriptions: { type: object }
+ *                 creditPackages: { type: object }
+ */
 router.get('/pricing', getPricing);
+
+/**
+ * @swagger
+ * /api/billing/checkout:
+ *   post:
+ *     summary: Create Stripe checkout session
+ *     tags: [Billing]
+ *     security:
+ *       - bearerAuth: []
+ *       - cookieAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               plan:
+ *                 type: string
+ *                 description: Plan name (e.g., 'basic', 'small')
+ *               type:
+ *                 type: string
+ *                 enum: [subscription, credits]
+ *             required: [plan, type]
+ *     responses:
+ *       200:
+ *         description: Checkout session created
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 sessionId: { type: string }
+ *                 url: { type: string }
+ *       400:
+ *         description: Invalid plan
+ */
 router.post('/checkout', authenticate, createCheckoutSession);
+
+/**
+ * @swagger
+ * /api/billing/webhook:
+ *   post:
+ *     summary: Stripe webhook handler
+ *     tags: [Billing]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *     responses:
+ *       200:
+ *         description: Webhook processed
+ *       400:
+ *         description: Invalid signature
+ */
+router.post('/webhook', express.raw({ type: 'application/json' }), handleWebhook);
 
 export default router;
 

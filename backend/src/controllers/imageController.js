@@ -7,10 +7,15 @@ export const uploadImage = async (req, res, next) => {
       return res.status(400).json({ message: 'No image file provided' });
     }
 
-    const { type } = req.body; // "user", "outfit", or "generated"
+    const { type } = req.body; // "user" or "outfit"
     
-    if (!type || !['user', 'outfit', 'generated'].includes(type)) {
-      return res.status(400).json({ message: 'Invalid image type. Must be: user, outfit, or generated' });
+    if (!type || !['user', 'outfit'].includes(type)) {
+      return res.status(400).json({ message: 'Invalid image type. Must be: user or outfit' });
+    }
+
+    // Validate file size
+    if (req.file.size > 5 * 1024 * 1024) {
+      return res.status(400).json({ message: 'File size exceeds 5MB limit' });
     }
 
     // Upload to Cloudinary

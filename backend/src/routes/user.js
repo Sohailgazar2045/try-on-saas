@@ -4,10 +4,78 @@ import { getProfile, updateProfile, deleteAccount } from '../controllers/userCon
 
 const router = express.Router();
 
-router.use(authenticate);
-router.get('/profile', getProfile);
-router.put('/profile', updateProfile);
-router.delete('/account', deleteAccount);
+/**
+ * @swagger
+ * /api/user/profile:
+ *   get:
+ *     summary: Get user profile
+ *     tags: [User]
+ *     security:
+ *       - bearerAuth: []
+ *       - cookieAuth: []
+ *     responses:
+ *       200:
+ *         description: User profile
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 user: { $ref: '#/components/schemas/User' }
+ *       404:
+ *         description: User not found
+ */
+router.get('/profile', authenticate, getProfile);
+
+/**
+ * @swagger
+ * /api/user/profile:
+ *   put:
+ *     summary: Update user profile
+ *     tags: [User]
+ *     security:
+ *       - bearerAuth: []
+ *       - cookieAuth: []
+ *     requestBody:
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               name: { type: string }
+ *               email: { type: string, format: email }
+ *               password: { type: string, minLength: 6 }
+ *     responses:
+ *       200:
+ *         description: Profile updated successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message: { type: string }
+ *                 user: { $ref: '#/components/schemas/User' }
+ *       400:
+ *         description: Invalid input
+ */
+router.put('/profile', authenticate, updateProfile);
+
+/**
+ * @swagger
+ * /api/user/account:
+ *   delete:
+ *     summary: Delete user account
+ *     tags: [User]
+ *     security:
+ *       - bearerAuth: []
+ *       - cookieAuth: []
+ *     responses:
+ *       200:
+ *         description: Account deleted successfully
+ *       404:
+ *         description: User not found
+ */
+router.delete('/account', authenticate, deleteAccount);
 
 export default router;
 

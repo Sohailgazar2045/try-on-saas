@@ -125,8 +125,16 @@ export const login = async (req, res, next) => {
 };
 
 export const logout = async (req, res) => {
-  res.clearCookie('token');
-  res.json({ message: 'Logged out successfully' });
+  try {
+    res.clearCookie('token', {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'strict'
+    });
+    res.json({ message: 'Logged out successfully' });
+  } catch (error) {
+    res.status(500).json({ message: 'Logout failed' });
+  }
 };
 
 export const getProfile = async (req, res, next) => {

@@ -5,10 +5,12 @@ import { useRouter } from 'next/navigation';
 import ProtectedRoute from '@/components/ProtectedRoute';
 import { imageAPI, tryOnAPI, authAPI } from '@/lib/api';
 import { Sidebar } from '@/components/Sidebar';
+import { Header } from '@/components/Header';
 import { UploadImage } from '@/components/UploadImage';
 import { ImagePreview } from '@/components/ImagePreview';
 import { GenerateButton } from '@/components/GenerateButton';
 import toast from 'react-hot-toast';
+import { Check, Zap } from 'lucide-react';
 
 export default function TryOnPage() {
   return (
@@ -133,122 +135,176 @@ function TryOnContent() {
   const outfitPhotos = userImages.filter((img) => img.type === 'outfit');
 
   return (
-    <div className="flex min-h-screen bg-slate-950 text-slate-50">
+    <div className="flex h-screen bg-slate-950 text-slate-50">
       <Sidebar user={user} />
 
       {/* Main content */}
-      <main className="flex-1 overflow-auto">
-        <header className="sticky top-0 z-10 border-b border-slate-800/80 bg-slate-950/80 backdrop-blur">
-          <div className="flex h-16 items-center justify-between px-6">
-            <div>
-              <h1 className="text-lg font-semibold text-slate-100">AI virtual try-on</h1>
-              <p className="text-xs text-slate-500">
-                Pair a person photo with a garment image, then generate a realistic on‑body preview.
-              </p>
+      <main className="flex flex-1 flex-col overflow-hidden">
+        <Header 
+          user={user} 
+          title="AI Virtual Try-On"
+          subtitle="Pair photos & generate realistic on-body previews"
+          showNotifications={true}
+        />
+
+        <div className="flex-1 overflow-auto bg-gradient-to-br from-slate-950 via-slate-900/50 to-slate-950 p-6">
+          {/* Progress Steps */}
+          <div className="mb-8 flex items-center justify-center gap-4">
+            {[
+              { number: 1, label: 'Person', complete: !!personImage },
+              { number: 2, label: 'Garment', complete: !!outfitImage },
+              { number: 3, label: 'Generate', complete: !!resultImage }
+            ].map((step, idx) => (
+              <div key={idx} className="flex items-center gap-4">
+                <div className={`relative flex h-10 w-10 items-center justify-center rounded-full font-semibold transition-all duration-300 ${
+                  step.complete 
+                    ? 'bg-emerald-500/20 text-emerald-400 ring-1 ring-emerald-500/50' 
+                    : 'bg-slate-800/50 text-slate-400 ring-1 ring-slate-800'
+                }`}>
+                  {step.complete ? <Check className="h-5 w-5" /> : step.number}
+                </div>
+                <span className={`text-xs font-semibold transition-colors ${step.complete ? 'text-emerald-400' : 'text-slate-400'}`}>
+                  {step.label}
+                </span>
+                {idx < 2 && <div className="h-0.5 w-8 bg-slate-800" />}
+              </div>
+            ))}
+          </div>
+
+          {/* Main Content Grid */}
+          <div className="mb-8 grid gap-6 md:grid-cols-2">
+            {/* Person Image */}
+            <div className="card-elevated">
+              <div className="mb-6 flex items-start justify-between">
+                <div>
+                  <h2 className="text-base font-bold text-slate-100 flex items-center gap-2">
+                    <span className="flex h-6 w-6 items-center justify-center rounded-full bg-primary-500/20 text-xs font-bold text-primary-400">1</span>
+                    Person Photo
+                  </h2>
+                  <p className="mt-2 text-xs text-slate-500">
+                    Upload a clear, front-facing portrait with good lighting
+                  </p>
+                </div>
+                {personImage && <Check className="h-5 w-5 text-emerald-400 mt-1" />}
+              </div>
+              <UploadImage
+                onUpload={handlePersonUpload}
+                currentImage={personImage}
+              />
+              {userPhotos.length > 0 && (
+                <div className="mt-6 pt-6 border-t border-slate-800">
+                  <p className="mb-3 text-xs font-medium text-slate-400 uppercase tracking-wider">Quick Select</p>
+                  <div className="grid grid-cols-3 gap-2">
+                    {userPhotos.slice(0, 3).map((img) => (
+                      <button
+                        key={img.id}
+                        onClick={() => handleSelectImage(img, 'user')}
+                        className={`group relative overflow-hidden rounded-lg border-2 transition-all duration-300 ${
+                          personImage?.id === img.id
+                            ? 'border-emerald-400 shadow-lg shadow-emerald-500/20'
+                            : 'border-slate-800 hover:border-primary-500/50'
+                        }`}
+                      >
+                        <img
+                          src={img.url}
+                          alt="User photo"
+                          className="h-24 w-full object-cover transition-transform duration-300 group-hover:scale-110"
+                        />
+                        {personImage?.id === img.id && (
+                          <div className="absolute inset-0 flex items-center justify-center bg-slate-950/40">
+                            <Check className="h-5 w-5 text-emerald-400" />
+                          </div>
+                        )}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Outfit Image */}
+            <div className="card-elevated">
+              <div className="mb-6 flex items-start justify-between">
+                <div>
+                  <h2 className="text-base font-bold text-slate-100 flex items-center gap-2">
+                    <span className="flex h-6 w-6 items-center justify-center rounded-full bg-sky-500/20 text-xs font-bold text-sky-400">2</span>
+                    Garment Image
+                  </h2>
+                  <p className="mt-2 text-xs text-slate-500">
+                    Upload the product image you want to visualize on-body
+                  </p>
+                </div>
+                {outfitImage && <Check className="h-5 w-5 text-emerald-400 mt-1" />}
+              </div>
+              <UploadImage
+                onUpload={handleOutfitUpload}
+                currentImage={outfitImage}
+              />
+              {outfitPhotos.length > 0 && (
+                <div className="mt-6 pt-6 border-t border-slate-800">
+                  <p className="mb-3 text-xs font-medium text-slate-400 uppercase tracking-wider">Quick Select</p>
+                  <div className="grid grid-cols-3 gap-2">
+                    {outfitPhotos.slice(0, 3).map((img) => (
+                      <button
+                        key={img.id}
+                        onClick={() => handleSelectImage(img, 'outfit')}
+                        className={`group relative overflow-hidden rounded-lg border-2 transition-all duration-300 ${
+                          outfitImage?.id === img.id
+                            ? 'border-emerald-400 shadow-lg shadow-emerald-500/20'
+                            : 'border-slate-800 hover:border-sky-500/50'
+                        }`}
+                      >
+                        <img
+                          src={img.url}
+                          alt="Outfit"
+                          className="h-24 w-full object-cover transition-transform duration-300 group-hover:scale-110"
+                        />
+                        {outfitImage?.id === img.id && (
+                          <div className="absolute inset-0 flex items-center justify-center bg-slate-950/40">
+                            <Check className="h-5 w-5 text-emerald-400" />
+                          </div>
+                        )}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
           </div>
-        </header>
 
-        <div className="px-6 py-6">
-        <div className="mb-8 grid gap-6 md:grid-cols-2">
-          {/* Person Image */}
-          <div className="rounded-2xl border border-slate-800 bg-slate-900/70 p-6 shadow-sm">
-            <h2 className="mb-1 text-sm font-semibold text-slate-100">1. Person photo</h2>
-            <p className="mb-4 text-xs text-slate-400">
-              Upload a customer, model, or mannequin shot with clear lighting.
-            </p>
-            <UploadImage
-              onUpload={handlePersonUpload}
-              currentImage={personImage}
+          {/* Generate Button Section */}
+          <div className="mb-8 flex justify-center">
+            <GenerateButton
+              onClick={handleGenerate}
+              disabled={!personImage || !outfitImage || loading}
+              loading={loading}
             />
-            {userPhotos.length > 0 && (
-              <div className="mt-4">
-                <p className="mt-4 text-xs text-slate-400">Or select from your library:</p>
-                <div className="grid grid-cols-3 gap-2">
-                  {userPhotos.map((img) => (
-                    <button
-                      key={img.id}
-                      onClick={() => handleSelectImage(img, 'user')}
-                      className={`border-2 rounded-lg overflow-hidden ${
-                        personImage?.id === img.id
-                          ? 'border-primary-400'
-                          : 'border-slate-700'
-                      }`}
-                    >
-                      <img
-                        src={img.url}
-                        alt="User photo"
-                        className="w-full h-24 object-cover"
-                      />
-                    </button>
-                  ))}
+          </div>
+
+          {/* Result Section */}
+          {resultImage && (
+            <div className="glass-panel-premium">
+              <div className="mb-6 flex items-start justify-between">
+                <div>
+                  <h2 className="text-base font-bold text-slate-100 flex items-center gap-2">
+                    <span className="flex h-6 w-6 items-center justify-center rounded-full bg-emerald-500/20 text-xs font-bold text-emerald-400">✓</span>
+                    Try-On Result
+                  </h2>
+                  <p className="mt-2 text-xs text-slate-500">
+                    Your AI-generated try-on preview is ready. Save it to your gallery or regenerate
+                  </p>
                 </div>
               </div>
-            )}
-          </div>
-
-          {/* Outfit Image */}
-          <div className="rounded-2xl border border-slate-800 bg-slate-900/70 p-6 shadow-sm">
-            <h2 className="mb-1 text-sm font-semibold text-slate-100">2. Garment image</h2>
-            <p className="mb-4 text-xs text-slate-400">
-              Upload the product image you&apos;d like to visualize on-body.
-            </p>
-            <UploadImage
-              onUpload={handleOutfitUpload}
-              currentImage={outfitImage}
-            />
-            {outfitPhotos.length > 0 && (
-              <div className="mt-4">
-                <p className="mt-4 text-xs text-slate-400">Or select from your outfits:</p>
-                <div className="grid grid-cols-3 gap-2">
-                  {outfitPhotos.map((img) => (
-                    <button
-                      key={img.id}
-                      onClick={() => handleSelectImage(img, 'outfit')}
-                      className={`border-2 rounded-lg overflow-hidden ${
-                        outfitImage?.id === img.id
-                          ? 'border-primary-400'
-                          : 'border-slate-700'
-                      }`}
-                    >
-                      <img
-                        src={img.url}
-                        alt="Outfit"
-                        className="w-full h-24 object-cover"
-                      />
-                    </button>
-                  ))}
-                </div>
-              </div>
-            )}
-          </div>
-        </div>
-
-        {/* Generate Button */}
-        <div className="mb-8 flex justify-center">
-          <GenerateButton
-            onClick={handleGenerate}
-            disabled={!personImage || !outfitImage || loading}
-            loading={loading}
-          />
-        </div>
-
-        {/* Result */}
-        {resultImage && (
-          <div className="rounded-2xl border border-slate-800 bg-slate-900/70 p-6 shadow-sm">
-            <h2 className="mb-1 text-sm font-semibold text-slate-100">Result</h2>
-            <p className="mb-4 text-xs text-slate-400">
-              Save promising outputs to your gallery to reuse across channels.
-            </p>
-            <ImagePreview image={resultImage} />
-            <button
-              onClick={handleSave}
-              className="mt-4 rounded-lg bg-primary-500 px-6 py-2 text-sm font-semibold text-white transition hover:bg-primary-400"
-            >
-              Save to Gallery
-            </button>
-          </div>
-        )}
+              <ImagePreview image={resultImage} />
+              <button
+                onClick={handleSave}
+                className="mt-6 primary-button-lg flex items-center justify-center gap-2 w-full"
+              >
+                <Zap className="h-5 w-5" />
+                Save to Gallery
+              </button>
+            </div>
+          )}
         </div>
       </main>
     </div>

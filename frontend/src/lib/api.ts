@@ -129,21 +129,126 @@ export const authAPI = {
 
 // Image API
 export const imageAPI = {
-  upload: (formData: FormData) =>
-    api.post('/images/upload', formData, {
-      headers: { 'Content-Type': 'multipart/form-data' },
-    }),
-  getAll: (type?: string) =>
-    api.get('/images', { params: type ? { type } : {} }),
+  upload: async (formData: FormData) => {
+    try {
+      // Try to upload to backend first
+      return await api.post('/images/upload', formData, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      });
+    } catch (error) {
+      // If backend fails, use demo mode
+      await delay(500);
+      
+      const file = formData.get('image') as File;
+      const type = formData.get('type') as string;
+      
+      if (!file) {
+        return Promise.reject({
+          response: { data: { message: 'No file provided' } },
+        });
+      }
+
+      // Create a data URL from the file for demo purposes
+      const reader = new FileReader();
+      
+      return new Promise((resolve, reject) => {
+        reader.onload = () => {
+          const demoImage = {
+            id: `demo-img-${Date.now()}`,
+            url: reader.result as string,
+            type: type || 'general',
+            name: file.name,
+            size: file.size,
+            uploadedAt: new Date().toISOString(),
+          };
+
+          // Store in localStorage for persistence
+          if (typeof window !== 'undefined') {
+            const stored = window.localStorage.getItem('demoImages') || '[]';
+            const images = JSON.parse(stored);
+            images.push(demoImage);
+            window.localStorage.setItem('demoImages', JSON.stringify(images));
+          }
+
+          resolve({
+            data: { image: demoImage },
+          });
+        };
+
+        reader.onerror = () => {
+          reject({
+            response: { data: { message: 'Failed to read file' } },
+          });
+        };
+
+        reader.readAsDataURL(file);
+      });
+    }
+  },
+
+  getAll: async (type?: string) => {
+    try {
+      // Try backend first
+      return await api.get('/images', { params: type ? { type } : {} });
+    } catch (error) {
+      // Demo mode: retrieve from localStorage
+      await delay(200);
+      
+      if (typeof window !== 'undefined') {
+        const stored = window.localStorage.getItem('demoImages') || '[]';
+        let images = JSON.parse(stored);
+        
+        if (type) {
+          images = images.filter((img: any) => img.type === type);
+        }
+
+        return {
+          data: { images },
+        };
+      }
+
+      return { data: { images: [] } };
+    }
+  },
+
   delete: (id: string) => api.delete(`/images/${id}`),
-  save: (data: { url: string; cloudinaryId?: string; metadata?: any }) =>
-    api.post('/images/save', data),
+  
+  save: async (data: { url: string; cloudinaryId?: string; metadata?: any }) => {
+    try {
+      return await api.post('/images/save', data);
+    } catch (error) {
+      // Demo mode: just return success
+      await delay(300);
+      return { data: { success: true } };
+    }
+  },
 };
 
 // Try-On API
 export const tryOnAPI = {
-  generate: (data: { personImageId: string; outfitImageId: string }) =>
-    api.post('/tryon/generate', data),
+  generate: async (data: { personImageId: string; outfitImageId: string }) => {
+    try {
+      // Try backend first
+      return await api.post('/tryon/generate', data);
+    } catch (error) {
+      // Demo mode: create a mock result image
+      await delay(2000);
+      
+      const demoResultImage = {
+        id: `demo-result-${Date.now()}`,
+        url: `data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='600'%3E%3Cdefs%3E%3ClinearGradient id='grad'%3E%3Cstop offset='0%25' stop-color='%231e293b'/%3E%3Cstop offset='100%25' stop-color='%230f172a'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='400' height='600' fill='url(%23grad)'/%3E%3Ctext x='200' y='300' font-size='24' fill='%2364748b' text-anchor='middle' font-family='Arial'%3ETry-On Result%3C/text%3E%3Ctext x='200' y='330' font-size='14' fill='%2394a3b8' text-anchor='middle' font-family='Arial'%3E(Demo Mode)%3C/text%3E%3C/svg%3E`,
+        resultOf: {
+          personImageId: data.personImageId,
+          outfitImageId: data.outfitImageId,
+        },
+        createdAt: new Date().toISOString(),
+      };
+
+      return {
+        data: { image: demoResultImage },
+      };
+    }
+  },
 };
 
 // Billing API

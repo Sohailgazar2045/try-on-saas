@@ -4,6 +4,8 @@ import dotenv from 'dotenv';
 import helmet from 'helmet';
 import rateLimit from 'express-rate-limit';
 import cookieParser from 'cookie-parser';
+import swaggerUi from 'swagger-ui-express';
+import { specs } from './config/swagger.js';
 import authRoutes from './routes/auth.js';
 import imageRoutes from './routes/images.js';
 import tryOnRoutes from './routes/tryon.js';
@@ -33,12 +35,19 @@ app.use('/api/', limiter);
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 app.use(cookieParser());
-app.use(cookieParser());
 
 // Health check
 app.get('/health', (req, res) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() });
 });
+
+// Swagger UI
+app.use('/api-docs', swaggerUi.serve);
+app.get('/api-docs', swaggerUi.setup(specs, {
+  swaggerOptions: {
+    persistAuthorization: true,
+  }
+}));
 
 // API Routes
 app.use('/api/auth', authRoutes);
@@ -63,5 +72,6 @@ app.use((req, res) => {
 
 app.listen(PORT, () => {
   console.log(`🚀 Server running on port ${PORT}`);
+  console.log(`📚 API Documentation: http://localhost:${PORT}/api-docs`);
 });
 
