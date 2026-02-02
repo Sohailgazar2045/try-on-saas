@@ -34,7 +34,7 @@ export default function RegisterPage() {
     '5 free credits to start',
     'No credit card required',
     'Cancel anytime',
-    'Full API access on Pro plan'
+    'Advanced features on Pro plan'
   ];
 
   return (

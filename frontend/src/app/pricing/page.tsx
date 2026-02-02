@@ -29,7 +29,7 @@ export default function PricingPage() {
         '100 credits/month',
         'HD quality output',
         'Priority support',
-        'API access',
+        'Advanced features',
         'Team collaboration',
         'Advanced analytics'
       ],
@@ -46,7 +46,7 @@ export default function PricingPage() {
         'Unlimited credits',
         '4K quality output',
         'Dedicated support',
-        'Custom API limits',
+        'Custom solutions',
         'SSO & security',
         'SLA guarantee',
         'On-premise option'

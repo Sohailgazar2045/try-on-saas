@@ -17,11 +17,15 @@ import {
   Clock, 
   Globe, 
   Lock, 
-  Star,
+  ShoppingBag,
+  Store,
+  Palette,
   Play,
   ArrowUpRight,
   Menu,
-  X
+  X,
+  Shirt,
+  User
 } from 'lucide-react';
 
 export default function Home() {
@@ -49,10 +53,11 @@ export default function Home() {
             </div>
             <span className="text-[15px] font-bold text-white">Virtual Try-On</span>
           </Link>
-          
+
           {/* Desktop Nav */}
           <div className="hidden items-center gap-1 md:flex">
-            <Link href="#features" className="btn-ghost">Features</Link>
+            <Link href="#for-users" className="btn-ghost">For Shoppers</Link>
+            <Link href="#for-business" className="btn-ghost">For Business</Link>
             <Link href="#pricing" className="btn-ghost">Pricing</Link>
             <Link href="/login" className="btn-ghost">Sign in</Link>
             <Link href="/register" className="btn-primary ml-2">
@@ -74,7 +79,8 @@ export default function Home() {
         {mobileMenuOpen && (
           <div className="border-t border-white/[0.06] bg-[#0a0a0b] px-6 py-4 md:hidden">
             <div className="flex flex-col gap-2">
-              <Link href="#features" className="btn-ghost justify-start">Features</Link>
+              <Link href="#for-users" className="btn-ghost justify-start">For Shoppers</Link>
+              <Link href="#for-business" className="btn-ghost justify-start">For Business</Link>
               <Link href="#pricing" className="btn-ghost justify-start">Pricing</Link>
               <Link href="/login" className="btn-ghost justify-start">Sign in</Link>
               <Link href="/register" className="btn-primary mt-2 justify-center">
@@ -100,14 +106,14 @@ export default function Home() {
 
             {/* Heading */}
             <h1 className={`mt-8 heading-xl ${mounted ? 'animate-fade-in-delay-1' : 'opacity-0'}`}>
-              See how clothes fit{' '}
+              Try on clothes{' '}
               <span className="gradient-text">before you buy</span>
             </h1>
 
             {/* Subheading */}
             <p className={`mt-6 text-lg leading-relaxed text-zinc-400 max-w-2xl mx-auto ${mounted ? 'animate-fade-in-delay-2' : 'opacity-0'}`}>
-              Upload a photo, select any garment, and instantly visualize how it looks on you or your models. 
-              Perfect for fashion brands, e-commerce, and content creators.
+              Whether you're shopping online or running a fashion business, see how clothes look in real-time. 
+              Perfect for shoppers, fashion brands, e-commerce stores, and content creators.
             </p>
 
             {/* CTA Buttons */}
@@ -153,26 +159,26 @@ export default function Home() {
                   </div>
                   <div className="flex-1 text-center">
                     <span className="text-xs text-zinc-500">Virtual Try-On Studio</span>
-              </div>
+                  </div>
                 </div>
                 
                 {/* Preview content */}
                 <div className="grid gap-6 p-6 md:grid-cols-2 md:p-8">
                   <div className="space-y-3">
-                    <p className="text-xs font-medium text-zinc-400">Source Photo</p>
+                    <p className="text-xs font-medium text-zinc-400">Your Photo</p>
                     <div className="aspect-[3/4] rounded-xl bg-gradient-to-br from-zinc-800 to-zinc-900 flex items-center justify-center">
                       <div className="text-center">
-                        <Upload className="h-8 w-8 text-zinc-600 mx-auto" />
-                        <p className="mt-2 text-sm text-zinc-600">Upload image</p>
+                        <User className="h-8 w-8 text-zinc-600 mx-auto" />
+                        <p className="mt-2 text-sm text-zinc-600">Upload your photo</p>
                       </div>
                     </div>
                   </div>
                   <div className="space-y-3">
-                    <p className="text-xs font-medium text-zinc-400">AI Result</p>
+                    <p className="text-xs font-medium text-zinc-400">AI Try-On Result</p>
                     <div className="aspect-[3/4] rounded-xl bg-gradient-to-br from-orange-500/20 via-orange-500/10 to-amber-500/20 flex items-center justify-center">
                       <div className="text-center">
-                        <Sparkles className="h-8 w-8 text-orange-400 mx-auto" />
-                        <p className="mt-2 text-sm text-orange-400/80">AI generated preview</p>
+                        <Shirt className="h-8 w-8 text-orange-400 mx-auto" />
+                        <p className="mt-2 text-sm text-orange-400/80">See how it fits</p>
                       </div>
                     </div>
                   </div>
@@ -183,22 +189,149 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Logos Section */}
-      <section className="border-y border-white/[0.06] py-12">
+      {/* Use Cases Section */}
+      <section className="py-24 border-y border-white/[0.06]">
         <div className="mx-auto max-w-6xl px-6">
-          <p className="text-center text-sm font-medium text-zinc-500 mb-8">
-            Trusted by innovative fashion brands worldwide
-          </p>
-          <div className="flex flex-wrap items-center justify-center gap-x-12 gap-y-6">
-            {['ENTERPRISE', 'FASHION CO', 'STYLE+', 'TRENDY', 'MODEX'].map((brand) => (
-              <span key={brand} className="text-lg font-bold tracking-wide text-zinc-700">{brand}</span>
-            ))}
+          <div className="text-center mb-16">
+            <span className="text-sm font-semibold text-orange-400">WHO IT'S FOR</span>
+            <h2 className="mt-4 heading-lg">Built for shoppers and fashion businesses</h2>
+            <p className="mt-4 text-zinc-400 max-w-xl mx-auto">
+              From personal shopping to enterprise fashion brands, Virtual Try-On works for everyone
+            </p>
+          </div>
+
+          <div className="grid gap-8 md:grid-cols-2">
+            {/* For Shoppers */}
+            <div id="for-users" className="card-interactive">
+              <div className="flex items-center gap-4 mb-6">
+                <div className="flex h-14 w-14 items-center justify-center rounded-xl bg-blue-500/10">
+                  <ShoppingBag className="h-7 w-7 text-blue-400" />
+                </div>
+                <div>
+                  <h3 className="text-xl font-semibold text-white">For Shoppers</h3>
+                  <p className="text-sm text-zinc-500">Personal use</p>
+                </div>
+              </div>
+              
+              <p className="text-zinc-400 mb-6">
+                Shop with confidence. See exactly how clothes will look on you before making a purchase. 
+                Reduce returns, find your perfect fit, and discover new styles that work for your body type.
+              </p>
+
+              <ul className="space-y-3">
+                {[
+                  'Try on clothes from any online store',
+                  'See how different sizes and styles fit',
+                  'Share looks with friends before buying',
+                  'Build your personal style profile',
+                  'Save time and reduce returns'
+                ].map((feature, idx) => (
+                  <li key={idx} className="flex items-start gap-3">
+                    <CheckCircle2 className="h-5 w-5 text-emerald-500 shrink-0 mt-0.5" />
+                    <span className="text-sm text-zinc-300">{feature}</span>
+                  </li>
+                ))}
+              </ul>
+
+              <Link href="/register" className="btn-secondary w-full justify-center mt-6">
+                Start shopping smarter
+                <ArrowRight className="h-4 w-4" />
+              </Link>
+            </div>
+
+            {/* For Business */}
+            <div id="for-business" className="card-interactive">
+              <div className="flex items-center gap-4 mb-6">
+                <div className="flex h-14 w-14 items-center justify-center rounded-xl bg-orange-500/10">
+                  <Store className="h-7 w-7 text-orange-400" />
+                </div>
+                <div>
+                  <h3 className="text-xl font-semibold text-white">For Fashion Business</h3>
+                  <p className="text-sm text-zinc-500">E-commerce & brands</p>
+                </div>
+              </div>
+              
+              <p className="text-zinc-400 mb-6">
+                Transform your fashion business with AI-powered virtual try-on. Increase conversions, 
+                reduce returns, and create stunning product visuals without expensive photo shoots.
+              </p>
+
+              <ul className="space-y-3">
+                {[
+                  'Increase conversion rates by 40%+',
+                  'Reduce return rates by 60%',
+                  'Create unlimited product visuals',
+                  'Create visuals for your store',
+                  'White-label solutions available'
+                ].map((feature, idx) => (
+                  <li key={idx} className="flex items-start gap-3">
+                    <CheckCircle2 className="h-5 w-5 text-emerald-500 shrink-0 mt-0.5" />
+                    <span className="text-sm text-zinc-300">{feature}</span>
+                  </li>
+                ))}
+              </ul>
+
+              <Link href="/register" className="btn-primary w-full justify-center mt-6">
+                Grow your business
+                <ArrowRight className="h-4 w-4" />
+              </Link>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Industry Use Cases */}
+      <section className="py-24">
+        <div className="mx-auto max-w-6xl px-6">
+          <div className="text-center mb-16">
+            <span className="text-sm font-semibold text-orange-400">INDUSTRY SOLUTIONS</span>
+            <h2 className="mt-4 heading-lg">Perfect for every fashion business</h2>
+          </div>
+
+          <div className="grid gap-6 md:grid-cols-3">
+            {[
+              {
+                icon: Store,
+                title: 'E-commerce Stores',
+                description: 'Integrate try-on directly into your online store. Show customers how products look before they buy.',
+                color: 'orange'
+              },
+              {
+                icon: Palette,
+                title: 'Fashion Brands',
+                description: 'Create stunning product visuals and marketing materials. Showcase your collections with AI-powered imagery.',
+                color: 'blue'
+              },
+              {
+                icon: Users,
+                title: 'Content Creators',
+                description: 'Generate engaging fashion content for social media, blogs, and YouTube. Create unlimited outfit combinations.',
+                color: 'purple'
+              }
+            ].map((item, idx) => {
+              const Icon = item.icon;
+              const colorClasses = {
+                orange: 'bg-orange-500/10 text-orange-400',
+                blue: 'bg-blue-500/10 text-blue-400',
+                purple: 'bg-purple-500/10 text-purple-400',
+              };
+              
+              return (
+                <div key={idx} className="card text-center">
+                  <div className={`flex h-12 w-12 items-center justify-center rounded-xl ${colorClasses[item.color as keyof typeof colorClasses]} mx-auto mb-4`}>
+                    <Icon className="h-6 w-6" />
+                  </div>
+                  <h3 className="text-lg font-semibold text-white mb-2">{item.title}</h3>
+                  <p className="text-sm text-zinc-400 leading-relaxed">{item.description}</p>
+                </div>
+              );
+            })}
           </div>
         </div>
       </section>
 
       {/* How It Works */}
-      <section className="py-24">
+      <section className="py-24 bg-gradient-subtle">
         <div className="mx-auto max-w-6xl px-6">
           <div className="text-center">
             <span className="text-sm font-semibold text-orange-400">HOW IT WORKS</span>
@@ -245,14 +378,14 @@ export default function Home() {
       </section>
 
       {/* Features Section */}
-      <section id="features" className="py-24 bg-gradient-subtle">
+      <section id="features" className="py-24">
         <div className="mx-auto max-w-6xl px-6">
           <div className="grid gap-16 lg:grid-cols-2 lg:items-center">
             <div>
               <span className="text-sm font-semibold text-orange-400">FEATURES</span>
-              <h2 className="mt-4 heading-lg">Everything you need to<br />scale your fashion business</h2>
+              <h2 className="mt-4 heading-lg">Everything you need to shop smarter and grow your business</h2>
               <p className="mt-4 text-zinc-400">
-                Built for teams that care about conversion rates, customer experience, and reducing returns.
+                Built for both individual shoppers and fashion businesses that care about customer experience and reducing returns.
               </p>
 
               <div className="mt-10 space-y-6">
@@ -260,22 +393,22 @@ export default function Home() {
                   {
                     icon: Zap,
                     title: 'Lightning fast processing',
-                    description: 'Get results in under 10 seconds. No waiting around.'
+                    description: 'Get results in under 10 seconds. No waiting around for your try-on previews.'
                   },
                   {
                     icon: TrendingUp,
                     title: 'Boost conversion rates',
-                    description: 'Customers who use try-on convert 40% higher on average.'
+                    description: 'Businesses see 40% higher conversion when customers can visualize products. Shoppers buy with confidence.'
                   },
                   {
                     icon: Shield,
                     title: 'Enterprise-grade security',
-                    description: 'SOC 2 compliant. Your data is encrypted at rest and in transit.'
+                    description: 'Your photos are encrypted and never shared. SOC 2 compliant for business use.'
                   },
                   {
                     icon: Globe,
-                    title: 'API access included',
-                    description: 'Integrate directly into your app or website with our REST API.'
+                    title: 'Works everywhere',
+                    description: 'Use our platform to create try-on images for any website, social media, or marketing campaign.'
                   }
                 ].map((feature, idx) => (
                   <div key={idx} className="flex gap-4 group">
@@ -295,9 +428,9 @@ export default function Home() {
             <div className="grid gap-4 sm:grid-cols-2">
               {[
                 { value: '40%', label: 'Increase in conversion' },
-                { value: '3x', label: 'Faster content creation' },
                 { value: '60%', label: 'Reduction in returns' },
-                { value: '10K+', label: 'Happy customers' }
+                { value: '3x', label: 'Faster content creation' },
+                { value: '10K+', label: 'Happy users & businesses' }
               ].map((stat, idx) => (
                 <div key={idx} className="card text-center py-8">
                   <div className="text-4xl font-bold gradient-text">{stat.value}</div>
@@ -310,7 +443,7 @@ export default function Home() {
       </section>
 
       {/* Pricing Section */}
-      <section id="pricing" className="py-24">
+      <section id="pricing" className="py-24 border-t border-white/[0.06]">
         <div className="mx-auto max-w-6xl px-6">
           <div className="text-center">
             <span className="text-sm font-semibold text-orange-400">PRICING</span>
@@ -327,6 +460,7 @@ export default function Home() {
                 description: 'Perfect for trying out the platform',
                 features: ['5 try-on credits', 'Basic quality', 'Email support'],
                 cta: 'Get started',
+                href: '/register',
                 highlight: false
               },
               {
@@ -334,8 +468,9 @@ export default function Home() {
                 price: '$19',
                 period: '/month',
                 description: 'For growing businesses',
-                features: ['100 credits/month', 'HD quality output', 'Priority support', 'API access', 'Team collaboration'],
+                features: ['100 credits/month', 'HD quality output', 'Priority support', 'Team collaboration', 'Advanced features'],
                 cta: 'Start free trial',
+                href: '/register',
                 highlight: true
               },
               {
@@ -343,8 +478,9 @@ export default function Home() {
                 price: 'Custom',
                 period: '',
                 description: 'For large organizations',
-                features: ['Unlimited credits', '4K quality output', 'Dedicated support', 'Custom API limits', 'SSO & security'],
+                features: ['Unlimited credits', '4K quality output', 'Dedicated support', 'Custom solutions', 'SSO & security'],
                 cta: 'Contact sales',
+                href: '#',
                 highlight: false
               }
             ].map((plan, idx) => (
@@ -363,32 +499,33 @@ export default function Home() {
                 )}
                 
                 <h3 className="text-lg font-semibold">{plan.name}</h3>
-                <p className="mt-1 text-sm text-zinc-400">{plan.description}</p>
+                <p className="mt-1 text-sm text-zinc-500">{plan.description}</p>
                 
                 <div className="mt-6">
-                  <span className="text-4xl font-bold">{plan.price}</span>
+                  <span className="text-5xl font-bold text-white">{plan.price}</span>
                   {plan.period && <span className="text-zinc-400">{plan.period}</span>}
                 </div>
 
-                <ul className="mt-8 space-y-3">
+                <ul className="mt-8 space-y-4">
                   {plan.features.map((feature, fIdx) => (
-                    <li key={fIdx} className="flex items-center gap-3 text-sm">
-                      <CheckCircle2 className="h-4 w-4 text-emerald-500 shrink-0" />
+                    <li key={fIdx} className="flex items-center gap-3">
+                      <CheckCircle2 className="h-5 w-5 text-emerald-500 shrink-0" />
                       <span className="text-zinc-300">{feature}</span>
-                      </li>
-                    ))}
-                  </ul>
+                    </li>
+                  ))}
+                </ul>
 
-                  <Link
-                    href="/register"
-                  className={`mt-8 block w-full text-center py-3 rounded-xl font-semibold transition-all ${
+                <Link 
+                  href={plan.href}
+                  className={`mt-8 flex w-full items-center justify-center gap-2 py-3.5 rounded-xl font-semibold transition-all ${
                     plan.highlight 
-                      ? 'btn-primary justify-center' 
+                      ? 'btn-primary' 
                       : 'btn-secondary'
                   }`}
                 >
                   {plan.cta}
-          </Link>
+                  <ArrowRight className="h-4 w-4" />
+                </Link>
               </div>
             ))}
           </div>
@@ -401,18 +538,19 @@ export default function Home() {
           <div className="card-highlight relative overflow-hidden rounded-3xl p-12 md:p-16 text-center">
             <div className="absolute inset-0 bg-grid opacity-30" />
             <div className="relative">
-              <h2 className="heading-lg">Ready to transform your<br />fashion workflow?</h2>
+              <h2 className="heading-lg">Ready to transform your fashion experience?</h2>
               <p className="mt-4 text-zinc-400 max-w-xl mx-auto">
-                Join thousands of fashion brands using AI to create better customer experiences.
+                Whether you're shopping online or running a fashion business, Virtual Try-On helps you make better decisions.
               </p>
               <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4">
                 <Link href="/register" className="btn-primary px-8 py-3.5 text-base">
                   Start free trial
                   <ArrowRight className="h-5 w-5" />
-            </Link>
-                <Link href="#pricing" className="btn-secondary px-8 py-3.5 text-base">
-              View pricing
-            </Link>
+                </Link>
+                <button onClick={handleDemoClick} className="btn-secondary px-8 py-3.5 text-base">
+                  <Play className="h-4 w-4" />
+                  Try live demo
+                </button>
               </div>
             </div>
           </div>
@@ -431,18 +569,27 @@ export default function Home() {
                 <span className="text-[15px] font-bold text-white">Virtual Try-On</span>
               </Link>
               <p className="mt-4 text-sm text-zinc-500 leading-relaxed">
-                AI-powered virtual fitting room for modern fashion teams.
+                AI-powered virtual fitting room for shoppers and fashion businesses.
               </p>
             </div>
 
             {[
               {
-                title: 'Product',
+                title: 'For Shoppers',
                 links: [
-                  { label: 'Features', href: '#features' },
+                  { label: 'How it works', href: '#features' },
                   { label: 'Pricing', href: '#pricing' },
-                  { label: 'API', href: '#' },
-                  { label: 'Integrations', href: '#' }
+                  { label: 'Try demo', href: '#' },
+                  { label: 'FAQ', href: '#' }
+                ]
+              },
+              {
+                title: 'For Business',
+                links: [
+                  { label: 'Integrations', href: '#' },
+                  { label: 'Enterprise', href: '#' },
+                  { label: 'Contact Sales', href: '#' },
+                  { label: 'Support', href: '#' }
                 ]
               },
               {
@@ -452,14 +599,6 @@ export default function Home() {
                   { label: 'Blog', href: '#' },
                   { label: 'Careers', href: '#' },
                   { label: 'Contact', href: '#' }
-                ]
-              },
-              {
-                title: 'Legal',
-                links: [
-                  { label: 'Privacy', href: '#' },
-                  { label: 'Terms', href: '#' },
-                  { label: 'Security', href: '#' }
                 ]
               }
             ].map((section, idx) => (
@@ -474,7 +613,7 @@ export default function Home() {
                     </li>
                   ))}
                 </ul>
-          </div>
+              </div>
             ))}
           </div>
 

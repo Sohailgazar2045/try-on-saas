@@ -194,7 +194,7 @@ function TryOnContent() {
         <Header 
           user={user} 
           title="Try-On Studio"
-          subtitle={isDemo ? "Try selecting images below to see how it works" : "Create AI-powered virtual try-on images"}
+          subtitle={isDemo ? "Try selecting images below to see how it works" : "Try on clothes before you buy, or create product visuals for your business"}
           showNotifications={!isDemo}
         />
 
@@ -237,8 +237,8 @@ function TryOnContent() {
                       <Upload className="h-5 w-5 text-orange-400" />
                     </div>
                     <div>
-                      <h2 className="font-semibold text-white">Person Photo</h2>
-                      <p className="text-xs text-zinc-500">Front-facing, good lighting</p>
+                      <h2 className="font-semibold text-white">Your Photo</h2>
+                      <p className="text-xs text-zinc-500">Upload your photo or model image. Front-facing works best.</p>
                     </div>
                   </div>
                   {personImage && <Check className="h-5 w-5 text-emerald-400" />}
@@ -288,8 +288,8 @@ function TryOnContent() {
                       <Shirt className="h-5 w-5 text-blue-400" />
                     </div>
                     <div>
-                      <h2 className="font-semibold text-white">Garment Image</h2>
-                      <p className="text-xs text-zinc-500">Product or clothing photo</p>
+                      <h2 className="font-semibold text-white">Clothing Item</h2>
+                      <p className="text-xs text-zinc-500">Select the garment you want to try on. Works with any clothing type.</p>
                     </div>
                   </div>
                   {outfitImage && <Check className="h-5 w-5 text-emerald-400" />}

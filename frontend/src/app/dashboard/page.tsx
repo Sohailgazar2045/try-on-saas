@@ -58,10 +58,10 @@ function DashboardContent() {
   }, [router]);
 
   const stats = [
-    { label: 'Total Try-Ons', value: isDemo ? '142' : '0', change: '+12%', trend: 'up', icon: Sparkles, color: 'orange' },
-    { label: 'Gallery Items', value: isDemo ? '89' : '0', change: '+8%', trend: 'up', icon: ImageIcon, color: 'blue' },
+    { label: 'Try-Ons Created', value: isDemo ? '142' : '0', change: '+12%', trend: 'up', icon: Sparkles, color: 'orange' },
+    { label: 'Saved Images', value: isDemo ? '89' : '0', change: '+8%', trend: 'up', icon: ImageIcon, color: 'blue' },
     { label: 'Credits Used', value: isDemo ? '53' : '0', change: 'This month', trend: 'neutral', icon: Zap, color: 'purple' },
-    { label: 'Success Rate', value: isDemo ? '98%' : '-', change: '+2%', trend: 'up', icon: TrendingUp, color: 'green' },
+    { label: 'Conversion Rate', value: isDemo ? '98%' : '-', change: '+2%', trend: 'up', icon: TrendingUp, color: 'green' },
   ];
 
   const recentActivity = isDemo ? [
@@ -88,7 +88,7 @@ function DashboardContent() {
         <Header 
           user={user} 
           title={`Welcome back, ${user?.name?.split(' ')[0] || 'there'}`}
-          subtitle={isDemo ? "You're exploring the demo dashboard" : "Here's an overview of your workspace"}
+          subtitle={isDemo ? "Explore how Virtual Try-On works for shoppers and businesses" : "Your personal fashion studio and business dashboard"}
         />
 
         <div className="flex-1 overflow-auto p-6 lg:p-8">
@@ -143,9 +143,9 @@ function DashboardContent() {
                       </div>
                       <div className="flex-1">
                         <h3 className="font-semibold text-white group-hover:text-orange-400 transition-colors">
-                          New Try-On
+                          Try On Clothes
                         </h3>
-                        <p className="text-sm text-zinc-500">Create a new virtual try-on</p>
+                        <p className="text-sm text-zinc-500">See how clothes look on you</p>
                       </div>
                       <ArrowRight className="h-5 w-5 text-zinc-600 group-hover:text-orange-400 transition-colors" />
                     </Link>
@@ -158,11 +158,32 @@ function DashboardContent() {
                         <ImageIcon className="h-6 w-6 text-zinc-400" />
                       </div>
                       <div className="flex-1">
-                        <h3 className="font-semibold text-white">View Gallery</h3>
-                        <p className="text-sm text-zinc-500">Browse your images</p>
+                        <h3 className="font-semibold text-white">My Gallery</h3>
+                        <p className="text-sm text-zinc-500">View saved try-ons & images</p>
                       </div>
                       <ArrowRight className="h-5 w-5 text-zinc-600 group-hover:text-white transition-colors" />
                     </Link>
+                  </div>
+
+                  {/* Business Actions */}
+                  <div className="mt-4 pt-4 border-t border-white/[0.06]">
+                    <p className="text-xs font-medium text-zinc-500 mb-3">For Business</p>
+                    <div className="grid gap-3 sm:grid-cols-2">
+                      <Link
+                        href="/billing"
+                        className="flex items-center gap-3 rounded-lg border border-white/[0.06] bg-white/[0.02] px-3 py-2 hover:bg-white/[0.04] transition-colors"
+                      >
+                        <TrendingUp className="h-4 w-4 text-blue-400" />
+                        <span className="text-sm text-zinc-300">Analytics</span>
+                      </Link>
+                      <Link
+                        href="/gallery"
+                        className="flex items-center gap-3 rounded-lg border border-white/[0.06] bg-white/[0.02] px-3 py-2 hover:bg-white/[0.04] transition-colors"
+                      >
+                        <ImageIcon className="h-4 w-4 text-purple-400" />
+                        <span className="text-sm text-zinc-300">Export Images</span>
+                      </Link>
+                    </div>
                   </div>
                 </div>
 

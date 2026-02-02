@@ -76,7 +76,7 @@ function BillingContent() {
       price: '$19',
       period: '/month',
       description: 'For growing businesses',
-      features: ['100 credits/month', 'HD quality', 'Priority support', 'API access'],
+      features: ['100 credits/month', 'HD quality', 'Priority support', 'Advanced features'],
       popular: true,
       current: user?.subscription === 'basic',
       plan: 'basic'
@@ -86,7 +86,7 @@ function BillingContent() {
       price: '$49',
       period: '/month',
       description: 'For large organizations',
-      features: ['Unlimited credits', '4K quality', 'Dedicated support', 'Custom API', 'SSO'],
+      features: ['Unlimited credits', '4K quality', 'Dedicated support', 'Custom solutions', 'SSO'],
       current: user?.subscription === 'premium',
       plan: 'premium'
     }
