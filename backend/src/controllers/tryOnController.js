@@ -118,17 +118,3 @@ export const generateTryOnImage = async (req, res, next) => {
   }
 };
 
-    res.json({
-      message: 'Try-on generated successfully',
-      image: {
-        id: generatedImage.id,
-        url: generatedImage.url,
-        createdAt: generatedImage.createdAt
-      },
-      creditsRemaining: updatedUser.credits
-    });
-  } catch (error) {
-    next(error);
-  }
-};
-

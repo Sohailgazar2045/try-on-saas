@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import ProtectedRoute from '@/components/ProtectedRoute';
 import { authAPI } from '@/lib/api';
+import { isDemoMode, getDemoUser } from '@/lib/auth';
 import { Sidebar } from '@/components/Sidebar';
 import { Header } from '@/components/Header';
 import { 
@@ -12,9 +13,11 @@ import {
   Image as ImageIcon, 
   TrendingUp,
   Zap,
-  CheckCircle2,
   ArrowRight,
-  Activity
+  ArrowUpRight,
+  Clock,
+  CheckCircle2,
+  Plus
 } from 'lucide-react';
 
 export default function DashboardPage() {
@@ -29,14 +32,24 @@ function DashboardContent() {
   const router = useRouter();
   const [user, setUser] = useState<any>(null);
   const [loading, setLoading] = useState(true);
+  const [isDemo, setIsDemo] = useState(false);
 
   useEffect(() => {
     const fetchProfile = async () => {
+      const demo = isDemoMode();
+      setIsDemo(demo);
+
+      if (demo) {
+        setUser(getDemoUser());
+        setLoading(false);
+        return;
+      }
+
       try {
         const response = await authAPI.getProfile();
         setUser(response.data.user);
       } catch (error) {
-        console.error('Failed to load profile in dashboard (demo mode):', error);
+        console.error('Failed to load profile:', error);
       } finally {
         setLoading(false);
       }
@@ -45,173 +58,210 @@ function DashboardContent() {
   }, [router]);
 
   const stats = [
-    { label: 'Total Try-Ons', value: '142', change: '+12%', trend: 'up', icon: Sparkles },
-    { label: 'Gallery Items', value: '89', change: '+8%', trend: 'up', icon: ImageIcon },
-    { label: 'Credits Used', value: '53', change: 'This month', trend: 'neutral', icon: Zap },
-    { label: 'Success Rate', value: '98%', change: '+2%', trend: 'up', icon: TrendingUp },
+    { label: 'Total Try-Ons', value: isDemo ? '142' : '0', change: '+12%', trend: 'up', icon: Sparkles, color: 'orange' },
+    { label: 'Gallery Items', value: isDemo ? '89' : '0', change: '+8%', trend: 'up', icon: ImageIcon, color: 'blue' },
+    { label: 'Credits Used', value: isDemo ? '53' : '0', change: 'This month', trend: 'neutral', icon: Zap, color: 'purple' },
+    { label: 'Success Rate', value: isDemo ? '98%' : '-', change: '+2%', trend: 'up', icon: TrendingUp, color: 'green' },
   ];
 
-  const recentActivity = [
-    { action: 'Generated try-on', item: 'Summer Collection - Dress', time: '2 hours ago', type: 'success' },
-    { action: 'Saved to gallery', item: '3 images', time: '5 hours ago', type: 'info' },
-    { action: 'Updated profile', item: 'Account settings', time: '1 day ago', type: 'info' },
-    { action: 'Viewed billing', item: 'Pricing plans', time: '2 days ago', type: 'info' },
-  ];
+  const recentActivity = isDemo ? [
+    { action: 'Generated try-on', item: 'Summer Collection - Dress', time: '2 hours ago', status: 'success' },
+    { action: 'Saved to gallery', item: '3 new images', time: '5 hours ago', status: 'info' },
+    { action: 'Purchased credits', item: '50 credits added', time: '1 day ago', status: 'success' },
+  ] : [];
+
+  const getColorClasses = (color: string) => {
+    const colors: Record<string, { bg: string; text: string; icon: string }> = {
+      orange: { bg: 'bg-orange-500/10', text: 'text-orange-400', icon: 'text-orange-400' },
+      blue: { bg: 'bg-blue-500/10', text: 'text-blue-400', icon: 'text-blue-400' },
+      purple: { bg: 'bg-purple-500/10', text: 'text-purple-400', icon: 'text-purple-400' },
+      green: { bg: 'bg-emerald-500/10', text: 'text-emerald-400', icon: 'text-emerald-400' },
+    };
+    return colors[color] || colors.orange;
+  };
 
   return (
-    <div className="flex h-screen bg-slate-950 text-slate-50">
+    <div className="flex h-screen bg-[#0a0a0b]">
       <Sidebar user={user} />
 
-      {/* Main Content */}
-      <main className="flex flex-1 flex-col overflow-hidden">
-        {/* Header */}
+      <main className="flex-1 flex flex-col overflow-hidden">
         <Header 
           user={user} 
-          title={`Welcome back, ${user?.name?.split(' ')[0] || 'there'}!`}
-          subtitle="Here's what's happening with your workspace"
+          title={`Welcome back, ${user?.name?.split(' ')[0] || 'there'}`}
+          subtitle={isDemo ? "You're exploring the demo dashboard" : "Here's an overview of your workspace"}
         />
 
-        {/* Dashboard Content */}
-        <div className="flex-1 overflow-auto bg-gradient-to-br from-slate-950 via-slate-900/50 to-slate-950 p-6">
-          <div className="space-y-8">
+        <div className="flex-1 overflow-auto p-6 lg:p-8">
+          <div className="max-w-6xl mx-auto space-y-8">
             {/* Stats Grid */}
-            <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
               {stats.map((stat) => {
                 const Icon = stat.icon;
+                const colors = getColorClasses(stat.color);
                 return (
-                  <div
-                    key={stat.label}
-                    className="group card-interactive"
-                  >
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <p className="text-xs font-medium uppercase tracking-wider text-slate-400">{stat.label}</p>
-                        <p className="mt-3 text-3xl font-bold text-slate-100 transition-all duration-300 group-hover:text-primary-400">{stat.value}</p>
-                        <p className={`mt-2 text-xs font-medium ${
-                          stat.trend === 'up' ? 'text-emerald-400' : 
-                          stat.trend === 'down' ? 'text-red-400' : 
-                          'text-slate-500'
-                        }`}>
+                  <div key={stat.label} className="card group">
+                    <div className="flex items-start justify-between">
+                      <div className={`${colors.bg} rounded-xl p-2.5`}>
+                        <Icon className={`h-5 w-5 ${colors.icon}`} />
+                      </div>
+                      {stat.trend === 'up' && (
+                        <span className="flex items-center gap-1 text-xs font-medium text-emerald-400">
+                          <ArrowUpRight className="h-3 w-3" />
                           {stat.change}
-                        </p>
-                      </div>
-                      <div className="flex h-14 w-14 items-center justify-center rounded-xl bg-gradient-to-br from-primary-500/10 to-primary-500/5 ring-1 ring-primary-500/20 transition-all duration-300 group-hover:ring-primary-500/40">
-                        <Icon className="h-7 w-7 text-primary-400 transition-transform duration-300 group-hover:scale-110 group-hover:rotate-6" />
-                      </div>
+                        </span>
+                      )}
+                      {stat.trend === 'neutral' && (
+                        <span className="text-xs text-zinc-500">{stat.change}</span>
+                      )}
+                    </div>
+                    <div className="mt-4">
+                      <p className="text-3xl font-bold text-white">{stat.value}</p>
+                      <p className="mt-1 text-sm text-zinc-500">{stat.label}</p>
                     </div>
                   </div>
                 );
               })}
             </div>
 
-            {/* Main Grid - Left and Right Columns */}
+            {/* Main Content Grid */}
             <div className="grid gap-6 lg:grid-cols-3">
-              {/* Left Column - 2/3 width */}
+              {/* Quick Actions - Left Column */}
               <div className="lg:col-span-2 space-y-6">
-                {/* Quick Actions */}
-                <div className="card-elevated">
-                  <h2 className="text-base font-bold text-slate-100 mb-5">Quick Actions</h2>
+                {/* Quick Actions Card */}
+                <div className="card">
+                  <div className="flex items-center justify-between mb-6">
+                    <h2 className="text-base font-semibold text-white">Quick Actions</h2>
+                  </div>
+                  
                   <div className="grid gap-4 sm:grid-cols-2">
                     <Link
                       href="/try-on"
-                      className="group relative overflow-hidden rounded-xl border border-slate-800 bg-gradient-to-br from-slate-900/70 to-slate-950/70 p-4 transition-all duration-300 hover:border-primary-500/50 hover:bg-slate-900/50"
+                      className="group flex items-center gap-4 rounded-xl border border-white/[0.06] bg-white/[0.02] p-4 transition-all duration-150 hover:bg-orange-500/5 hover:border-orange-500/20"
                     >
-                      <div className="flex items-center gap-4">
-                        <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-gradient-to-br from-primary-500/20 to-primary-500/10 ring-1 ring-primary-500/30 transition-all duration-300 group-hover:ring-primary-500/50">
-                          <Sparkles className="h-6 w-6 text-primary-400 transition-transform duration-300 group-hover:scale-110" />
-                        </div>
-                        <div className="flex-1">
-                          <h3 className="text-sm font-semibold text-slate-100 transition-colors duration-300 group-hover:text-primary-300">Create Try-On</h3>
-                          <p className="mt-1 text-xs text-slate-500 transition-colors duration-300 group-hover:text-slate-400">Generate new visuals</p>
-                        </div>
+                      <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-orange-500/10">
+                        <Plus className="h-6 w-6 text-orange-400" />
                       </div>
-                      <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-primary-500/0 via-primary-500/0 to-primary-500/10 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+                      <div className="flex-1">
+                        <h3 className="font-semibold text-white group-hover:text-orange-400 transition-colors">
+                          New Try-On
+                        </h3>
+                        <p className="text-sm text-zinc-500">Create a new virtual try-on</p>
+                      </div>
+                      <ArrowRight className="h-5 w-5 text-zinc-600 group-hover:text-orange-400 transition-colors" />
                     </Link>
+
                     <Link
                       href="/gallery"
-                      className="group relative overflow-hidden rounded-xl border border-slate-800 bg-gradient-to-br from-slate-900/70 to-slate-950/70 p-4 transition-all duration-300 hover:border-sky-500/50 hover:bg-slate-900/50"
+                      className="group flex items-center gap-4 rounded-xl border border-white/[0.06] bg-white/[0.02] p-4 transition-all duration-150 hover:bg-white/[0.04] hover:border-white/[0.1]"
                     >
-                      <div className="flex items-center gap-4">
-                        <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-gradient-to-br from-sky-500/20 to-sky-500/10 ring-1 ring-sky-500/30 transition-all duration-300 group-hover:ring-sky-500/50">
-                          <ImageIcon className="h-6 w-6 text-sky-400 transition-transform duration-300 group-hover:scale-110" />
-                        </div>
-                        <div className="flex-1">
-                          <h3 className="text-sm font-semibold text-slate-100 transition-colors duration-300 group-hover:text-sky-300">View Gallery</h3>
-                          <p className="mt-1 text-xs text-slate-500 transition-colors duration-300 group-hover:text-slate-400">Browse your images</p>
-                        </div>
+                      <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-white/[0.05]">
+                        <ImageIcon className="h-6 w-6 text-zinc-400" />
                       </div>
-                      <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-sky-500/0 via-sky-500/0 to-sky-500/10 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+                      <div className="flex-1">
+                        <h3 className="font-semibold text-white">View Gallery</h3>
+                        <p className="text-sm text-zinc-500">Browse your images</p>
+                      </div>
+                      <ArrowRight className="h-5 w-5 text-zinc-600 group-hover:text-white transition-colors" />
                     </Link>
                   </div>
                 </div>
 
                 {/* Recent Activity */}
-                <div className="card-elevated">
-                  <div className="flex items-center justify-between mb-5">
-                    <h2 className="text-base font-bold text-slate-100 flex items-center gap-2">
-                      <Activity className="h-5 w-5 text-primary-400" />
-                      Recent Activity
-                    </h2>
-                    <Link href="#" className="text-xs text-primary-400 hover:text-primary-300 transition-colors">View all</Link>
+                <div className="card">
+                  <div className="flex items-center justify-between mb-6">
+                    <h2 className="text-base font-semibold text-white">Recent Activity</h2>
+                    <Link href="#" className="text-sm text-zinc-500 hover:text-white transition-colors">
+                      View all
+                    </Link>
                   </div>
-                  <div className="space-y-4">
-                    {recentActivity.slice(0, 3).map((activity, idx) => (
-                      <div key={idx} className="group flex items-start gap-3 p-3 rounded-lg hover:bg-slate-800/30 transition-colors duration-300">
-                        <div className={`mt-0.5 flex h-8 w-8 items-center justify-center rounded-full ${
-                          activity.type === 'success' ? 'bg-emerald-500/10' : 'bg-primary-500/10'
-                        } ring-1 ${activity.type === 'success' ? 'ring-emerald-500/30' : 'ring-primary-500/30'}`}>
-                          <CheckCircle2 className={`h-4 w-4 ${
-                            activity.type === 'success' ? 'text-emerald-400' : 'text-primary-400'
-                          }`} />
-                        </div>
-                        <div className="flex-1 min-w-0">
-                          <p className="text-xs font-semibold text-slate-200 transition-colors duration-300 group-hover:text-slate-100">
-                            {activity.action}
-                          </p>
-                          <p className="mt-1 truncate text-xs text-slate-500">
-                            {activity.item}
-                          </p>
-                          <p className="mt-1.5 text-[10px] text-slate-600">
+
+                  {recentActivity.length > 0 ? (
+                    <div className="space-y-4">
+                      {recentActivity.map((activity, idx) => (
+                        <div 
+                          key={idx} 
+                          className="flex items-start gap-4 p-3 rounded-xl hover:bg-white/[0.02] transition-colors"
+                        >
+                          <div className={`mt-0.5 flex h-8 w-8 items-center justify-center rounded-full ${
+                            activity.status === 'success' ? 'bg-emerald-500/10' : 'bg-blue-500/10'
+                          }`}>
+                            <CheckCircle2 className={`h-4 w-4 ${
+                              activity.status === 'success' ? 'text-emerald-400' : 'text-blue-400'
+                            }`} />
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <p className="text-sm font-medium text-white">{activity.action}</p>
+                            <p className="text-sm text-zinc-500 truncate">{activity.item}</p>
+                          </div>
+                          <div className="flex items-center gap-1 text-xs text-zinc-600">
+                            <Clock className="h-3 w-3" />
                             {activity.time}
-                          </p>
+                          </div>
                         </div>
-                      </div>
-                    ))}
-                  </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="text-center py-8">
+                      <p className="text-sm text-zinc-500">No recent activity</p>
+                      <p className="text-xs text-zinc-600 mt-1">Create your first try-on to get started</p>
+                    </div>
+                  )}
                 </div>
               </div>
 
-              {/* Right Column - 1/3 width */}
+              {/* Right Column */}
               <div className="space-y-6">
-                {/* Account Summary */}
-                <div className="glass-panel-premium p-6">
-                  <h2 className="text-base font-bold text-slate-100 mb-5">Account Summary</h2>
-                  <div className="space-y-5">
-                    <div className="relative p-4 rounded-lg bg-gradient-to-br from-primary-500/10 to-primary-500/5 border border-primary-500/20">
-                      <p className="text-xs font-medium uppercase tracking-wider text-primary-400">Credits Remaining</p>
-                      <p className="mt-2 text-3xl font-bold text-primary-300">
-                        {user?.credits || 0}
-                      </p>
-                      <Link
-                        href="/billing"
-                        className="mt-3 inline-flex items-center gap-1 text-xs font-medium text-primary-400 hover:text-primary-300 transition-colors"
-                      >
-                        Top up credits <ArrowRight className="h-3 w-3" />
-                      </Link>
-                    </div>
-                    <div className="border-t border-slate-800 pt-5">
-                      <p className="text-xs text-slate-500 uppercase tracking-wider font-medium">Current Plan</p>
-                      <p className="mt-2 text-xl font-bold text-slate-200">
-                        {user?.subscription || 'Free'}
-                      </p>
-                      <Link
-                        href="/billing"
-                        className="mt-3 inline-flex items-center gap-1 text-xs font-medium text-sky-400 hover:text-sky-300 transition-colors"
-                      >
-                        Upgrade plan <ArrowRight className="h-3 w-3" />
-                      </Link>
-                    </div>
+                {/* Credits Card */}
+                <div className="card-highlight">
+                  <div className="flex items-center justify-between">
+                    <h2 className="text-base font-semibold text-white">Credits</h2>
+                    <Sparkles className="h-5 w-5 text-orange-400" />
                   </div>
+                  
+                  <div className="mt-6">
+                    <p className="text-5xl font-bold text-white">{user?.credits || 0}</p>
+                    <p className="mt-2 text-sm text-zinc-500">credits remaining</p>
+                  </div>
+
+                  <div className="mt-6 pt-6 border-t border-orange-500/10">
+                    <Link
+                      href="/billing"
+                      className="btn-primary w-full justify-center"
+                    >
+                      Buy more credits
+                      <ArrowRight className="h-4 w-4" />
+                    </Link>
+                  </div>
+                </div>
+
+                {/* Plan Card */}
+                <div className="card">
+                  <div className="flex items-center justify-between">
+                    <h2 className="text-base font-semibold text-white">Your Plan</h2>
+                  </div>
+                  
+                  <div className="mt-4">
+                    <div className="flex items-center gap-2">
+                      <span className="text-xl font-bold text-white capitalize">
+                        {user?.subscription || 'Free'}
+                      </span>
+                      <span className="badge-accent">Active</span>
+                    </div>
+                    <p className="mt-2 text-sm text-zinc-500">
+                      {user?.subscription === 'free' 
+                        ? 'Upgrade to get more credits and features'
+                        : 'Enjoying premium features'
+                      }
+                    </p>
+                  </div>
+
+                  <Link
+                    href="/billing"
+                    className="mt-4 flex items-center gap-1 text-sm font-medium text-orange-400 hover:text-orange-300 transition-colors"
+                  >
+                    {user?.subscription === 'free' ? 'Upgrade plan' : 'Manage subscription'}
+                    <ArrowRight className="h-4 w-4" />
+                  </Link>
                 </div>
               </div>
             </div>
@@ -221,4 +271,3 @@ function DashboardContent() {
     </div>
   );
 }
-

@@ -1,11 +1,12 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
 import ProtectedRoute from '@/components/ProtectedRoute';
-import { authAPI } from '@/lib/api';
+import { authAPI, userAPI } from '@/lib/api';
+import { isDemoMode, getDemoUser } from '@/lib/auth';
 import { Sidebar } from '@/components/Sidebar';
-import { useForm } from 'react-hook-form';
+import { Header } from '@/components/Header';
+import { User, Mail, Lock, Shield, Save, Eye, EyeOff } from 'lucide-react';
 import toast from 'react-hot-toast';
 
 export default function ProfilePage() {
@@ -17,136 +18,217 @@ export default function ProfilePage() {
 }
 
 function ProfileContent() {
-  const router = useRouter();
   const [user, setUser] = useState<any>(null);
-  const [loading, setLoading] = useState(true);
-  const { register, handleSubmit, formState: { errors } } = useForm();
+  const [loading, setLoading] = useState(false);
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [currentPassword, setCurrentPassword] = useState('');
+  const [newPassword, setNewPassword] = useState('');
+  const [showCurrentPassword, setShowCurrentPassword] = useState(false);
+  const [showNewPassword, setShowNewPassword] = useState(false);
+  const [isDemo, setIsDemo] = useState(false);
 
   useEffect(() => {
+    const fetchProfile = async () => {
+      const demo = isDemoMode();
+      setIsDemo(demo);
+
+      if (demo) {
+        const demoUser = getDemoUser();
+        setUser(demoUser);
+        setName(demoUser.name);
+        setEmail(demoUser.email);
+        return;
+      }
+
+      try {
+        const response = await authAPI.getProfile();
+        setUser(response.data.user);
+        setName(response.data.user.name || '');
+        setEmail(response.data.user.email || '');
+      } catch (error) {
+        console.error('Failed to load profile:', error);
+      }
+    };
     fetchProfile();
   }, []);
 
-  const fetchProfile = async () => {
+  const handleUpdateProfile = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (isDemo) {
+      toast.error('Sign up to update your profile');
+      return;
+    }
+
+    setLoading(true);
+    
     try {
-      // Use the mocked auth profile in this demo environment
-      const response = await authAPI.getProfile();
-      setUser(response.data.user);
-    } catch (error) {
-      console.error('Failed to load profile (demo mode):', error);
+      await userAPI.updateProfile({ name, email });
+      toast.success('Profile updated!');
+      setUser({ ...user, name, email });
+    } catch (error: any) {
+      toast.error(error.response?.data?.message || 'Update failed');
     } finally {
       setLoading(false);
     }
   };
 
-  const onSubmit = async (data: any) => {
-    try {
-      await userAPI.updateProfile(data);
-      toast.success('Profile updated successfully');
-      fetchProfile();
-    } catch (error: any) {
-      toast.error(error.response?.data?.message || 'Update failed');
-    }
-  };
-
-  const handleDeleteAccount = async () => {
-    if (!confirm('Are you sure you want to delete your account? This action cannot be undone.')) {
+  const handleChangePassword = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (isDemo) {
+      toast.error('Sign up to change your password');
       return;
     }
 
+    if (!currentPassword || !newPassword) {
+      toast.error('Please fill in both password fields');
+      return;
+    }
+    
+    setLoading(true);
     try {
-      await userAPI.deleteAccount();
-      toast.success('Account deleted');
-      router.push('/');
+      await userAPI.changePassword({ currentPassword, newPassword });
+      toast.success('Password changed!');
+      setCurrentPassword('');
+      setNewPassword('');
     } catch (error: any) {
-      toast.error(error.response?.data?.message || 'Delete failed');
+      toast.error(error.response?.data?.message || 'Password change failed');
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <div className="flex min-h-screen bg-slate-950 text-slate-50">
+    <div className="flex h-screen bg-[#0a0a0b]">
       <Sidebar user={user} />
 
-      {/* Main content */}
-      <main className="flex-1 overflow-auto">
-        <header className="sticky top-0 z-10 border-b border-slate-800/80 bg-slate-950/80 backdrop-blur">
-          <div className="flex h-16 items-center justify-between px-6">
-            <div>
-              <h1 className="text-lg font-semibold text-slate-100">Profile settings</h1>
-              <p className="text-xs text-slate-500">
-                Keep your workspace details up to date for smoother collaboration.
+      <main className="flex-1 flex flex-col overflow-hidden">
+        <Header 
+          user={user} 
+          title="Profile"
+          subtitle="Manage your account settings"
+        />
+
+        <div className="flex-1 overflow-auto p-6 lg:p-8">
+          <div className="max-w-2xl mx-auto space-y-8">
+            {/* Profile Picture */}
+            <div className="card">
+              <div className="flex items-center gap-6">
+                <div className="flex h-20 w-20 items-center justify-center rounded-2xl bg-gradient-to-br from-orange-400 to-orange-600">
+                  <span className="text-2xl font-bold text-white">
+                    {(user?.name || user?.email || 'U')[0].toUpperCase()}
+                  </span>
+                </div>
+                <div>
+                  <h2 className="text-xl font-semibold text-white">{user?.name || 'User'}</h2>
+                  <p className="text-sm text-zinc-500">{user?.email}</p>
+                  <div className="flex items-center gap-2 mt-2">
+                    <span className="badge-accent capitalize">{user?.subscription || 'Free'} Plan</span>
+                    <span className="badge">{user?.credits || 0} credits</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Profile Info */}
+            <div className="card">
+              <h3 className="text-base font-semibold text-white mb-6 flex items-center gap-2">
+                <User className="h-5 w-5 text-zinc-500" />
+                Personal Information
+              </h3>
+              <form onSubmit={handleUpdateProfile} className="space-y-5">
+                <div>
+                  <label className="block text-sm font-medium text-zinc-400 mb-2">Full name</label>
+                  <input
+                    type="text"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    className="input"
+                    placeholder="Your name"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-zinc-400 mb-2">Email address</label>
+                  <input
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    className="input"
+                    placeholder="you@example.com"
+                  />
+                </div>
+                <button type="submit" disabled={loading} className="btn-primary">
+                  <Save className="h-4 w-4" />
+                  {loading ? 'Saving...' : 'Save Changes'}
+                </button>
+              </form>
+            </div>
+
+            {/* Change Password */}
+            <div className="card">
+              <h3 className="text-base font-semibold text-white mb-6 flex items-center gap-2">
+                <Lock className="h-5 w-5 text-zinc-500" />
+                Change Password
+              </h3>
+              <form onSubmit={handleChangePassword} className="space-y-5">
+                <div>
+                  <label className="block text-sm font-medium text-zinc-400 mb-2">Current password</label>
+                  <div className="relative">
+                    <input
+                      type={showCurrentPassword ? 'text' : 'password'}
+                      value={currentPassword}
+                      onChange={(e) => setCurrentPassword(e.target.value)}
+                      className="input pr-12"
+                      placeholder="Enter current password"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowCurrentPassword(!showCurrentPassword)}
+                      className="absolute right-4 top-1/2 -translate-y-1/2 text-zinc-500 hover:text-zinc-400"
+                    >
+                      {showCurrentPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                    </button>
+                  </div>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-zinc-400 mb-2">New password</label>
+                  <div className="relative">
+                    <input
+                      type={showNewPassword ? 'text' : 'password'}
+                      value={newPassword}
+                      onChange={(e) => setNewPassword(e.target.value)}
+                      className="input pr-12"
+                      placeholder="Enter new password"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowNewPassword(!showNewPassword)}
+                      className="absolute right-4 top-1/2 -translate-y-1/2 text-zinc-500 hover:text-zinc-400"
+                    >
+                      {showNewPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                    </button>
+                  </div>
+                </div>
+                <button type="submit" disabled={loading} className="btn-secondary">
+                  <Shield className="h-4 w-4" />
+                  {loading ? 'Updating...' : 'Update Password'}
+                </button>
+              </form>
+            </div>
+
+            {/* Danger Zone */}
+            <div className="card border-red-500/20">
+              <h3 className="text-base font-semibold text-red-400 mb-2">Danger Zone</h3>
+              <p className="text-sm text-zinc-500 mb-4">
+                Once you delete your account, there is no going back. Please be certain.
               </p>
+              <button className="px-4 py-2 rounded-lg text-sm font-medium text-red-400 bg-red-500/10 hover:bg-red-500/20 transition-colors">
+                Delete Account
+              </button>
             </div>
           </div>
-        </header>
-
-        <div className="mx-auto max-w-2xl px-6 py-6">
-        <div className="mb-6 rounded-2xl border border-slate-800 bg-slate-900/70 p-6 shadow-sm">
-          <h2 className="mb-4 text-sm font-semibold text-slate-100">Account information</h2>
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-            <div>
-              <label className="mb-1 block text-xs font-medium text-slate-200">
-                Name
-              </label>
-              <input
-                type="text"
-                defaultValue={user?.name || ''}
-                {...register('name')}
-                className="input-field"
-              />
-            </div>
-
-            <div>
-              <label className="mb-1 block text-xs font-medium text-slate-200">
-                Email
-              </label>
-              <input
-                type="email"
-                defaultValue={user?.email || ''}
-                {...register('email', { required: 'Email is required' })}
-                className="input-field"
-              />
-              {errors.email && (
-                <p className="mt-1 text-xs text-red-400">{errors.email.message as string}</p>
-              )}
-            </div>
-
-            <div>
-              <label className="mb-1 block text-xs font-medium text-slate-200">
-                New Password (leave blank to keep current)
-              </label>
-              <input
-                type="password"
-                {...register('password', {
-                  minLength: { value: 6, message: 'Password must be at least 6 characters' }
-                })}
-                className="input-field"
-              />
-              {errors.password && (
-                <p className="mt-1 text-xs text-red-400">{errors.password.message as string}</p>
-              )}
-            </div>
-
-            <button
-              type="submit"
-              className="primary-button mt-2 w-full justify-center"
-            >
-              Update Profile
-            </button>
-          </form>
-        </div>
-
-        <div className="rounded-2xl border border-red-900/70 bg-red-950/40 p-6 shadow-sm">
-          <h2 className="mb-2 text-sm font-semibold text-red-200">Danger zone</h2>
-          <button
-            onClick={handleDeleteAccount}
-            className="rounded-lg bg-red-600 px-5 py-2 text-xs font-semibold text-white hover:bg-red-500"
-          >
-            Delete Account
-          </button>
-          <p className="mt-2 text-xs text-red-200/80">
-            This will permanently delete your account and all associated data.
-          </p>
-        </div>
         </div>
       </main>
     </div>

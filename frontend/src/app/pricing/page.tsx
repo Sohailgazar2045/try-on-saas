@@ -1,133 +1,223 @@
+'use client';
+
 import Link from 'next/link';
-import { Check } from 'lucide-react';
+import { Sparkles, CheckCircle2, ArrowRight, Zap } from 'lucide-react';
 
 export default function PricingPage() {
+  const plans = [
+    {
+      name: 'Free',
+      price: '$0',
+      period: '',
+      description: 'Perfect for trying out the platform',
+      features: [
+        '5 try-on credits',
+        'Basic quality output',
+        'Email support',
+        'Standard processing speed'
+      ],
+      cta: 'Get started',
+      href: '/register',
+      highlight: false
+    },
+    {
+      name: 'Pro',
+      price: '$19',
+      period: '/month',
+      description: 'For growing businesses',
+      features: [
+        '100 credits/month',
+        'HD quality output',
+        'Priority support',
+        'API access',
+        'Team collaboration',
+        'Advanced analytics'
+      ],
+      cta: 'Start free trial',
+      href: '/register',
+      highlight: true
+    },
+    {
+      name: 'Enterprise',
+      price: 'Custom',
+      period: '',
+      description: 'For large organizations',
+      features: [
+        'Unlimited credits',
+        '4K quality output',
+        'Dedicated support',
+        'Custom API limits',
+        'SSO & security',
+        'SLA guarantee',
+        'On-premise option'
+      ],
+      cta: 'Contact sales',
+      href: '#',
+      highlight: false
+    }
+  ];
+
+  const creditPacks = [
+    { amount: 10, price: '$4.99', perCredit: '$0.50' },
+    { amount: 25, price: '$9.99', perCredit: '$0.40', popular: true },
+    { amount: 50, price: '$17.99', perCredit: '$0.36' },
+    { amount: 100, price: '$29.99', perCredit: '$0.30' },
+  ];
+
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-50">
+    <div className="min-h-screen bg-[#0a0a0b]">
       {/* Navigation */}
-      <header className="border-b border-slate-800/80 bg-slate-950/80 backdrop-blur">
-        <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
-          <Link href="/" className="flex items-center gap-2">
-            <span className="h-7 w-7 rounded-xl bg-primary-500/90 shadow-lg shadow-primary-500/40" />
-            <span className="text-sm font-semibold tracking-tight text-slate-100">
-              Virtual Try-On
-            </span>
+      <nav className="border-b border-white/[0.06] bg-[#0a0a0b]/80 backdrop-blur-xl">
+        <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
+          <Link href="/" className="flex items-center gap-2.5">
+            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-orange-500 to-orange-600">
+              <Sparkles className="h-5 w-5 text-white" />
+            </div>
+            <span className="text-[15px] font-bold text-white">Virtual Try-On</span>
           </Link>
-          <div className="flex items-center gap-3 text-xs font-medium text-slate-200">
-            <Link href="/login" className="text-slate-300 hover:text-slate-50">
-              Login
-            </Link>
-            <Link
-              href="/register"
-              className="rounded-lg bg-primary-500 px-4 py-2 text-xs font-semibold text-white shadow-sm transition hover:bg-primary-400"
-            >
-              Get started
-            </Link>
+          <div className="flex items-center gap-2">
+            <Link href="/login" className="btn-ghost">Sign in</Link>
+            <Link href="/register" className="btn-primary">Get started</Link>
           </div>
         </div>
-      </header>
+      </nav>
 
-      <main className="mx-auto max-w-6xl px-4 py-10 sm:px-6 lg:px-8 lg:py-14">
-        <div className="mb-10 text-center">
-          <h1 className="text-balance text-4xl font-semibold tracking-tight text-slate-50 sm:text-5xl">
-            Simple, transparent pricing.
-          </h1>
-          <p className="mt-3 text-sm text-slate-400 sm:text-base">
-            Start free, then scale credits and seats as your use cases grow.
+      {/* Hero */}
+      <section className="py-20">
+        <div className="mx-auto max-w-6xl px-6 text-center">
+          <span className="text-sm font-semibold text-orange-400">PRICING</span>
+          <h1 className="mt-4 text-4xl font-bold text-white sm:text-5xl">Simple, transparent pricing</h1>
+          <p className="mt-4 text-lg text-zinc-400 max-w-xl mx-auto">
+            Start free, upgrade when you need more. No hidden fees, cancel anytime.
           </p>
         </div>
+      </section>
 
-        <div className="grid max-w-5xl gap-6 md:grid-cols-3">
-          {/* Free Plan */}
-          <div className="rounded-2xl border border-slate-800 bg-slate-900/70 p-6 shadow-sm">
-            <h3 className="text-sm font-semibold text-slate-100">Free</h3>
-            <p className="mt-3 text-3xl font-semibold text-primary-300">$0</p>
-            <p className="mt-1 text-xs text-slate-400">For quick experiments and demos.</p>
-            <ul className="mt-4 space-y-2 text-xs text-slate-300">
-              <li className="flex items-center gap-2">
-                <Check className="h-4 w-4 text-emerald-400" />
-                <span>5 free credits</span>
-              </li>
-              <li className="flex items-center gap-2">
-                <Check className="h-4 w-4 text-emerald-400" />
-                <span>Access to core try-on flows</span>
-              </li>
-            </ul>
-            <Link
-              href="/register"
-              className="mt-6 block w-full rounded-lg bg-slate-800 px-4 py-2.5 text-center text-xs font-semibold text-slate-100 hover:bg-slate-700"
-            >
-              Get started
-            </Link>
-          </div>
+      {/* Subscription Plans */}
+      <section className="pb-20">
+        <div className="mx-auto max-w-6xl px-6">
+          <div className="grid gap-6 lg:grid-cols-3">
+            {plans.map((plan, idx) => (
+              <div 
+                key={idx} 
+                className={`relative rounded-2xl p-8 ${
+                  plan.highlight 
+                    ? 'bg-gradient-to-b from-orange-500/10 to-transparent border-2 border-orange-500/30' 
+                    : 'card'
+                }`}
+              >
+                {plan.highlight && (
+                  <div className="absolute -top-3 left-1/2 -translate-x-1/2">
+                    <span className="badge-accent">Most popular</span>
+                  </div>
+                )}
+                
+                <h3 className="text-xl font-semibold text-white">{plan.name}</h3>
+                <p className="mt-1 text-sm text-zinc-500">{plan.description}</p>
+                
+                <div className="mt-6">
+                  <span className="text-5xl font-bold text-white">{plan.price}</span>
+                  {plan.period && <span className="text-zinc-400">{plan.period}</span>}
+                </div>
 
-          {/* Basic Plan */}
-          <div className="relative rounded-2xl border border-primary-500/60 bg-slate-900/80 p-6 shadow-lg shadow-primary-500/20">
-            <div className="absolute -top-3 left-4 rounded-full bg-primary-500 px-3 py-1 text-[10px] font-semibold uppercase tracking-wide text-white">
-              Most popular
-            </div>
-            <h3 className="mt-2 text-sm font-semibold text-slate-100">Basic</h3>
-            <p className="mt-3 text-3xl font-semibold text-primary-300">
-              $9.99<span className="text-xs text-slate-400">/month</span>
-            </p>
-            <p className="mt-1 text-xs text-slate-400">For individual creators and lean teams.</p>
-            <ul className="mt-4 space-y-2 text-xs text-slate-300">
-              <li className="flex items-center gap-2">
-                <Check className="h-4 w-4 text-emerald-400" />
-                <span>50 credits per month</span>
-              </li>
-              <li className="flex items-center gap-2">
-                <Check className="h-4 w-4 text-emerald-400" />
-                <span>Priority processing pipeline</span>
-              </li>
-              <li className="flex items-center gap-2">
-                <Check className="h-4 w-4 text-emerald-400" />
-                <span>Email support</span>
-              </li>
-            </ul>
-            <Link
-              href="/register"
-              className="mt-6 block w-full rounded-lg bg-primary-500 px-4 py-2.5 text-center text-xs font-semibold text-white hover:bg-primary-400"
-            >
-              Subscribe
-            </Link>
-          </div>
+                <ul className="mt-8 space-y-4">
+                  {plan.features.map((feature, fIdx) => (
+                    <li key={fIdx} className="flex items-center gap-3">
+                      <CheckCircle2 className="h-5 w-5 text-emerald-500 shrink-0" />
+                      <span className="text-zinc-300">{feature}</span>
+                    </li>
+                  ))}
+                </ul>
 
-          {/* Premium Plan */}
-          <div className="rounded-2xl border border-slate-800 bg-slate-900/70 p-6 shadow-sm">
-            <h3 className="text-sm font-semibold text-slate-100">Premium</h3>
-            <p className="mt-3 text-3xl font-semibold text-primary-300">
-              $29.99<span className="text-xs text-slate-400">/month</span>
-            </p>
-            <p className="mt-1 text-xs text-slate-400">For teams running ongoing campaigns.</p>
-            <ul className="mt-4 space-y-2 text-xs text-slate-300">
-              <li className="flex items-center gap-2">
-                <Check className="h-4 w-4 text-emerald-400" />
-                <span>200 credits per month</span>
-              </li>
-              <li className="flex items-center gap-2">
-                <Check className="h-4 w-4 text-emerald-400" />
-                <span>Highest quality rendering pipeline</span>
-              </li>
-              <li className="flex items-center gap-2">
-                <Check className="h-4 w-4 text-emerald-400" />
-                <span>Priority support & SLAs</span>
-              </li>
-              <li className="flex items-center gap-2">
-                <Check className="h-4 w-4 text-emerald-400" />
-                <span>Advanced collaboration features</span>
-              </li>
-            </ul>
-            <Link
-              href="/register"
-              className="mt-6 block w-full rounded-lg bg-primary-500 px-4 py-2.5 text-center text-xs font-semibold text-white hover:bg-primary-400"
-            >
-              Subscribe
-            </Link>
+                <Link 
+                  href={plan.href}
+                  className={`mt-8 flex w-full items-center justify-center gap-2 py-3.5 rounded-xl font-semibold transition-all ${
+                    plan.highlight 
+                      ? 'btn-primary' 
+                      : 'btn-secondary'
+                  }`}
+                >
+                  {plan.cta}
+                  <ArrowRight className="h-4 w-4" />
+                </Link>
+              </div>
+            ))}
           </div>
         </div>
-      </main>
+      </section>
+
+      {/* Credit Packs */}
+      <section className="py-20 border-t border-white/[0.06]">
+        <div className="mx-auto max-w-6xl px-6">
+          <div className="text-center mb-12">
+            <h2 className="text-2xl font-bold text-white">Need more credits?</h2>
+            <p className="mt-2 text-zinc-400">Purchase credit packs anytime, no subscription required</p>
+          </div>
+          
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            {creditPacks.map((pack, idx) => (
+              <div 
+                key={idx} 
+                className={`card text-center ${pack.popular ? 'ring-2 ring-orange-500/30' : ''}`}
+              >
+                {pack.popular && (
+                  <span className="badge-accent mb-4">Best value</span>
+                )}
+                <div className="flex h-14 w-14 items-center justify-center rounded-xl bg-orange-500/10 mx-auto">
+                  <Zap className="h-7 w-7 text-orange-400" />
+                </div>
+                <p className="mt-4 text-3xl font-bold text-white">{pack.amount}</p>
+                <p className="text-sm text-zinc-500">credits</p>
+                <p className="mt-4 text-2xl font-bold text-white">{pack.price}</p>
+                <p className="text-xs text-zinc-500">{pack.perCredit} per credit</p>
+                <Link href="/register" className="btn-secondary w-full justify-center mt-6">
+                  Purchase
+                </Link>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* FAQ */}
+      <section className="py-20 border-t border-white/[0.06]">
+        <div className="mx-auto max-w-3xl px-6">
+          <h2 className="text-2xl font-bold text-white text-center mb-12">Frequently asked questions</h2>
+          
+          <div className="space-y-6">
+            {[
+              {
+                q: 'What happens when I run out of credits?',
+                a: 'You can purchase additional credit packs at any time, or upgrade your subscription plan for more monthly credits.'
+              },
+              {
+                q: 'Can I cancel my subscription?',
+                a: 'Yes, you can cancel your subscription at any time. You\'ll continue to have access until the end of your billing period.'
+              },
+              {
+                q: 'Do unused credits roll over?',
+                a: 'Credits from one-time purchases never expire. Monthly subscription credits refresh each billing cycle.'
+              },
+              {
+                q: 'Is there a free trial?',
+                a: 'Yes! Every new account starts with 5 free credits to try the platform. No credit card required.'
+              }
+            ].map((faq, idx) => (
+              <div key={idx} className="card">
+                <h3 className="font-semibold text-white">{faq.q}</h3>
+                <p className="mt-2 text-sm text-zinc-400">{faq.a}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Footer */}
+      <footer className="border-t border-white/[0.06] py-12">
+        <div className="mx-auto max-w-6xl px-6 text-center">
+          <p className="text-sm text-zinc-500">© 2024 Virtual Try-On. All rights reserved.</p>
+        </div>
+      </footer>
     </div>
   );
 }
-

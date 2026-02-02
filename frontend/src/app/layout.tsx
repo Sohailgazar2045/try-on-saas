@@ -1,14 +1,10 @@
 import type { Metadata } from 'next'
-import { Inter } from 'next/font/google'
 import './globals.css'
-import { Toaster } from 'react-hot-toast'
 import { AppWrapper } from '@/components/AppWrapper'
 
-const inter = Inter({ subsets: ['latin'] })
-
 export const metadata: Metadata = {
-  title: 'AI Virtual Try-On | Try Clothes Before You Buy',
-  description: 'Experience the future of online shopping with AI-powered virtual try-on technology',
+  title: 'Virtual Try-On | AI-Powered Fashion Technology',
+  description: 'Transform your fashion workflow with AI-powered virtual try-on. Upload a photo, try on clothes, and see instant results.',
 }
 
 export default function RootLayout({
@@ -18,13 +14,11 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={inter.className}>
+      <body>
         <AppWrapper>
           {children}
         </AppWrapper>
-        <Toaster position="top-right" />
       </body>
     </html>
   )
 }
-

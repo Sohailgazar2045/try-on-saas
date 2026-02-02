@@ -1,97 +1,70 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import Link from 'next/link'
-import { ArrowRight, Sparkles, Shield, Zap, Upload, Image as ImageIcon, CheckCircle2, Users, TrendingUp, Clock, Globe, Lock, Star, HelpCircle, Menu, X, ChevronRight, Award, Rocket } from 'lucide-react'
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { enableDemoMode } from '@/lib/auth';
+import { 
+  ArrowRight, 
+  Sparkles, 
+  Shield, 
+  Zap, 
+  Upload, 
+  Image as ImageIcon, 
+  CheckCircle2, 
+  Users, 
+  TrendingUp, 
+  Clock, 
+  Globe, 
+  Lock, 
+  Star,
+  Play,
+  ArrowUpRight,
+  Menu,
+  X
+} from 'lucide-react';
 
 export default function Home() {
+  const router = useRouter();
   const [mounted, setMounted] = useState(false);
-  const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   useEffect(() => {
     setMounted(true);
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 20);
-    };
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  const handleDemoClick = () => {
+    enableDemoMode();
+    router.push('/dashboard');
+  };
+
   return (
-    <div className="relative min-h-screen overflow-hidden bg-slate-950 text-slate-50">
-      {/* Enhanced Navigation Header */}
-      <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
-        scrolled 
-          ? 'border-b border-slate-800/80 bg-slate-950/90 backdrop-blur-xl shadow-lg shadow-black/20' 
-          : 'border-b border-slate-800/50 bg-slate-950/60 backdrop-blur-md'
-      }`}>
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
-          <Link 
-            href="/" 
-            className={`group flex items-center gap-2.5 transition-all duration-500 ${
-              mounted ? 'opacity-100' : 'opacity-0'
-            }`}
-          >
-            <div className="relative">
-              {/* Pulsing glow */}
-              <div className="absolute inset-0 rounded-xl bg-primary-500/30 blur-xl animate-pulse-slow" />
-              {/* Rotating gradient ring */}
-              <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-primary-500 via-sky-400 to-primary-500 opacity-0 group-hover:opacity-40 blur-md transition-opacity duration-500 animate-spin-slow" />
-              <div className="relative flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-primary-500 via-primary-400 to-sky-400 shadow-lg shadow-primary-500/40 transition-all duration-500 group-hover:scale-110 group-hover:rotate-12">
-                <Sparkles className="h-5 w-5 text-white transition-transform duration-500 group-hover:scale-110" />
-              </div>
+    <div className="min-h-screen bg-[#0a0a0b]">
+      {/* Navigation */}
+      <nav className="fixed top-0 left-0 right-0 z-50 border-b border-white/[0.06] bg-[#0a0a0b]/80 backdrop-blur-xl">
+        <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
+          <Link href="/" className="flex items-center gap-2.5">
+            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-orange-500 to-orange-600">
+              <Sparkles className="h-5 w-5 text-white" />
             </div>
-            <div className="flex flex-col">
-              <span className="text-sm font-bold tracking-tight text-slate-100 transition-colors duration-300 group-hover:text-primary-300">
-                Virtual Try-On
-              </span>
-              <span className="text-[9px] font-medium text-slate-500 uppercase tracking-wider">
-                AI Studio
-              </span>
-            </div>
+            <span className="text-[15px] font-bold text-white">Virtual Try-On</span>
           </Link>
           
-          {/* Desktop Navigation */}
-          <nav className={`hidden items-center gap-1 md:flex transition-all duration-700 ${
-            mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-2'
-          }`} style={{ transitionDelay: '200ms' }}>
-            <Link 
-              href="#features" 
-              className="group relative rounded-lg px-4 py-2 text-xs font-medium text-slate-300 transition-all duration-300 hover:text-slate-50 hover:bg-slate-900/50"
-            >
-              <span className="relative z-10">Features</span>
-              <div className="absolute inset-0 rounded-lg bg-primary-500/10 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+          {/* Desktop Nav */}
+          <div className="hidden items-center gap-1 md:flex">
+            <Link href="#features" className="btn-ghost">Features</Link>
+            <Link href="#pricing" className="btn-ghost">Pricing</Link>
+            <Link href="/login" className="btn-ghost">Sign in</Link>
+            <Link href="/register" className="btn-primary ml-2">
+              Get started free
+              <ArrowRight className="h-4 w-4" />
             </Link>
-            <Link 
-              href="#pricing" 
-              className="group relative rounded-lg px-4 py-2 text-xs font-medium text-slate-300 transition-all duration-300 hover:text-slate-50 hover:bg-slate-900/50"
-            >
-              <span className="relative z-10">Pricing</span>
-              <div className="absolute inset-0 rounded-lg bg-primary-500/10 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
-            </Link>
-            <Link 
-              href="/login" 
-              className="group relative rounded-lg px-4 py-2 text-xs font-medium text-slate-300 transition-all duration-300 hover:text-slate-50 hover:bg-slate-900/50"
-            >
-              <span className="relative z-10">Login</span>
-              <div className="absolute inset-0 rounded-lg bg-primary-500/10 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
-            </Link>
-            <Link 
-              href="/register" 
-              className="group relative overflow-hidden rounded-lg bg-gradient-to-r from-primary-500 to-primary-600 px-5 py-2 text-xs font-semibold text-white shadow-lg shadow-primary-500/30 transition-all duration-500 hover:scale-105 hover:shadow-xl hover:shadow-primary-500/40"
-            >
-              <span className="relative z-10 flex items-center gap-1.5">
-                Get started
-                <ArrowRight className="h-3.5 w-3.5 transition-transform duration-300 group-hover:scale-110" />
-              </span>
-            </Link>
-          </nav>
+          </div>
 
           {/* Mobile Menu Button */}
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="md:hidden rounded-lg p-2 text-slate-300 transition-colors hover:bg-slate-900/50 hover:text-slate-50"
+            className="rounded-lg p-2 text-zinc-400 hover:bg-white/5 md:hidden"
           >
             {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
           </button>
@@ -99,490 +72,403 @@ export default function Home() {
 
         {/* Mobile Menu */}
         {mobileMenuOpen && (
-          <div className="border-t border-slate-800/50 bg-slate-950/95 backdrop-blur-xl md:hidden">
-            <nav className="flex flex-col gap-1 p-4">
-              <Link 
-                href="#features" 
-                onClick={() => setMobileMenuOpen(false)}
-                className="rounded-lg px-4 py-2.5 text-sm font-medium text-slate-300 transition-colors hover:bg-slate-900/50 hover:text-slate-50"
-              >
-                Features
+          <div className="border-t border-white/[0.06] bg-[#0a0a0b] px-6 py-4 md:hidden">
+            <div className="flex flex-col gap-2">
+              <Link href="#features" className="btn-ghost justify-start">Features</Link>
+              <Link href="#pricing" className="btn-ghost justify-start">Pricing</Link>
+              <Link href="/login" className="btn-ghost justify-start">Sign in</Link>
+              <Link href="/register" className="btn-primary mt-2 justify-center">
+                Get started free
               </Link>
-              <Link 
-                href="#pricing" 
-                onClick={() => setMobileMenuOpen(false)}
-                className="rounded-lg px-4 py-2.5 text-sm font-medium text-slate-300 transition-colors hover:bg-slate-900/50 hover:text-slate-50"
-              >
-                Pricing
-              </Link>
-              <Link 
-                href="/login" 
-                onClick={() => setMobileMenuOpen(false)}
-                className="rounded-lg px-4 py-2.5 text-sm font-medium text-slate-300 transition-colors hover:bg-slate-900/50 hover:text-slate-50"
-              >
-            Login
-          </Link>
-          <Link 
-            href="/register" 
-                onClick={() => setMobileMenuOpen(false)}
-                className="mt-2 rounded-lg bg-primary-500 px-4 py-2.5 text-center text-sm font-semibold text-white transition-colors hover:bg-primary-400"
-              >
-                Get started
-              </Link>
-      </nav>
+            </div>
           </div>
         )}
-      </header>
+      </nav>
 
-      {/* Hero Section with extreme animations */}
-      <section className="relative mx-auto max-w-7xl px-4 pt-32 pb-16 sm:px-6 lg:px-8 lg:pt-40 lg:pb-24">
-        <div className="grid items-center gap-12 lg:grid-cols-[1.2fr,1fr]">
-          {/* Copy with staggered animations */}
-          <div className="space-y-6">
-            <div className={`inline-flex items-center gap-2 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-3 py-1.5 text-[11px] font-medium text-emerald-100 backdrop-blur-sm transition-all duration-1000 ${
-              mounted ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-4'
-            }`}>
-              <Sparkles className="h-3 w-3 animate-pulse" />
-              <span>AI-powered virtual fitting room</span>
+      {/* Hero Section */}
+      <section className="relative pt-32 pb-20 lg:pt-40 lg:pb-32">
+        {/* Background gradient */}
+        <div className="absolute inset-0 bg-gradient-radial pointer-events-none" />
+        
+        <div className="relative mx-auto max-w-6xl px-6">
+          <div className="mx-auto max-w-3xl text-center">
+            {/* Badge */}
+            <div className={`inline-flex items-center gap-2 rounded-full border border-orange-500/20 bg-orange-500/10 px-4 py-1.5 text-sm font-medium text-orange-400 ${mounted ? 'animate-fade-in' : 'opacity-0'}`}>
+              <Sparkles className="h-3.5 w-3.5" />
+              AI-Powered Fashion Technology
             </div>
 
-            <h1 className={`text-balance text-4xl font-semibold tracking-tight sm:text-5xl lg:text-6xl transition-all duration-1000 ${
-              mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
-            }`} style={{ transitionDelay: '200ms' }}>
-              See every outfit
-              <span className="block bg-gradient-to-r from-sky-400 via-cyan-300 to-emerald-300 bg-clip-text text-transparent">
-                {' '}before it ships.
-              </span>
+            {/* Heading */}
+            <h1 className={`mt-8 heading-xl ${mounted ? 'animate-fade-in-delay-1' : 'opacity-0'}`}>
+              See how clothes fit{' '}
+              <span className="gradient-text">before you buy</span>
             </h1>
 
-            <p className={`max-w-xl text-base leading-relaxed text-slate-400 sm:text-lg transition-all duration-1000 ${
-              mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
-            }`} style={{ transitionDelay: '400ms' }}>
-              Upload a model or customer photo, drop in garments, and instantly preview realistic try-ons.
-              Built for fashion teams that care about conversion, returns, and brand experience.
+            {/* Subheading */}
+            <p className={`mt-6 text-lg leading-relaxed text-zinc-400 max-w-2xl mx-auto ${mounted ? 'animate-fade-in-delay-2' : 'opacity-0'}`}>
+              Upload a photo, select any garment, and instantly visualize how it looks on you or your models. 
+              Perfect for fashion brands, e-commerce, and content creators.
             </p>
 
-            <div className={`flex flex-wrap items-center gap-3 transition-all duration-1000 ${
-              mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
-            }`} style={{ transitionDelay: '600ms' }}>
-              <Link 
-                href="/register"
-                className="group relative inline-flex items-center gap-2 rounded-lg bg-gradient-to-r from-primary-500 to-primary-600 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-primary-500/30 transition-all duration-500 hover:scale-105 hover:shadow-xl hover:shadow-primary-500/40"
-              >
-                <span>Start a demo workspace</span>
-                <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:scale-110" />
+            {/* CTA Buttons */}
+            <div className={`mt-10 flex flex-col sm:flex-row items-center justify-center gap-4 ${mounted ? 'animate-fade-in-delay-3' : 'opacity-0'}`}>
+              <Link href="/register" className="btn-primary px-8 py-3.5 text-base">
+                Start free trial
+                <ArrowRight className="h-5 w-5" />
               </Link>
-              <Link 
-                href="#pricing"
-                className="group inline-flex items-center gap-2 rounded-lg border border-slate-700 bg-slate-900/70 px-6 py-3 text-sm font-semibold text-slate-100 backdrop-blur-sm transition-all duration-300 hover:border-primary-500/50 hover:bg-slate-800 hover:scale-105"
-              >
-                View pricing
-              </Link>
+              <button onClick={handleDemoClick} className="btn-secondary px-8 py-3.5 text-base">
+                <Play className="h-4 w-4" />
+                Try live demo
+              </button>
             </div>
 
-            <div className={`flex flex-wrap items-center gap-6 text-xs text-slate-400 transition-all duration-1000 ${
-              mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
-            }`} style={{ transitionDelay: '800ms' }}>
-              <div className="group flex items-center gap-2 transition-all duration-300 hover:text-slate-300">
-                <Shield className="h-3.5 w-3.5 text-emerald-400 transition-transform duration-300 group-hover:scale-110" />
-                <span>No credit card, no backend required</span>
+            {/* Trust indicators */}
+            <div className={`mt-12 flex flex-wrap items-center justify-center gap-x-8 gap-y-4 text-sm text-zinc-500 ${mounted ? 'animate-fade-in-delay-3' : 'opacity-0'}`}>
+              <div className="flex items-center gap-2">
+                <CheckCircle2 className="h-4 w-4 text-emerald-500" />
+                No credit card required
               </div>
-              <div className="group flex items-center gap-2 transition-all duration-300 hover:text-slate-300">
-                <Zap className="h-3.5 w-3.5 text-sky-400 transition-transform duration-300 group-hover:scale-110" />
-                <span>Optimized for product, growth, and design teams</span>
+              <div className="flex items-center gap-2">
+                <CheckCircle2 className="h-4 w-4 text-emerald-500" />
+                5 free credits included
               </div>
-            </div>
-          </div>
-
-          {/* Visual / mock preview with animations */}
-          <div className={`relative transition-all duration-1000 ${
-            mounted ? 'opacity-100 translate-x-0 scale-100' : 'opacity-0 translate-x-8 scale-95'
-          }`} style={{ transitionDelay: '400ms' }}>
-            {/* Animated glow effect */}
-            <div className="absolute -inset-6 -z-10 rounded-3xl bg-gradient-to-tr from-sky-500/20 via-cyan-400/10 to-emerald-400/20 blur-2xl animate-pulse-slow" />
-            {/* Rotating gradient ring */}
-            <div className="absolute -inset-6 -z-10 rounded-3xl bg-gradient-to-r from-primary-500 via-sky-400 to-emerald-400 opacity-20 blur-2xl animate-spin-slow" />
-            
-            <div className="group relative rounded-3xl border border-slate-800 bg-slate-900/80 shadow-2xl shadow-slate-900/60 backdrop-blur-sm transition-all duration-500 hover:scale-[1.02] hover:border-primary-500/30">
-              
-              <div className="border-b border-slate-800/70 bg-slate-900/80 px-4 py-3 text-xs text-slate-400">
-                <span className="inline-flex h-2.5 w-2.5 rounded-full bg-emerald-400/80 animate-pulse" />{' '}
-                Live preview &mdash; customer view
-              </div>
-              <div className="grid gap-4 p-4 sm:grid-cols-2 sm:p-6">
-                <div className="space-y-2">
-                  <p className="text-xs font-medium text-slate-300">Source photo</p>
-                  <div className="group/image h-40 rounded-2xl bg-gradient-to-br from-slate-800 to-slate-900 sm:h-48 transition-all duration-500 hover:scale-105 hover:shadow-lg" />
-                  <p className="text-[11px] text-slate-500">
-                    Upload a clean, front-facing portrait or model shot.
-                  </p>
-                </div>
-                <div className="space-y-2">
-                  <p className="text-xs font-medium text-slate-300">AI try-on result</p>
-                  <div className="group/image h-40 rounded-2xl bg-gradient-to-tr from-sky-500/40 via-cyan-400/30 to-emerald-400/40 sm:h-48 transition-all duration-500 hover:scale-105 hover:shadow-lg" />
-                  <p className="text-[11px] text-slate-500">
-                    Preview the garment on-body, adjust, then ship with confidence.
-                  </p>
-                </div>
+              <div className="flex items-center gap-2">
+                <CheckCircle2 className="h-4 w-4 text-emerald-500" />
+                Cancel anytime
               </div>
             </div>
           </div>
-        </div>
-      </section>
 
-      {/* Trust Badges Section */}
-      <section className="relative border-b border-slate-800/80 bg-gradient-to-r from-slate-900/50 to-slate-950/50 py-12 backdrop-blur-sm">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className={`text-center mb-8 transition-all duration-1000 ${
-            mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
-          }`} style={{ transitionDelay: '300ms' }}>
-            <p className="text-xs font-bold uppercase tracking-wider text-slate-400">Trusted by leading fashion brands</p>
-          </div>
-          <div className={`grid grid-cols-2 gap-4 md:grid-cols-4 lg:grid-cols-5 transition-all duration-1000 ${
-            mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
-          }`} style={{ transitionDelay: '400ms' }}>
-            {[
-              { icon: Award, label: 'Enterprise Grade' },
-              { icon: Shield, label: '99.9% Uptime' },
-              { icon: Zap, label: 'Lightning Fast' },
-              { icon: Lock, label: 'Secure & Private' },
-              { icon: Users, label: '10k+ Users' }
-            ].map((badge, idx) => {
-              const Icon = badge.icon;
-              return (
-                <div key={idx} className="group flex flex-col items-center rounded-lg border border-slate-800/50 bg-slate-900/30 p-3 text-center transition-all duration-300 hover:border-primary-500/50 hover:bg-slate-900/50">
-                  <Icon className="h-5 w-5 text-primary-400 transition-transform duration-300 group-hover:scale-110" />
-                  <p className="mt-2 text-xs font-semibold text-slate-300">{badge.label}</p>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      </section>
-
-      {/* How It Works with animations */}
-      <section className="relative border-b border-slate-800/80 bg-slate-900/30 py-16 backdrop-blur-sm">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className={`text-center transition-all duration-1000 ${
-            mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
-          }`} style={{ transitionDelay: '200ms' }}>
-            <h2 className="text-3xl font-semibold tracking-tight sm:text-4xl">How it works</h2>
-            <p className="mt-4 text-slate-400">Three simple steps to transform your fashion workflow</p>
-          </div>
-          <div className="mt-12 grid gap-8 md:grid-cols-3">
-            {[
-              { icon: Upload, bgClass: 'bg-primary-500/10', iconClass: 'text-primary-400', hoverGlow: 'bg-primary-500/10', ringColor: 'from-primary-500', title: '1. Upload', desc: 'Upload your model photos and garment images. Our AI handles the rest.' },
-              { icon: ImageIcon, bgClass: 'bg-sky-500/10', iconClass: 'text-sky-400', hoverGlow: 'bg-sky-500/10', ringColor: 'from-sky-500', title: '2. Generate', desc: 'AI processes your images and creates realistic try-on previews in seconds.' },
-              { icon: CheckCircle2, bgClass: 'bg-emerald-500/10', iconClass: 'text-emerald-400', hoverGlow: 'bg-emerald-500/10', ringColor: 'from-emerald-500', title: '3. Deploy', desc: 'Export and use your try-on images across your store, campaigns, and channels.' }
-            ].map((step, index) => {
-              const Icon = step.icon;
-              return (
-                <div 
-                  key={index}
-                  className={`group relative text-center transition-all duration-1000 ${
-                    mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
-                  }`}
-                  style={{ transitionDelay: `${400 + index * 150}ms` }}
-                >
-                  {/* Hover glow effect */}
-                  <div className={`absolute inset-0 rounded-2xl ${step.hoverGlow} opacity-0 blur-xl transition-opacity duration-500 group-hover:opacity-50`} />
-                  
-                  <div className={`relative mx-auto flex h-16 w-16 items-center justify-center rounded-2xl ${step.bgClass} backdrop-blur-sm transition-all duration-500 group-hover:scale-110 group-hover:rotate-6`}>
-                    {/* Rotating ring */}
-                    <div className={`absolute inset-0 rounded-2xl bg-gradient-to-r ${step.ringColor} via-transparent ${step.ringColor} opacity-0 blur-sm transition-opacity duration-500 group-hover:opacity-30 group-hover:animate-spin-slow`} />
-                    <Icon className={`relative z-10 h-8 w-8 ${step.iconClass} transition-transform duration-500 group-hover:scale-110`} />
+          {/* Hero Visual */}
+          <div className={`mt-20 ${mounted ? 'animate-fade-in-delay-3' : 'opacity-0'}`}>
+            <div className="relative mx-auto max-w-4xl">
+              <div className="absolute -inset-4 rounded-3xl bg-gradient-to-r from-orange-500/20 via-orange-500/5 to-orange-500/20 blur-2xl" />
+              <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-[#111113]">
+                {/* Window header */}
+                <div className="flex items-center gap-2 border-b border-white/[0.06] px-4 py-3">
+                  <div className="flex gap-1.5">
+                    <div className="h-3 w-3 rounded-full bg-white/10" />
+                    <div className="h-3 w-3 rounded-full bg-white/10" />
+                    <div className="h-3 w-3 rounded-full bg-white/10" />
                   </div>
-                  <h3 className="mt-4 text-lg font-semibold transition-colors duration-300 group-hover:text-primary-300">{step.title}</h3>
-                  <p className="mt-2 text-sm text-slate-400 transition-colors duration-300 group-hover:text-slate-300">
-                    {step.desc}
-                  </p>
+                  <div className="flex-1 text-center">
+                    <span className="text-xs text-zinc-500">Virtual Try-On Studio</span>
+              </div>
                 </div>
-              );
-            })}
-          </div>
-        </div>
-      </section>
-
-      {/* Features Section with animations */}
-      <section id="features" className="relative py-16">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className={`text-center transition-all duration-1000 ${
-            mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
-          }`} style={{ transitionDelay: '200ms' }}>
-            <h2 className="text-3xl font-semibold tracking-tight sm:text-4xl">Everything you need</h2>
-            <p className="mt-4 text-slate-400">Built for modern fashion teams</p>
-          </div>
-          <div className="mt-12 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-            {[
-              { icon: Zap, bgClass: 'bg-primary-500/10', iconClass: 'text-primary-400', hoverBorder: 'hover:border-primary-500/50', hoverShadow: 'hover:shadow-primary-500/10', hoverGlow: 'bg-primary-500/20', title: 'Lightning fast', desc: 'Generate try-on previews in seconds, not hours. No waiting, no delays.' },
-              { icon: TrendingUp, bgClass: 'bg-sky-500/10', iconClass: 'text-sky-400', hoverBorder: 'hover:border-sky-500/50', hoverShadow: 'hover:shadow-sky-500/10', hoverGlow: 'bg-sky-500/20', title: 'Increase conversion', desc: 'Show customers exactly how products look before they buy. Reduce returns.' },
-              { icon: Clock, bgClass: 'bg-emerald-500/10', iconClass: 'text-emerald-400', hoverBorder: 'hover:border-emerald-500/50', hoverShadow: 'hover:shadow-emerald-500/10', hoverGlow: 'bg-emerald-500/20', title: 'Save time & money', desc: 'Skip expensive photo shoots. Create unlimited variations instantly.' },
-              { icon: Users, bgClass: 'bg-purple-500/10', iconClass: 'text-purple-400', hoverBorder: 'hover:border-purple-500/50', hoverShadow: 'hover:shadow-purple-500/10', hoverGlow: 'bg-purple-500/20', title: 'Team collaboration', desc: 'Share galleries, collaborate on styling, and iterate together in real-time.' },
-              { icon: Globe, bgClass: 'bg-amber-500/10', iconClass: 'text-amber-400', hoverBorder: 'hover:border-amber-500/50', hoverShadow: 'hover:shadow-amber-500/10', hoverGlow: 'bg-amber-500/20', title: 'API ready', desc: 'Integrate with your existing stack. Built for scale and reliability.' },
-              { icon: Lock, bgClass: 'bg-red-500/10', iconClass: 'text-red-400', hoverBorder: 'hover:border-red-500/50', hoverShadow: 'hover:shadow-red-500/10', hoverGlow: 'bg-red-500/20', title: 'Secure & private', desc: 'Your images are encrypted and never shared. Enterprise-grade security.' }
-            ].map((feature, index) => {
-              const Icon = feature.icon;
-              return (
-                <div 
-                  key={index}
-                  className={`group relative overflow-hidden rounded-2xl border border-slate-800 bg-slate-900/70 p-6 backdrop-blur-sm transition-all duration-500 hover:scale-105 ${feature.hoverBorder} hover:bg-slate-900/90 hover:shadow-xl ${feature.hoverShadow} ${
-                    mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
-                  }`}
-                  style={{ transitionDelay: `${300 + index * 100}ms` }}
-                >
-                  {/* Glow effect */}
-                  <div className={`absolute -inset-1 rounded-2xl ${feature.hoverGlow} opacity-0 blur-xl transition-opacity duration-500 group-hover:opacity-50`} />
-                  
-                  <div className={`relative flex h-10 w-10 items-center justify-center rounded-lg ${feature.bgClass} transition-all duration-500 group-hover:scale-110 group-hover:rotate-6`}>
-                    <Icon className={`h-5 w-5 ${feature.iconClass} transition-transform duration-500 group-hover:scale-110`} />
-                  </div>
-                  <h3 className="relative z-10 mt-4 text-lg font-semibold transition-colors duration-300 group-hover:text-primary-300">{feature.title}</h3>
-                  <p className="relative z-10 mt-2 text-sm text-slate-400 transition-colors duration-300 group-hover:text-slate-300">
-                    {feature.desc}
-                  </p>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      </section>
-
-      {/* Benefits Section with animations */}
-      <section className="relative border-y border-slate-800/80 bg-slate-900/30 py-16 backdrop-blur-sm">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="grid gap-12 lg:grid-cols-2 lg:items-center">
-            <div className={`transition-all duration-1000 ${
-              mounted ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-8'
-            }`} style={{ transitionDelay: '200ms' }}>
-              <h2 className="text-3xl font-semibold tracking-tight sm:text-4xl">
-                Built for fashion teams that ship fast
-              </h2>
-              <p className="mt-4 text-lg text-slate-400">
-                Whether you're a startup launching your first collection or an established brand optimizing conversion, Virtual Try-On fits your workflow.
-              </p>
-              <div className="mt-8 space-y-4">
-                {[
-                  { title: 'Reduce return rates', desc: 'Customers see exactly how products fit before purchasing, leading to fewer returns and happier customers.' },
-                  { title: 'Scale your content', desc: 'Generate unlimited product images without booking models or photographers. Scale your catalog instantly.' },
-                  { title: 'Improve conversion', desc: 'Visual try-ons increase engagement and conversion rates. Show, don\'t just tell.' }
-                ].map((benefit, index) => (
-                  <div 
-                    key={index}
-                    className={`group flex items-start gap-3 transition-all duration-700 ${
-                      mounted ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4'
-                    }`}
-                    style={{ transitionDelay: `${400 + index * 150}ms` }}
-                  >
-                    <CheckCircle2 className="h-5 w-5 shrink-0 text-emerald-400 transition-transform duration-300 group-hover:scale-110 group-hover:rotate-12" />
-                    <div>
-                      <h4 className="font-semibold transition-colors duration-300 group-hover:text-primary-300">{benefit.title}</h4>
-                      <p className="mt-1 text-sm text-slate-400 transition-colors duration-300 group-hover:text-slate-300">
-                        {benefit.desc}
-                      </p>
+                
+                {/* Preview content */}
+                <div className="grid gap-6 p-6 md:grid-cols-2 md:p-8">
+                  <div className="space-y-3">
+                    <p className="text-xs font-medium text-zinc-400">Source Photo</p>
+                    <div className="aspect-[3/4] rounded-xl bg-gradient-to-br from-zinc-800 to-zinc-900 flex items-center justify-center">
+                      <div className="text-center">
+                        <Upload className="h-8 w-8 text-zinc-600 mx-auto" />
+                        <p className="mt-2 text-sm text-zinc-600">Upload image</p>
+                      </div>
                     </div>
                   </div>
-                ))}
+                  <div className="space-y-3">
+                    <p className="text-xs font-medium text-zinc-400">AI Result</p>
+                    <div className="aspect-[3/4] rounded-xl bg-gradient-to-br from-orange-500/20 via-orange-500/10 to-amber-500/20 flex items-center justify-center">
+                      <div className="text-center">
+                        <Sparkles className="h-8 w-8 text-orange-400 mx-auto" />
+                        <p className="mt-2 text-sm text-orange-400/80">AI generated preview</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
-            <div className="grid gap-4 sm:grid-cols-2">
-              {[
-                { value: '40%', color: 'text-primary-400', label: 'Average reduction in return rates' },
-                { value: '3x', color: 'text-sky-400', label: 'Faster content creation vs traditional shoots' },
-                { value: '25%', color: 'text-emerald-400', label: 'Increase in conversion rates' },
-                { value: '10k+', color: 'text-purple-400', label: 'Try-ons generated monthly by our users' }
-              ].map((stat, index) => (
-                <div 
-                  key={index}
-                  className={`group relative overflow-hidden rounded-2xl border border-slate-800 bg-slate-900/70 p-6 backdrop-blur-sm transition-all duration-500 hover:scale-105 hover:border-primary-500/50 hover:shadow-lg ${
-                    mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
-                  }`}
-                  style={{ transitionDelay: `${600 + index * 100}ms` }}
-                >
-                  <div className={`text-3xl font-bold ${stat.color} transition-transform duration-300 group-hover:scale-110`}>{stat.value}</div>
-                  <p className="mt-2 text-sm text-slate-400 transition-colors duration-300 group-hover:text-slate-300">{stat.label}</p>
-                </div>
-              ))}
-            </div>
           </div>
         </div>
       </section>
 
-      {/* Pricing Preview with animations */}
-      <section id="pricing" className="relative py-16">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className={`text-center transition-all duration-1000 ${
-            mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
-          }`} style={{ transitionDelay: '200ms' }}>
-            <h2 className="text-3xl font-semibold tracking-tight sm:text-4xl">Simple, transparent pricing</h2>
-            <p className="mt-4 text-slate-400">Start free, scale as you grow</p>
+      {/* Logos Section */}
+      <section className="border-y border-white/[0.06] py-12">
+        <div className="mx-auto max-w-6xl px-6">
+          <p className="text-center text-sm font-medium text-zinc-500 mb-8">
+            Trusted by innovative fashion brands worldwide
+          </p>
+          <div className="flex flex-wrap items-center justify-center gap-x-12 gap-y-6">
+            {['ENTERPRISE', 'FASHION CO', 'STYLE+', 'TRENDY', 'MODEX'].map((brand) => (
+              <span key={brand} className="text-lg font-bold tracking-wide text-zinc-700">{brand}</span>
+            ))}
           </div>
-          <div className="mt-12 flex justify-center">
-            <div className="grid gap-6 md:grid-cols-3">
-              {[
-                { name: 'Free', price: '$0', period: '', badge: '', features: ['5 free credits', 'Basic try-on features'], popular: false },
-                { name: 'Basic', price: '$9.99', period: '/month', badge: 'Most popular', features: ['50 credits/month', 'Priority processing', 'Email support'], popular: true },
-                { name: 'Premium', price: '$29.99', period: '/month', badge: '', features: ['200 credits/month', 'Highest quality results', 'Priority support', 'Advanced features'], popular: false }
-              ].map((plan, index) => (
-                <div 
-                  key={index}
-                  className={`group relative overflow-hidden rounded-2xl border-2 ${plan.popular ? 'border-primary-500 bg-slate-900/90' : 'border-slate-800 bg-slate-900/70'} p-8 backdrop-blur-sm transition-all duration-500 hover:scale-105 hover:shadow-2xl ${
-                    mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
-                  }`}
-                  style={{ transitionDelay: `${400 + index * 150}ms` }}
-                >
-                  {/* Glow effect for popular */}
-                  {plan.popular && (
-                    <div className="absolute -inset-1 rounded-2xl bg-primary-500/20 blur-xl animate-pulse-slow" />
-                  )}
-                  
-                  {plan.badge && (
-                    <div className="mb-4 inline-block rounded-full bg-primary-500/10 px-3 py-1 text-xs font-medium text-primary-300 backdrop-blur-sm">
-                      {plan.badge}
-                    </div>
-                  )}
-                  <h3 className="text-xl font-semibold transition-colors duration-300 group-hover:text-primary-300">{plan.name}</h3>
-                  <div className="mt-4">
-                    <span className="text-4xl font-bold transition-transform duration-300 group-hover:scale-110">{plan.price}</span>
-                    {plan.period && <span className="text-slate-400">{plan.period}</span>}
-                  </div>
-                  <ul className="mt-6 space-y-3 text-sm">
-                    {plan.features.map((feature, fIndex) => (
-                      <li key={fIndex} className="flex items-center gap-2 transition-transform duration-300 group-hover:translate-x-1">
-                        <CheckCircle2 className="h-4 w-4 text-emerald-400 transition-transform duration-300 group-hover:scale-110" />
-                        <span className="transition-colors duration-300 group-hover:text-slate-200">{feature}</span>
-                      </li>
-                    ))}
-                  </ul>
-                  <Link
-                    href="/register"
-                    className={`group/btn mt-6 block w-full overflow-hidden rounded-lg px-4 py-2.5 text-center text-sm font-semibold transition-all duration-500 ${
-                      plan.popular 
-                        ? 'bg-gradient-to-r from-primary-500 to-primary-600 text-white shadow-lg shadow-primary-500/30 hover:scale-105 hover:shadow-xl hover:shadow-primary-500/40'
-                        : 'border border-slate-700 bg-slate-800/50 text-slate-200 hover:border-primary-500/50 hover:bg-slate-800'
-                    }`}
-                  >
-                    <span>{plan.popular ? 'Subscribe' : 'Get started'}</span>
-                  </Link>
-                </div>
-              ))}
-            </div>
-          </div>
-          <div className={`mt-8 text-center transition-all duration-1000 ${
-            mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
-          }`} style={{ transitionDelay: '1000ms' }}>
-            <Link href="/pricing" className="group inline-flex items-center gap-1 text-sm text-primary-400 transition-all duration-300 hover:text-primary-300 hover:gap-2">
-              View detailed pricing
-              <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
-          </Link>
-        </div>
         </div>
       </section>
 
-      {/* FAQ Section with animations */}
-      <section className="relative border-y border-slate-800/80 bg-slate-900/30 py-16 backdrop-blur-sm">
-        <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
-          <div className={`text-center transition-all duration-1000 ${
-            mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
-          }`} style={{ transitionDelay: '200ms' }}>
-            <h2 className="text-3xl font-semibold tracking-tight sm:text-4xl">Frequently asked questions</h2>
+      {/* How It Works */}
+      <section className="py-24">
+        <div className="mx-auto max-w-6xl px-6">
+          <div className="text-center">
+            <span className="text-sm font-semibold text-orange-400">HOW IT WORKS</span>
+            <h2 className="mt-4 heading-lg">Three simple steps to perfect fit</h2>
+            <p className="mt-4 text-zinc-400 max-w-xl mx-auto">
+              Our AI-powered platform makes virtual try-on effortless. No technical skills required.
+            </p>
           </div>
-          <div className="mt-12 space-y-6">
+
+          <div className="mt-16 grid gap-8 md:grid-cols-3">
             {[
-              { q: 'How accurate are the try-on results?', a: 'Our AI uses advanced computer vision models trained on millions of fashion images to produce highly realistic results. While results may vary based on image quality, most users report 90%+ satisfaction with the output.' },
-              { q: 'Can I use the generated images commercially?', a: 'Yes! All images generated through Virtual Try-On can be used for commercial purposes including product pages, marketing campaigns, and social media.' },
-              { q: 'What image formats do you support?', a: 'We support all common image formats including JPG, PNG, and WEBP. Images up to 10MB are supported for optimal processing.' },
-              { q: 'Is there an API available?', a: 'Yes! We offer a RESTful API for enterprise customers. Contact us to learn more about API access and custom integrations.' }
-            ].map((faq, index) => (
-              <div 
-                key={index}
-                className={`group relative overflow-hidden rounded-2xl border border-slate-800 bg-slate-900/70 p-6 backdrop-blur-sm transition-all duration-500 hover:scale-[1.02] hover:border-primary-500/50 hover:shadow-lg ${
-                  mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
-                }`}
-                style={{ transitionDelay: `${400 + index * 150}ms` }}
-              >
-                <h3 className="flex items-center gap-2 font-semibold transition-colors duration-300 group-hover:text-primary-300">
-                  <HelpCircle className="h-5 w-5 text-primary-400 transition-transform duration-300 group-hover:scale-110 group-hover:rotate-12" />
-                  {faq.q}
-                </h3>
-                <p className="mt-2 text-sm text-slate-400 transition-colors duration-300 group-hover:text-slate-300">
-                  {faq.a}
-                </p>
+              {
+                step: '01',
+                icon: Upload,
+                title: 'Upload your photo',
+                description: 'Upload a clear, front-facing photo of yourself or your model. Our AI handles any background.'
+              },
+              {
+                step: '02',
+                icon: ImageIcon,
+                title: 'Select a garment',
+                description: 'Choose from your catalog or upload any garment image. We support all clothing types.'
+              },
+              {
+                step: '03',
+                icon: Sparkles,
+                title: 'Get instant results',
+                description: 'Our AI generates a realistic preview in seconds. Download and share anywhere.'
+              }
+            ].map((item, idx) => (
+              <div key={idx} className="card-interactive group">
+                <div className="flex items-start justify-between">
+                  <div className="icon-container h-12 w-12">
+                    <item.icon className="h-6 w-6 text-orange-400" />
+                  </div>
+                  <span className="text-4xl font-bold text-zinc-800">{item.step}</span>
+                </div>
+                <h3 className="mt-6 heading-md">{item.title}</h3>
+                <p className="mt-3 text-sm text-zinc-400 leading-relaxed">{item.description}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* CTA Section with animations */}
-      <section className="relative py-16">
-        <div className="mx-auto max-w-4xl px-4 text-center sm:px-6 lg:px-8">
-          <h2 className={`text-3xl font-semibold tracking-tight sm:text-4xl transition-all duration-1000 ${
-            mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
-          }`} style={{ transitionDelay: '200ms' }}>
-            Ready to transform your fashion workflow?
-          </h2>
-          <p className={`mt-4 text-lg text-slate-400 transition-all duration-1000 ${
-            mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
-          }`} style={{ transitionDelay: '400ms' }}>
-            Join hundreds of fashion brands using AI to create better customer experiences.
-          </p>
-          <div className={`mt-8 flex flex-wrap justify-center gap-3 transition-all duration-1000 ${
-            mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
-          }`} style={{ transitionDelay: '600ms' }}>
-            <Link 
-              href="/register"
-              className="group relative inline-flex items-center gap-2 rounded-lg bg-gradient-to-r from-primary-500 to-primary-600 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-primary-500/30 transition-all duration-500 hover:scale-105 hover:shadow-xl hover:shadow-primary-500/40"
-            >
-              <span>Start free trial</span>
-              <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:scale-110" />
-            </Link>
-            <Link 
-              href="/pricing"
-              className="group inline-flex items-center gap-2 rounded-lg border border-slate-700 bg-slate-900/70 px-6 py-3 text-sm font-semibold text-slate-100 backdrop-blur-sm transition-all duration-300 hover:border-primary-500/50 hover:bg-slate-800 hover:scale-105"
-            >
-              View pricing
-            </Link>
+      {/* Features Section */}
+      <section id="features" className="py-24 bg-gradient-subtle">
+        <div className="mx-auto max-w-6xl px-6">
+          <div className="grid gap-16 lg:grid-cols-2 lg:items-center">
+            <div>
+              <span className="text-sm font-semibold text-orange-400">FEATURES</span>
+              <h2 className="mt-4 heading-lg">Everything you need to<br />scale your fashion business</h2>
+              <p className="mt-4 text-zinc-400">
+                Built for teams that care about conversion rates, customer experience, and reducing returns.
+              </p>
+
+              <div className="mt-10 space-y-6">
+                {[
+                  {
+                    icon: Zap,
+                    title: 'Lightning fast processing',
+                    description: 'Get results in under 10 seconds. No waiting around.'
+                  },
+                  {
+                    icon: TrendingUp,
+                    title: 'Boost conversion rates',
+                    description: 'Customers who use try-on convert 40% higher on average.'
+                  },
+                  {
+                    icon: Shield,
+                    title: 'Enterprise-grade security',
+                    description: 'SOC 2 compliant. Your data is encrypted at rest and in transit.'
+                  },
+                  {
+                    icon: Globe,
+                    title: 'API access included',
+                    description: 'Integrate directly into your app or website with our REST API.'
+                  }
+                ].map((feature, idx) => (
+                  <div key={idx} className="flex gap-4 group">
+                    <div className="icon-container-neutral h-10 w-10 shrink-0 group-hover:bg-orange-500/10 transition-colors">
+                      <feature.icon className="h-5 w-5 text-zinc-400 group-hover:text-orange-400 transition-colors" />
+                    </div>
+                    <div>
+                      <h3 className="font-semibold text-white">{feature.title}</h3>
+                      <p className="mt-1 text-sm text-zinc-400">{feature.description}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Stats */}
+            <div className="grid gap-4 sm:grid-cols-2">
+              {[
+                { value: '40%', label: 'Increase in conversion' },
+                { value: '3x', label: 'Faster content creation' },
+                { value: '60%', label: 'Reduction in returns' },
+                { value: '10K+', label: 'Happy customers' }
+              ].map((stat, idx) => (
+                <div key={idx} className="card text-center py-8">
+                  <div className="text-4xl font-bold gradient-text">{stat.value}</div>
+                  <p className="mt-2 text-sm text-zinc-400">{stat.label}</p>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </section>
 
-      {/* Footer with animations */}
-      <footer className="relative border-t border-slate-800/80 bg-slate-950 py-12 backdrop-blur-sm">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="grid gap-8 md:grid-cols-4">
-            <div className={`transition-all duration-1000 ${
-              mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
-            }`} style={{ transitionDelay: '200ms' }}>
-              <div className="group flex items-center gap-2">
-                <div className="relative">
-                  <div className="absolute inset-0 rounded-xl bg-primary-500/30 blur-xl opacity-0 transition-opacity duration-500 group-hover:opacity-50" />
-                  <span className="relative h-8 w-8 rounded-xl bg-primary-500/90 shadow-lg shadow-primary-500/40 transition-transform duration-500 group-hover:scale-110 group-hover:rotate-12" />
+      {/* Pricing Section */}
+      <section id="pricing" className="py-24">
+        <div className="mx-auto max-w-6xl px-6">
+          <div className="text-center">
+            <span className="text-sm font-semibold text-orange-400">PRICING</span>
+            <h2 className="mt-4 heading-lg">Simple, transparent pricing</h2>
+            <p className="mt-4 text-zinc-400">Start free, upgrade when you need more.</p>
+          </div>
+
+          <div className="mt-16 grid gap-6 lg:grid-cols-3">
+            {[
+              {
+                name: 'Free',
+                price: '$0',
+                period: '',
+                description: 'Perfect for trying out the platform',
+                features: ['5 try-on credits', 'Basic quality', 'Email support'],
+                cta: 'Get started',
+                highlight: false
+              },
+              {
+                name: 'Pro',
+                price: '$19',
+                period: '/month',
+                description: 'For growing businesses',
+                features: ['100 credits/month', 'HD quality output', 'Priority support', 'API access', 'Team collaboration'],
+                cta: 'Start free trial',
+                highlight: true
+              },
+              {
+                name: 'Enterprise',
+                price: 'Custom',
+                period: '',
+                description: 'For large organizations',
+                features: ['Unlimited credits', '4K quality output', 'Dedicated support', 'Custom API limits', 'SSO & security'],
+                cta: 'Contact sales',
+                highlight: false
+              }
+            ].map((plan, idx) => (
+              <div 
+                key={idx} 
+                className={`relative rounded-2xl p-8 ${
+                  plan.highlight 
+                    ? 'bg-gradient-to-b from-orange-500/10 to-transparent border-2 border-orange-500/30' 
+                    : 'card'
+                }`}
+              >
+                {plan.highlight && (
+                  <div className="absolute -top-3 left-1/2 -translate-x-1/2">
+                    <span className="badge-accent">Most popular</span>
+                  </div>
+                )}
+                
+                <h3 className="text-lg font-semibold">{plan.name}</h3>
+                <p className="mt-1 text-sm text-zinc-400">{plan.description}</p>
+                
+                <div className="mt-6">
+                  <span className="text-4xl font-bold">{plan.price}</span>
+                  {plan.period && <span className="text-zinc-400">{plan.period}</span>}
                 </div>
-                <span className="text-sm font-semibold tracking-tight text-slate-100 transition-colors duration-300 group-hover:text-primary-300">
-                  Virtual Try-On
-                </span>
+
+                <ul className="mt-8 space-y-3">
+                  {plan.features.map((feature, fIdx) => (
+                    <li key={fIdx} className="flex items-center gap-3 text-sm">
+                      <CheckCircle2 className="h-4 w-4 text-emerald-500 shrink-0" />
+                      <span className="text-zinc-300">{feature}</span>
+                      </li>
+                    ))}
+                  </ul>
+
+                  <Link
+                    href="/register"
+                  className={`mt-8 block w-full text-center py-3 rounded-xl font-semibold transition-all ${
+                    plan.highlight 
+                      ? 'btn-primary justify-center' 
+                      : 'btn-secondary'
+                  }`}
+                >
+                  {plan.cta}
+          </Link>
               </div>
-              <p className="mt-4 text-xs text-slate-400">
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* CTA Section */}
+      <section className="py-24">
+        <div className="mx-auto max-w-6xl px-6">
+          <div className="card-highlight relative overflow-hidden rounded-3xl p-12 md:p-16 text-center">
+            <div className="absolute inset-0 bg-grid opacity-30" />
+            <div className="relative">
+              <h2 className="heading-lg">Ready to transform your<br />fashion workflow?</h2>
+              <p className="mt-4 text-zinc-400 max-w-xl mx-auto">
+                Join thousands of fashion brands using AI to create better customer experiences.
+              </p>
+              <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4">
+                <Link href="/register" className="btn-primary px-8 py-3.5 text-base">
+                  Start free trial
+                  <ArrowRight className="h-5 w-5" />
+            </Link>
+                <Link href="#pricing" className="btn-secondary px-8 py-3.5 text-base">
+              View pricing
+            </Link>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Footer */}
+      <footer className="border-t border-white/[0.06] py-16">
+        <div className="mx-auto max-w-6xl px-6">
+          <div className="grid gap-12 md:grid-cols-4">
+            <div>
+              <Link href="/" className="flex items-center gap-2.5">
+                <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-orange-500 to-orange-600">
+                  <Sparkles className="h-5 w-5 text-white" />
+                </div>
+                <span className="text-[15px] font-bold text-white">Virtual Try-On</span>
+              </Link>
+              <p className="mt-4 text-sm text-zinc-500 leading-relaxed">
                 AI-powered virtual fitting room for modern fashion teams.
               </p>
             </div>
+
             {[
-              { title: 'Product', links: [{ href: '#features', label: 'Features' }, { href: '#pricing', label: 'Pricing' }, { href: '/dashboard', label: 'Dashboard' }] },
-              { title: 'Company', links: [{ href: '#', label: 'About' }, { href: '#', label: 'Blog' }, { href: '#', label: 'Careers' }] },
-              { title: 'Support', links: [{ href: '#', label: 'Documentation' }, { href: '#', label: 'Contact' }, { href: '/login', label: 'Login' }] }
-            ].map((section, index) => (
-              <div 
-                key={index}
-                className={`transition-all duration-1000 ${
-                  mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
-                }`}
-                style={{ transitionDelay: `${400 + index * 150}ms` }}
-              >
-                <h4 className="text-sm font-semibold">{section.title}</h4>
-                <ul className="mt-4 space-y-2 text-xs text-slate-400">
-                  {section.links.map((link, lIndex) => (
-                    <li key={lIndex}>
-                      <Link href={link.href} className="group/link inline-block transition-all duration-300 hover:text-slate-200 hover:translate-x-1">
+              {
+                title: 'Product',
+                links: [
+                  { label: 'Features', href: '#features' },
+                  { label: 'Pricing', href: '#pricing' },
+                  { label: 'API', href: '#' },
+                  { label: 'Integrations', href: '#' }
+                ]
+              },
+              {
+                title: 'Company',
+                links: [
+                  { label: 'About', href: '#' },
+                  { label: 'Blog', href: '#' },
+                  { label: 'Careers', href: '#' },
+                  { label: 'Contact', href: '#' }
+                ]
+              },
+              {
+                title: 'Legal',
+                links: [
+                  { label: 'Privacy', href: '#' },
+                  { label: 'Terms', href: '#' },
+                  { label: 'Security', href: '#' }
+                ]
+              }
+            ].map((section, idx) => (
+              <div key={idx}>
+                <h4 className="font-semibold text-white">{section.title}</h4>
+                <ul className="mt-4 space-y-3">
+                  {section.links.map((link, lIdx) => (
+                    <li key={lIdx}>
+                      <Link href={link.href} className="text-sm text-zinc-500 hover:text-white transition-colors">
                         {link.label}
                       </Link>
                     </li>
@@ -591,14 +477,22 @@ export default function Home() {
           </div>
             ))}
           </div>
-          <div className={`mt-8 border-t border-slate-800 pt-8 text-center text-xs text-slate-500 transition-all duration-1000 ${
-            mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
-          }`} style={{ transitionDelay: '1000ms' }}>
-            <p>© 2024 Virtual Try-On. All rights reserved.</p>
+
+          <div className="mt-16 flex flex-col md:flex-row items-center justify-between gap-4 pt-8 border-t border-white/[0.06]">
+            <p className="text-sm text-zinc-500">© 2024 Virtual Try-On. All rights reserved.</p>
+            <div className="flex items-center gap-6">
+              <Link href="#" className="text-zinc-500 hover:text-white transition-colors">
+                <span className="sr-only">Twitter</span>
+                <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24"><path d="M8.29 20.251c7.547 0 11.675-6.253 11.675-11.675 0-.178 0-.355-.012-.53A8.348 8.348 0 0022 5.92a8.19 8.19 0 01-2.357.646 4.118 4.118 0 001.804-2.27 8.224 8.224 0 01-2.605.996 4.107 4.107 0 00-6.993 3.743 11.65 11.65 0 01-8.457-4.287 4.106 4.106 0 001.27 5.477A4.072 4.072 0 012.8 9.713v.052a4.105 4.105 0 003.292 4.022 4.095 4.095 0 01-1.853.07 4.108 4.108 0 003.834 2.85A8.233 8.233 0 012 18.407a11.616 11.616 0 006.29 1.84" /></svg>
+              </Link>
+              <Link href="#" className="text-zinc-500 hover:text-white transition-colors">
+                <span className="sr-only">GitHub</span>
+                <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24"><path fillRule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" clipRule="evenodd" /></svg>
+              </Link>
+            </div>
           </div>
         </div>
       </footer>
     </div>
-  )
+  );
 }
-

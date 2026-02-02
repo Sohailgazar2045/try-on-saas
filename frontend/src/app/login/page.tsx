@@ -3,144 +3,179 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { useForm } from 'react-hook-form';
 import { authAPI } from '@/lib/api';
-import { setAuthToken } from '@/lib/auth';
+import { enableDemoMode } from '@/lib/auth';
 import toast from 'react-hot-toast';
-
-interface LoginForm {
-  email: string;
-  password: string;
-}
+import { Sparkles, ArrowRight, Eye, EyeOff, Mail, Lock, Play } from 'lucide-react';
 
 export default function LoginPage() {
   const router = useRouter();
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
-  const { register, handleSubmit, formState: { errors } } = useForm<LoginForm>();
+  const [showPassword, setShowPassword] = useState(false);
 
-  const onSubmit = async (data: LoginForm) => {
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
     setLoading(true);
+
     try {
-      const response = await authAPI.login(data);
-      setAuthToken(response.data.token);
-      toast.success('Login successful!');
+      await authAPI.login({ email, password });
+      toast.success('Welcome back!');
       router.push('/dashboard');
     } catch (error: any) {
-      toast.error(error.response?.data?.message || 'Login failed');
+      toast.error(error.response?.data?.message || 'Invalid credentials');
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-50">
-      <div className="mx-auto flex min-h-screen max-w-6xl flex-col items-center justify-center px-4 sm:px-6 lg:px-8">
-        <div className="grid w-full gap-10 rounded-3xl border border-slate-800 bg-slate-900/70 p-6 shadow-2xl shadow-slate-900/50 backdrop-blur sm:p-10 md:grid-cols-[1.1fr,1fr]">
-          {/* Brand / marketing side */}
-          <div className="flex flex-col justify-between space-y-10 border-b border-slate-800 pb-8 md:border-b-0 md:border-r md:pb-0 md:pr-10">
-            <div>
-              <Link href="/" className="inline-flex items-center gap-2 text-sm font-semibold text-slate-200">
-                <span className="h-8 w-8 rounded-xl bg-primary-500/90 shadow-lg shadow-primary-500/40" />
-                <span>Virtual Try-On</span>
-              </Link>
-
-              <h1 className="mt-8 text-balance text-3xl font-semibold tracking-tight sm:text-4xl">
-                Welcome back to your AI fitting room.
-              </h1>
-              <p className="mt-4 max-w-md text-sm text-slate-400">
-                Log in to generate new try-ons, manage your gallery, and experiment with outfits in seconds.
-              </p>
-
-              <div className="mt-6 grid gap-3 text-xs text-slate-300 sm:grid-cols-2">
-                <div className="rounded-2xl border border-slate-800 bg-slate-900/80 p-4">
-                  <p className="font-medium">Realtime previews</p>
-                  <p className="mt-1 text-slate-400">Upload, combine, and view AI renders in a streamlined flow.</p>
-                </div>
-                <div className="rounded-2xl border border-slate-800 bg-slate-900/80 p-4">
-                  <p className="font-medium">Designed for teams</p>
-                  <p className="mt-1 text-slate-400">Built for fashion brands, marketplaces, and growth experiments.</p>
-                </div>
-              </div>
+    <div className="min-h-screen flex bg-[#0a0a0b]">
+      {/* Left Panel - Form */}
+      <div className="flex-1 flex items-center justify-center p-8">
+        <div className="w-full max-w-md">
+          {/* Logo */}
+          <Link href="/" className="inline-flex items-center gap-2.5 mb-12">
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-orange-500 to-orange-600">
+              <Sparkles className="h-5 w-5 text-white" />
             </div>
+            <span className="text-lg font-bold text-white">Virtual Try-On</span>
+          </Link>
 
-            <div className="hidden text-xs text-slate-500 md:block">
-              <p>Demo environment &mdash; no backend required.</p>
-            </div>
+          {/* Header */}
+          <div className="mb-8">
+            <h1 className="text-3xl font-bold text-white">Welcome back</h1>
+            <p className="mt-2 text-zinc-500">
+              Sign in to your account to continue
+            </p>
           </div>
 
-          {/* Form side */}
-          <div className="flex flex-col justify-center">
-            <div className="mb-6 space-y-2">
-              <h2 className="text-lg font-semibold leading-none">Sign in</h2>
-              <p className="text-sm text-slate-400">
-                Use the demo credentials below to explore the product.
-              </p>
-              <div className="mt-3 rounded-xl border border-emerald-500/30 bg-emerald-500/5 p-3 text-xs text-emerald-100">
-                <div className="flex items-center justify-between gap-2">
-                  <span className="font-mono">demo@tryon.dev</span>
-                  <span className="rounded-full bg-emerald-500/20 px-2 py-0.5 text-[10px] uppercase tracking-wide">
-                    Email
-                  </span>
-                </div>
-                <div className="mt-1 flex items-center justify-between gap-2">
-                  <span className="font-mono">Password123!</span>
-                  <span className="rounded-full bg-emerald-500/20 px-2 py-0.5 text-[10px] uppercase tracking-wide">
-                    Password
-                  </span>
-                </div>
+          {/* Form */}
+          <form onSubmit={handleSubmit} className="space-y-5">
+            <div>
+              <label htmlFor="email" className="block text-sm font-medium text-zinc-400 mb-2">
+                Email address
+              </label>
+              <div className="relative">
+                <Mail className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-zinc-500" />
+                <input
+                  id="email"
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="name@company.com"
+                  className="input pl-12"
+                  required
+                />
               </div>
             </div>
 
-            <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-              <div className="space-y-1.5">
-                <label className="text-xs font-medium text-slate-200">
-                  Email
-                </label>
-                <input
-                  type="email"
-                  {...register('email', { required: 'Email is required' })}
-                  placeholder="you@brand.com"
-                  className="input-field"
-                />
-                {errors.email && (
-                  <p className="text-xs text-red-400">{errors.email.message}</p>
-                )}
-              </div>
-
-              <div className="space-y-1.5">
-                <label className="text-xs font-medium text-slate-200">
+            <div>
+              <div className="flex items-center justify-between mb-2">
+                <label htmlFor="password" className="block text-sm font-medium text-zinc-400">
                   Password
                 </label>
-                <input
-                  type="password"
-                  {...register('password', { required: 'Password is required' })}
-                  placeholder="••••••••"
-                  className="input-field"
-                />
-                {errors.password && (
-                  <p className="text-xs text-red-400">{errors.password.message}</p>
-                )}
+                <Link href="/forgot-password" className="text-sm text-orange-400 hover:text-orange-300 transition-colors">
+                  Forgot password?
+                </Link>
               </div>
+              <div className="relative">
+                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-zinc-500" />
+                <input
+                  id="password"
+                  type={showPassword ? 'text' : 'password'}
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="Enter your password"
+                  className="input pl-12 pr-12"
+                  required
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-4 top-1/2 -translate-y-1/2 text-zinc-500 hover:text-zinc-400 transition-colors"
+                >
+                  {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                </button>
+              </div>
+            </div>
 
-              <button
-                type="submit"
-                disabled={loading}
-                className="primary-button mt-2 w-full justify-center"
-              >
-                {loading ? 'Logging in…' : 'Continue to dashboard'}
-              </button>
-            </form>
+            <button
+              type="submit"
+              disabled={loading}
+              className="btn-primary w-full justify-center py-3"
+            >
+              {loading ? (
+                <span className="flex items-center gap-2">
+                  <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                  </svg>
+                  Signing in...
+                </span>
+              ) : (
+                <>
+                  Sign in
+                  <ArrowRight className="h-5 w-5" />
+                </>
+              )}
+            </button>
+          </form>
 
-            <p className="mt-6 text-center text-xs text-slate-400">
-              Don&apos;t have an account?{' '}
-              <Link href="/register" className="font-medium text-primary-400 hover:text-primary-300">
-                Create a demo account
-              </Link>
-            </p>
+          {/* Divider */}
+          <div className="my-8 flex items-center gap-4">
+            <div className="flex-1 h-px bg-white/[0.06]" />
+            <span className="text-sm text-zinc-500">or</span>
+            <div className="flex-1 h-px bg-white/[0.06]" />
+          </div>
+
+          {/* Demo Mode */}
+          <button
+            onClick={() => {
+              enableDemoMode();
+              toast.success('Welcome to the demo!');
+              router.push('/dashboard');
+            }}
+            className="btn-secondary w-full justify-center py-3"
+          >
+            <Play className="h-4 w-4" />
+            Explore demo
+          </button>
+
+          {/* Sign up link */}
+          <p className="mt-8 text-center text-sm text-zinc-500">
+            Don't have an account?{' '}
+            <Link href="/register" className="font-medium text-orange-400 hover:text-orange-300 transition-colors">
+              Create one for free
+            </Link>
+          </p>
+        </div>
+      </div>
+
+      {/* Right Panel - Visual */}
+      <div className="hidden lg:flex flex-1 items-center justify-center bg-[#111113] border-l border-white/[0.06] p-12">
+        <div className="max-w-lg text-center">
+          <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-2xl bg-gradient-to-br from-orange-500 to-orange-600 mb-8">
+            <Sparkles className="h-10 w-10 text-white" />
+          </div>
+          <h2 className="text-2xl font-bold text-white">AI-Powered Virtual Try-On</h2>
+          <p className="mt-4 text-zinc-400 leading-relaxed">
+            Transform your fashion workflow with our cutting-edge AI technology. 
+            Upload photos, try on garments, and create stunning visuals in seconds.
+          </p>
+          <div className="mt-8 flex items-center justify-center gap-6 text-sm text-zinc-500">
+            <div className="flex items-center gap-2">
+              <div className="h-2 w-2 rounded-full bg-emerald-500" />
+              99.9% Uptime
+            </div>
+            <div className="flex items-center gap-2">
+              <div className="h-2 w-2 rounded-full bg-emerald-500" />
+              SOC 2 Compliant
+            </div>
           </div>
         </div>
       </div>
     </div>
   );
 }
-

@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { User, LogOut, Settings, Bell, ChevronDown } from 'lucide-react';
+import { User, LogOut, Settings, Bell, ChevronDown, CreditCard, ExternalLink } from 'lucide-react';
 import { authAPI } from '@/lib/api';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
@@ -24,82 +24,98 @@ export function Header({ user, title, subtitle, showNotifications = true }: Head
   };
 
   return (
-    <header className="shrink-0 border-b border-slate-800/80 bg-gradient-to-r from-slate-950 to-slate-950/80 backdrop-blur-xl overflow-visible relative z-40">
-      <div className="flex h-16 items-center justify-between px-6">
-        {/* Left Section */}
-        <div>
-          <h1 className="text-lg font-bold text-slate-100">{title}</h1>
-          {subtitle && (
-            <p className="text-xs text-slate-500">{subtitle}</p>
-          )}
-        </div>
+    <header className="shrink-0 h-16 flex items-center justify-between px-6 lg:px-8 border-b border-white/[0.06] bg-[#0a0a0b]">
+      {/* Left Section */}
+      <div>
+        <h1 className="text-lg font-semibold text-white">{title}</h1>
+        {subtitle && (
+          <p className="text-sm text-zinc-500">{subtitle}</p>
+        )}
+      </div>
 
-        {/* Right Section */}
-        <div className="flex items-center gap-4">
-          {/* Notifications */}
-          {showNotifications && (
-            <div className="relative">
-              <button
-                onClick={() => setNotificationsOpen(!notificationsOpen)}
-                className="group relative rounded-lg p-2 text-slate-400 transition-all duration-300 hover:bg-slate-900/50 hover:text-slate-300"
-              >
-                <Bell className="h-5 w-5" />
-                <span className="absolute right-1.5 top-1.5 h-2 w-2 rounded-full bg-primary-500 animate-pulse" />
-              </button>
+      {/* Right Section */}
+      <div className="flex items-center gap-2">
+        {/* Notifications */}
+        {showNotifications && (
+          <div className="relative">
+            <button
+              onClick={() => {
+                setNotificationsOpen(!notificationsOpen);
+                setDropdownOpen(false);
+              }}
+              className="relative flex h-10 w-10 items-center justify-center rounded-xl text-zinc-400 hover:bg-white/[0.04] hover:text-white transition-all"
+            >
+              <Bell className="h-5 w-5" />
+              <span className="absolute top-2 right-2 h-2 w-2 rounded-full bg-orange-500" />
+            </button>
 
-              {/* Notification Dropdown */}
-              {notificationsOpen && (
-                <div className="absolute right-0 top-full mt-2 w-80 rounded-xl border border-slate-800 bg-slate-950/95 p-4 shadow-2xl backdrop-blur-xl z-[9999]">
-                  <div className="space-y-3 max-h-96 overflow-auto">
-                    <div className="rounded-lg border border-emerald-500/20 bg-emerald-500/5 p-3">
-                      <p className="text-xs font-medium text-emerald-400">Try-on completed</p>
-                      <p className="mt-1 text-xs text-slate-400">Your latest batch is ready to review</p>
-                      <p className="mt-2 text-[10px] text-slate-500">2 minutes ago</p>
+            {notificationsOpen && (
+              <>
+                <div 
+                  className="fixed inset-0 z-40" 
+                  onClick={() => setNotificationsOpen(false)} 
+                />
+                <div className="absolute right-0 top-full mt-2 w-80 rounded-2xl border border-white/[0.06] bg-[#111113] p-4 shadow-2xl z-50">
+                  <h3 className="text-sm font-semibold text-white mb-4">Notifications</h3>
+                  <div className="space-y-3">
+                    <div className="rounded-xl bg-emerald-500/5 border border-emerald-500/10 p-3">
+                      <p className="text-sm font-medium text-emerald-400">Try-on completed</p>
+                      <p className="mt-1 text-xs text-zinc-500">Your latest batch is ready</p>
+                      <p className="mt-2 text-[11px] text-zinc-600">2 minutes ago</p>
                     </div>
-                    <div className="rounded-lg border border-primary-500/20 bg-primary-500/5 p-3">
-                      <p className="text-xs font-medium text-primary-400">Credits added</p>
-                      <p className="mt-1 text-xs text-slate-400">Your subscription renewal added 100 credits</p>
-                      <p className="mt-2 text-[10px] text-slate-500">1 hour ago</p>
+                    <div className="rounded-xl bg-orange-500/5 border border-orange-500/10 p-3">
+                      <p className="text-sm font-medium text-orange-400">Credits added</p>
+                      <p className="mt-1 text-xs text-zinc-500">Your subscription added 100 credits</p>
+                      <p className="mt-2 text-[11px] text-zinc-600">1 hour ago</p>
                     </div>
                   </div>
-                  <button className="mt-3 w-full rounded-lg border border-slate-800 bg-slate-900/50 py-2 text-xs font-medium text-slate-300 transition-colors hover:bg-slate-800">
+                  <button className="mt-4 w-full rounded-xl bg-white/[0.04] py-2.5 text-sm font-medium text-zinc-400 hover:bg-white/[0.06] hover:text-white transition-colors">
                     View all notifications
                   </button>
                 </div>
-              )}
+              </>
+            )}
+          </div>
+        )}
+
+        {/* User Profile */}
+        <div className="relative">
+          <button
+            onClick={() => {
+              setDropdownOpen(!dropdownOpen);
+              setNotificationsOpen(false);
+            }}
+            className="flex items-center gap-3 rounded-xl px-3 py-2 hover:bg-white/[0.04] transition-all"
+          >
+            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-br from-orange-400 to-orange-600">
+              <span className="text-xs font-bold text-white">
+                {(user?.name || user?.email || 'U')[0].toUpperCase()}
+              </span>
             </div>
-          )}
+            <div className="hidden sm:block text-left">
+              <p className="text-sm font-medium text-white">{user?.name || 'User'}</p>
+              <p className="text-xs text-zinc-500">{user?.credits || 0} credits</p>
+            </div>
+            <ChevronDown className="h-4 w-4 text-zinc-500 hidden sm:block" />
+          </button>
 
-          {/* User Profile Dropdown */}
-          <div className="relative">
-            <button
-              onClick={() => setDropdownOpen(!dropdownOpen)}
-              className="group flex items-center gap-2 rounded-lg px-3 py-2 text-slate-300 transition-all duration-300 hover:bg-slate-900/50"
-            >
-              <div className="relative flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-primary-400 to-primary-600 shadow-lg shadow-primary-500/20">
-                <span className="text-xs font-bold text-white">
-                  {(user?.name || user?.email || 'U')[0].toUpperCase()}
-                </span>
-              </div>
-              <div className="hidden sm:block">
-                <p className="text-xs font-medium text-slate-100">{user?.name || 'User'}</p>
-                <p className="text-[10px] text-slate-500">Pro</p>
-              </div>
-              <ChevronDown className="h-4 w-4 text-slate-400 transition-transform duration-300 group-hover:text-slate-300" />
-            </button>
-
-            {/* Dropdown Menu */}
-            {dropdownOpen && (
-              <div className="absolute right-0 top-full mt-2 w-48 rounded-xl border border-slate-800 bg-slate-950/95 shadow-2xl backdrop-blur-xl z-[9999] overflow-hidden">
-                <div className="border-b border-slate-800/50 p-3">
-                  <p className="text-xs font-medium text-slate-300">{user?.email}</p>
-                  <p className="text-[10px] text-slate-500 mt-1">{user?.credits || 0} credits remaining</p>
+          {dropdownOpen && (
+            <>
+              <div 
+                className="fixed inset-0 z-40" 
+                onClick={() => setDropdownOpen(false)} 
+              />
+              <div className="absolute right-0 top-full mt-2 w-56 rounded-2xl border border-white/[0.06] bg-[#111113] overflow-hidden shadow-2xl z-50">
+                <div className="p-3 border-b border-white/[0.06]">
+                  <p className="text-sm font-medium text-white">{user?.name || 'User'}</p>
+                  <p className="text-xs text-zinc-500 mt-0.5">{user?.email || 'demo@tryon.dev'}</p>
                 </div>
-                <div className="space-y-1 p-2">
+                
+                <div className="p-2">
                   <Link
                     href="/profile"
                     onClick={() => setDropdownOpen(false)}
-                    className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm text-slate-300 transition-colors hover:bg-slate-900/50 hover:text-slate-100"
+                    className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm text-zinc-400 hover:bg-white/[0.04] hover:text-white transition-colors"
                   >
                     <User className="h-4 w-4" />
                     Profile
@@ -107,27 +123,28 @@ export function Header({ user, title, subtitle, showNotifications = true }: Head
                   <Link
                     href="/billing"
                     onClick={() => setDropdownOpen(false)}
-                    className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm text-slate-300 transition-colors hover:bg-slate-900/50 hover:text-slate-100"
+                    className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm text-zinc-400 hover:bg-white/[0.04] hover:text-white transition-colors"
                   >
-                    <Settings className="h-4 w-4" />
-                    Settings
+                    <CreditCard className="h-4 w-4" />
+                    Billing
                   </Link>
                 </div>
-                <div className="border-t border-slate-800/50 p-2">
+
+                <div className="p-2 border-t border-white/[0.06]">
                   <button
                     onClick={() => {
                       setDropdownOpen(false);
                       handleLogout();
                     }}
-                    className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm text-red-400 transition-colors hover:bg-red-950/20"
+                    className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm text-red-400 hover:bg-red-500/10 transition-colors"
                   >
                     <LogOut className="h-4 w-4" />
                     Sign out
                   </button>
                 </div>
               </div>
-            )}
-          </div>
+            </>
+          )}
         </div>
       </div>
     </header>

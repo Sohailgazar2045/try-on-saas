@@ -48,8 +48,8 @@ export const createCheckoutSession = async (req, res, next) => {
         large: { credits: 50, price: 17.99 }
       };
 
-      const package = creditPackages[plan];
-      if (!package) {
+      const creditPackage = creditPackages[plan];
+      if (!creditPackage) {
         return res.status(400).json({ message: 'Invalid credit package' });
       }
 
@@ -60,10 +60,10 @@ export const createCheckoutSession = async (req, res, next) => {
             price_data: {
               currency: 'usd',
               product_data: {
-                name: `${package.credits} Credits`,
+                name: `${creditPackage.credits} Credits`,
                 description: 'Virtual Try-On Credits'
               },
-              unit_amount: Math.round(package.price * 100)
+              unit_amount: Math.round(creditPackage.price * 100)
             },
             quantity: 1
           }
@@ -71,7 +71,7 @@ export const createCheckoutSession = async (req, res, next) => {
         metadata: {
           userId: req.userId,
           type: 'credits',
-          credits: package.credits.toString()
+          credits: creditPackage.credits.toString()
         }
       };
     }

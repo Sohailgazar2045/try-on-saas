@@ -1,79 +1,6 @@
 {
   "name": "virtual-tryon-backend",
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-export const specs = swaggerJsdoc(options);};  apis: ['./src/routes/*.js']  },    }      }        }          }            error: { type: 'string' }            message: { type: 'string' },          properties: {          type: 'object',        Error: {        },          }            createdAt: { type: 'string', format: 'date-time' }            type: { type: 'string', enum: ['user', 'outfit', 'generated'] },            url: { type: 'string', format: 'uri' },            id: { type: 'string' },          properties: {          type: 'object',        Image: {        },          }            createdAt: { type: 'string', format: 'date-time' }            subscription: { type: 'string', enum: ['free', 'basic', 'premium'] },            credits: { type: 'integer', minimum: 0 },            name: { type: 'string' },            email: { type: 'string', format: 'email' },            id: { type: 'string', description: 'User ID' },          properties: {          type: 'object',        User: {      schemas: {      },        }          description: 'Cookie-based JWT token'          name: 'token',          in: 'cookie',          type: 'apiKey',        cookieAuth: {        },          description: 'JWT Bearer token'          bearerFormat: 'JWT',          scheme: 'bearer',          type: 'http',        bearerAuth: {      securitySchemes: {    components: {    ],      }        description: 'Production server'        url: 'https://api.virtualtry-on.com',      {      },        description: 'Development server'        url: 'http://localhost:5000',      {    servers: [    },      }        url: 'https://virtualtry-on.com'        name: 'Support',      contact: {      description: 'AI-powered virtual try-on SaaS backend API',      version: '1.0.0',      title: 'Virtual Try-On API',    info: {    openapi: '3.0.0',  definition: {const options = {  "version": "1.0.0",
+  "version": "1.0.0",
   "description": "Backend API for AI Virtual Try-On SaaS",
   "main": "src/server.js",
   "type": "module",
@@ -110,4 +37,3 @@ export const specs = swaggerJsdoc(options);};  apis: ['./src/routes/*.js']  },  
     "prisma": "^5.7.1"
   }
 }
-
