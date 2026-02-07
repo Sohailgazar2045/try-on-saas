@@ -27,7 +27,7 @@ export const getProfile = async (req, res, next) => {
 
 export const updateProfile = async (req, res, next) => {
   try {
-    const { name, email, password } = req.body;
+    const { name, email, password, currentPassword } = req.body;
     const updateData = {};
 
     if (name !== undefined) updateData.name = name;
@@ -43,6 +43,24 @@ export const updateProfile = async (req, res, next) => {
       if (password.length < 6) {
         return res.status(400).json({ message: 'Password must be at least 6 characters' });
       }
+      
+      // If currentPassword is provided, verify it before changing password
+      if (currentPassword !== undefined) {
+        const user = await prisma.user.findUnique({
+          where: { id: req.userId },
+          select: { passwordHash: true }
+        });
+        
+        if (!user) {
+          return res.status(404).json({ message: 'User not found' });
+        }
+        
+        const isValid = await bcrypt.compare(currentPassword, user.passwordHash);
+        if (!isValid) {
+          return res.status(401).json({ message: 'Current password is incorrect' });
+        }
+      }
+      
       updateData.passwordHash = await bcrypt.hash(password, 10);
     }
 

@@ -1,7 +1,24 @@
-import axios from 'axios';
+import axios, { AxiosResponse } from 'axios';
 import Cookies from 'js-cookie';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
+
+// Type definitions
+export interface Image {
+  id: string;
+  url: string;
+  type: string;
+  name?: string;
+  size?: number;
+  uploadedAt?: string;
+  createdAt?: string;
+}
+
+export interface ImageUploadResponse {
+  data: {
+    image: Image;
+  };
+}
 
 const api = axios.create({
   baseURL: API_URL,
@@ -129,12 +146,13 @@ export const authAPI = {
 
 // Image API
 export const imageAPI = {
-  upload: async (formData: FormData) => {
+  upload: async (formData: FormData): Promise<ImageUploadResponse> => {
     try {
       // Try to upload to backend first
-      return await api.post('/images/upload', formData, {
+      const response = await api.post<{ image: Image }>('/images/upload', formData, {
         headers: { 'Content-Type': 'multipart/form-data' },
       });
+      return { data: response.data } as ImageUploadResponse;
     } catch (error) {
       // If backend fails, use demo mode
       await delay(500);
@@ -151,9 +169,9 @@ export const imageAPI = {
       // Create a data URL from the file for demo purposes
       const reader = new FileReader();
       
-      return new Promise((resolve, reject) => {
+      return new Promise<ImageUploadResponse>((resolve, reject) => {
         reader.onload = () => {
-          const demoImage = {
+          const demoImage: Image = {
             id: `demo-img-${Date.now()}`,
             url: reader.result as string,
             type: type || 'general',
@@ -263,6 +281,8 @@ export const userAPI = {
   getProfile: () => api.get('/user/profile'),
   updateProfile: (data: { name?: string; email?: string; password?: string }) =>
     api.put('/user/profile', data),
+  changePassword: (data: { currentPassword: string; newPassword: string }) =>
+    api.put('/user/profile', { password: data.newPassword, currentPassword: data.currentPassword }),
   deleteAccount: () => api.delete('/user/account'),
 };
 
