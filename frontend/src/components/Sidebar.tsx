@@ -14,13 +14,16 @@ import {
   ChevronRight,
   Sun,
   Moon,
+  X,
 } from 'lucide-react';
 
 interface SidebarProps {
   user?: any;
+  isOpen?: boolean;
+  onClose?: () => void;
 }
 
-export function Sidebar({ user }: SidebarProps) {
+export function Sidebar({ user, isOpen = true, onClose }: SidebarProps) {
   const pathname = usePathname();
   const router = useRouter();
   const { theme, toggleTheme } = useTheme();
@@ -37,14 +40,38 @@ export function Sidebar({ user }: SidebarProps) {
   ];
 
   return (
-    <aside className="flex h-screen w-60 flex-col bg-surface-alt border-r border-subtle">
-      {/* Logo */}
-      <div className="flex h-12 items-center gap-2.5 px-4 border-b border-subtle shrink-0">
-        <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-gradient-to-br from-orange-500 to-orange-600">
-          <Sparkles className="h-4 w-4 text-white" />
+    <>
+      {/* Mobile Overlay */}
+      {isOpen && onClose && (
+        <div
+          className="fixed inset-0 bg-black/50 z-40 lg:hidden"
+          onClick={onClose}
+        />
+      )}
+
+      {/* Sidebar */}
+      <aside
+        className={`fixed lg:static inset-y-0 left-0 z-50 flex h-screen w-60 flex-col bg-surface-alt border-r border-subtle transform transition-transform duration-300 ease-in-out ${
+          isOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
+        }`}
+      >
+        {/* Logo */}
+        <div className="flex h-12 items-center justify-between gap-2.5 px-4 border-b border-subtle shrink-0">
+          <div className="flex items-center gap-2.5">
+            <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-gradient-to-br from-orange-500 to-orange-600">
+              <Sparkles className="h-4 w-4 text-white" />
+            </div>
+            <span className="text-sm font-bold text-foreground">Virtual Try-On</span>
+          </div>
+          {onClose && (
+            <button
+              onClick={onClose}
+              className="lg:hidden p-1 rounded-md hover:bg-overlay-4 text-foreground-tertiary"
+            >
+              <X className="h-5 w-5" />
+            </button>
+          )}
         </div>
-        <span className="text-sm font-bold text-foreground">Virtual Try-On</span>
-      </div>
 
       {/* Main Navigation */}
       <nav className="flex-1 px-2 py-2 space-y-0.5">
@@ -139,5 +166,6 @@ export function Sidebar({ user }: SidebarProps) {
         </div>
       </div>
     </aside>
+    </>
   );
 }

@@ -30,6 +30,7 @@ function TryOnContent() {
   const [loading, setLoading] = useState(false);
   const [userImages, setUserImages] = useState<any[]>([]);
   const [isDemo, setIsDemo] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   useEffect(() => {
     fetchUserData();
@@ -188,14 +189,19 @@ function TryOnContent() {
 
   return (
     <div className="flex h-screen bg-surface">
-      <Sidebar user={user} />
+      <Sidebar 
+        user={user} 
+        isOpen={sidebarOpen}
+        onClose={() => setSidebarOpen(false)}
+      />
 
-      <main className="flex-1 flex flex-col overflow-hidden">
+      <main className="flex-1 flex flex-col overflow-hidden min-w-0">
         <Header 
           user={user} 
           title="Try-On Studio"
           subtitle={isDemo ? "Try selecting images below to see how it works" : "Try on clothes before you buy, or create product visuals for your business"}
           showNotifications={!isDemo}
+          onMenuClick={() => setSidebarOpen(true)}
         />
 
         <div className="flex-1 overflow-auto p-6 lg:p-8">

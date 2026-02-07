@@ -25,6 +25,7 @@ function GalleryContent() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedImage, setSelectedImage] = useState<any>(null);
   const [isDemo, setIsDemo] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   useEffect(() => {
     fetchData();
@@ -100,13 +101,18 @@ function GalleryContent() {
 
   return (
     <div className="flex h-screen bg-surface">
-      <Sidebar user={user} />
+      <Sidebar 
+        user={user} 
+        isOpen={sidebarOpen}
+        onClose={() => setSidebarOpen(false)}
+      />
 
-      <main className="flex-1 flex flex-col overflow-hidden">
+      <main className="flex-1 flex flex-col overflow-hidden min-w-0">
         <Header 
           user={user} 
           title="Gallery"
           subtitle={isDemo ? "Sample images in demo mode" : `${images.length} images in your collection`}
+          onMenuClick={() => setSidebarOpen(true)}
         />
 
         <div className="flex-1 overflow-auto p-6 lg:p-8">

@@ -33,6 +33,7 @@ function DashboardContent() {
   const [user, setUser] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [isDemo, setIsDemo] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -82,41 +83,46 @@ function DashboardContent() {
 
   return (
     <div className="flex h-screen bg-surface">
-      <Sidebar user={user} />
+      <Sidebar 
+        user={user} 
+        isOpen={sidebarOpen}
+        onClose={() => setSidebarOpen(false)}
+      />
 
-      <main className="flex-1 flex flex-col overflow-hidden">
+      <main className="flex-1 flex flex-col overflow-hidden min-w-0">
         <Header 
           user={user} 
           title={`Welcome back, ${user?.name?.split(' ')[0] || 'there'}`}
           subtitle={isDemo ? "Explore how Virtual Try-On works for shoppers and businesses" : "Your personal fashion studio and business dashboard"}
+          onMenuClick={() => setSidebarOpen(true)}
         />
 
-        <div className="flex-1 overflow-auto p-6 lg:p-8">
-          <div className="max-w-6xl mx-auto space-y-8">
+        <div className="flex-1 overflow-auto p-4 sm:p-6 lg:p-8">
+          <div className="max-w-6xl mx-auto space-y-6 sm:space-y-8">
             {/* Stats Grid */}
-            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            <div className="grid gap-3 sm:gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
               {stats.map((stat) => {
                 const Icon = stat.icon;
                 const colors = getColorClasses(stat.color);
                 return (
-                  <div key={stat.label} className="card group">
+                    <div key={stat.label} className="card group">
                     <div className="flex items-start justify-between">
-                      <div className={`${colors.bg} rounded-xl p-2.5`}>
-                        <Icon className={`h-5 w-5 ${colors.icon}`} />
+                      <div className={`${colors.bg} rounded-xl p-2 sm:p-2.5`}>
+                        <Icon className={`h-4 w-4 sm:h-5 sm:w-5 ${colors.icon}`} />
                       </div>
                       {stat.trend === 'up' && (
                         <span className="flex items-center gap-1 text-xs font-medium text-emerald-500 dark:text-emerald-400">
                           <ArrowUpRight className="h-3 w-3" />
-                          {stat.change}
+                          <span className="hidden sm:inline">{stat.change}</span>
                         </span>
                       )}
                       {stat.trend === 'neutral' && (
-                        <span className="text-xs text-foreground-tertiary">{stat.change}</span>
+                        <span className="text-xs text-foreground-tertiary hidden sm:inline">{stat.change}</span>
                       )}
                     </div>
-                    <div className="mt-4">
-                      <p className="text-3xl font-bold text-foreground">{stat.value}</p>
-                      <p className="mt-1 text-sm text-foreground-tertiary">{stat.label}</p>
+                    <div className="mt-3 sm:mt-4">
+                      <p className="text-2xl sm:text-3xl font-bold text-foreground">{stat.value}</p>
+                      <p className="mt-1 text-xs sm:text-sm text-foreground-tertiary">{stat.label}</p>
                     </div>
                   </div>
                 );
@@ -124,64 +130,64 @@ function DashboardContent() {
             </div>
 
             {/* Main Content Grid */}
-            <div className="grid gap-6 lg:grid-cols-3">
+            <div className="grid gap-4 sm:gap-6 lg:grid-cols-3">
               {/* Quick Actions - Left Column */}
-              <div className="lg:col-span-2 space-y-6">
+              <div className="lg:col-span-2 space-y-4 sm:space-y-6">
                 {/* Quick Actions Card */}
                 <div className="card">
                   <div className="flex items-center justify-between mb-6">
                     <h2 className="text-base font-semibold text-foreground">Quick Actions</h2>
                   </div>
                   
-                  <div className="grid gap-4 sm:grid-cols-2">
+                  <div className="grid gap-3 sm:gap-4 grid-cols-1 sm:grid-cols-2">
                     <Link
                       href="/try-on"
-                      className="group flex items-center gap-4 rounded-xl border border-subtle bg-overlay-2 p-4 transition-all duration-150 hover:bg-orange-500/5 hover:border-orange-500/20"
+                      className="group flex items-center gap-3 sm:gap-4 rounded-xl border border-subtle bg-overlay-2 p-3 sm:p-4 transition-all duration-150 hover:bg-orange-500/5 hover:border-orange-500/20"
                     >
-                      <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-orange-500/10">
-                        <Plus className="h-6 w-6 text-orange-400" />
+                      <div className="flex h-10 w-10 sm:h-12 sm:w-12 items-center justify-center rounded-xl bg-orange-500/10 shrink-0">
+                        <Plus className="h-5 w-5 sm:h-6 sm:w-6 text-orange-400" />
                       </div>
-                      <div className="flex-1">
-                        <h3 className="font-semibold text-foreground group-hover:text-orange-400 transition-colors">
+                      <div className="flex-1 min-w-0">
+                        <h3 className="text-sm sm:text-base font-semibold text-foreground group-hover:text-orange-400 transition-colors">
                           Try On Clothes
                         </h3>
-                        <p className="text-sm text-foreground-tertiary">See how clothes look on you</p>
+                        <p className="text-xs sm:text-sm text-foreground-tertiary">See how clothes look on you</p>
                       </div>
-                      <ArrowRight className="h-5 w-5 text-foreground-tertiary group-hover:text-orange-400 transition-colors" />
+                      <ArrowRight className="h-4 w-4 sm:h-5 sm:w-5 text-foreground-tertiary group-hover:text-orange-400 transition-colors shrink-0" />
                     </Link>
 
                     <Link
                       href="/gallery"
-                      className="group flex items-center gap-4 rounded-xl border border-subtle bg-overlay-2 p-4 transition-all duration-150 hover:bg-overlay-4 hover:border-muted"
+                      className="group flex items-center gap-3 sm:gap-4 rounded-xl border border-subtle bg-overlay-2 p-3 sm:p-4 transition-all duration-150 hover:bg-overlay-4 hover:border-muted"
                     >
-                      <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-overlay-4">
-                        <ImageIcon className="h-6 w-6 text-foreground-secondary" />
+                      <div className="flex h-10 w-10 sm:h-12 sm:w-12 items-center justify-center rounded-xl bg-overlay-4 shrink-0">
+                        <ImageIcon className="h-5 w-5 sm:h-6 sm:w-6 text-foreground-secondary" />
                       </div>
-                      <div className="flex-1">
-                        <h3 className="font-semibold text-foreground">My Gallery</h3>
-                        <p className="text-sm text-foreground-tertiary">View saved try-ons & images</p>
+                      <div className="flex-1 min-w-0">
+                        <h3 className="text-sm sm:text-base font-semibold text-foreground">My Gallery</h3>
+                        <p className="text-xs sm:text-sm text-foreground-tertiary">View saved try-ons & images</p>
                       </div>
-                      <ArrowRight className="h-5 w-5 text-foreground-tertiary group-hover:text-foreground transition-colors" />
+                      <ArrowRight className="h-4 w-4 sm:h-5 sm:w-5 text-foreground-tertiary group-hover:text-foreground transition-colors shrink-0" />
                     </Link>
                   </div>
 
                   {/* Business Actions */}
                   <div className="mt-4 pt-4 border-t border-subtle">
                     <p className="text-xs font-medium text-foreground-tertiary mb-3">For Business</p>
-                    <div className="grid gap-3 sm:grid-cols-2">
+                    <div className="grid gap-2 sm:gap-3 grid-cols-1 sm:grid-cols-2">
                       <Link
                         href="/billing"
-                        className="flex items-center gap-3 rounded-lg border border-subtle bg-overlay-2 px-3 py-2 hover:bg-overlay-4 transition-colors"
+                        className="flex items-center gap-2 sm:gap-3 rounded-lg border border-subtle bg-overlay-2 px-3 py-2 hover:bg-overlay-4 transition-colors"
                       >
-                        <TrendingUp className="h-4 w-4 text-blue-400" />
-                        <span className="text-sm text-foreground-secondary">Analytics</span>
+                        <TrendingUp className="h-4 w-4 text-blue-400 shrink-0" />
+                        <span className="text-xs sm:text-sm text-foreground-secondary">Analytics</span>
                       </Link>
                       <Link
                         href="/gallery"
-                        className="flex items-center gap-3 rounded-lg border border-subtle bg-overlay-2 px-3 py-2 hover:bg-overlay-4 transition-colors"
+                        className="flex items-center gap-2 sm:gap-3 rounded-lg border border-subtle bg-overlay-2 px-3 py-2 hover:bg-overlay-4 transition-colors"
                       >
-                        <ImageIcon className="h-4 w-4 text-purple-400" />
-                        <span className="text-sm text-foreground-secondary">Export Images</span>
+                        <ImageIcon className="h-4 w-4 text-purple-400 shrink-0" />
+                        <span className="text-xs sm:text-sm text-foreground-secondary">Export Images</span>
                       </Link>
                     </div>
                   </div>
@@ -201,22 +207,22 @@ function DashboardContent() {
                       {recentActivity.map((activity, idx) => (
                         <div 
                           key={idx} 
-                          className="flex items-start gap-4 p-3 rounded-xl hover:bg-overlay-2 transition-colors"
+                          className="flex items-start gap-3 sm:gap-4 p-3 rounded-xl hover:bg-overlay-2 transition-colors"
                         >
-                          <div className={`mt-0.5 flex h-8 w-8 items-center justify-center rounded-full ${
+                          <div className={`mt-0.5 flex h-7 w-7 sm:h-8 sm:w-8 items-center justify-center rounded-full shrink-0 ${
                             activity.status === 'success' ? 'bg-emerald-500/10' : 'bg-blue-500/10'
                           }`}>
-                            <CheckCircle2 className={`h-4 w-4 ${
+                            <CheckCircle2 className={`h-3.5 w-3.5 sm:h-4 sm:w-4 ${
                               activity.status === 'success' ? 'text-emerald-500 dark:text-emerald-400' : 'text-blue-400'
                             }`} />
                           </div>
                           <div className="flex-1 min-w-0">
-                            <p className="text-sm font-medium text-foreground">{activity.action}</p>
-                            <p className="text-sm text-foreground-tertiary truncate">{activity.item}</p>
+                            <p className="text-xs sm:text-sm font-medium text-foreground">{activity.action}</p>
+                            <p className="text-xs sm:text-sm text-foreground-tertiary truncate">{activity.item}</p>
                           </div>
-                          <div className="flex items-center gap-1 text-xs text-foreground-tertiary">
+                          <div className="flex items-center gap-1 text-xs text-foreground-tertiary shrink-0">
                             <Clock className="h-3 w-3" />
-                            {activity.time}
+                            <span className="hidden sm:inline">{activity.time}</span>
                           </div>
                         </div>
                       ))}
@@ -231,23 +237,23 @@ function DashboardContent() {
               </div>
 
               {/* Right Column */}
-              <div className="space-y-6">
+              <div className="space-y-4 sm:space-y-6">
                 {/* Credits Card */}
                 <div className="card-highlight">
                   <div className="flex items-center justify-between">
-                    <h2 className="text-base font-semibold text-foreground">Credits</h2>
-                    <Sparkles className="h-5 w-5 text-orange-400" />
+                    <h2 className="text-sm sm:text-base font-semibold text-foreground">Credits</h2>
+                    <Sparkles className="h-4 w-4 sm:h-5 sm:w-5 text-orange-400" />
                   </div>
                   
-                  <div className="mt-6">
-                    <p className="text-5xl font-bold text-foreground">{user?.credits || 0}</p>
-                    <p className="mt-2 text-sm text-foreground-tertiary">credits remaining</p>
+                  <div className="mt-4 sm:mt-6">
+                    <p className="text-4xl sm:text-5xl font-bold text-foreground">{user?.credits || 0}</p>
+                    <p className="mt-2 text-xs sm:text-sm text-foreground-tertiary">credits remaining</p>
                   </div>
 
-                  <div className="mt-6 pt-6 border-t border-orange-500/10">
+                  <div className="mt-4 sm:mt-6 pt-4 sm:pt-6 border-t border-orange-500/10">
                     <Link
                       href="/billing"
-                      className="btn-primary w-full justify-center"
+                      className="btn-primary w-full justify-center text-sm"
                     >
                       Buy more credits
                       <ArrowRight className="h-4 w-4" />
@@ -258,17 +264,17 @@ function DashboardContent() {
                 {/* Plan Card */}
                 <div className="card">
                   <div className="flex items-center justify-between">
-                    <h2 className="text-base font-semibold text-foreground">Your Plan</h2>
+                    <h2 className="text-sm sm:text-base font-semibold text-foreground">Your Plan</h2>
                   </div>
                   
                   <div className="mt-4">
-                    <div className="flex items-center gap-2">
-                      <span className="text-xl font-bold text-foreground capitalize">
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <span className="text-lg sm:text-xl font-bold text-foreground capitalize">
                         {user?.subscription || 'Free'}
                       </span>
-                      <span className="badge-accent">Active</span>
+                      <span className="badge-accent text-xs">Active</span>
                     </div>
-                    <p className="mt-2 text-sm text-foreground-tertiary">
+                    <p className="mt-2 text-xs sm:text-sm text-foreground-tertiary">
                       {user?.subscription === 'free' 
                         ? 'Upgrade to get more credits and features'
                         : 'Enjoying premium features'
@@ -278,10 +284,10 @@ function DashboardContent() {
 
                   <Link
                     href="/billing"
-                    className="mt-4 flex items-center gap-1 text-sm font-medium text-orange-400 hover:text-orange-300 transition-colors"
+                    className="mt-4 flex items-center gap-1 text-xs sm:text-sm font-medium text-orange-400 hover:text-orange-300 transition-colors"
                   >
                     {user?.subscription === 'free' ? 'Upgrade plan' : 'Manage subscription'}
-                    <ArrowRight className="h-4 w-4" />
+                    <ArrowRight className="h-3 w-3 sm:h-4 sm:w-4" />
                   </Link>
                 </div>
               </div>

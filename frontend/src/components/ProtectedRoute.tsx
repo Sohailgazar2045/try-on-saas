@@ -49,7 +49,7 @@ export default function ProtectedRoute({ children }: { children: React.ReactNode
   return (
     <>
       {isDemo && <DemoBanner />}
-      <div className={isDemo ? 'pt-10' : ''}>
+      <div className={isDemo ? 'pt-[44px] sm:pt-[52px]' : ''}>
         {children}
       </div>
     </>

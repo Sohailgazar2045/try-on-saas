@@ -21,6 +21,7 @@ function BillingContent() {
   const [user, setUser] = useState<any>(null);
   const [loading, setLoading] = useState<string | null>(null);
   const [isDemo, setIsDemo] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -100,34 +101,39 @@ function BillingContent() {
 
   return (
     <div className="flex h-screen bg-surface">
-      <Sidebar user={user} />
+      <Sidebar 
+        user={user} 
+        isOpen={sidebarOpen}
+        onClose={() => setSidebarOpen(false)}
+      />
 
-      <main className="flex-1 flex flex-col overflow-hidden">
+      <main className="flex-1 flex flex-col overflow-hidden min-w-0">
         <Header 
           user={user} 
           title="Billing"
           subtitle="Manage your subscription and credits"
+          onMenuClick={() => setSidebarOpen(true)}
         />
 
-        <div className="flex-1 overflow-auto p-6 lg:p-8">
-          <div className="max-w-5xl mx-auto space-y-12">
+        <div className="flex-1 overflow-auto p-4 sm:p-6 lg:p-8">
+          <div className="max-w-5xl mx-auto space-y-8 sm:space-y-12">
             {/* Current Balance */}
             <div className="card-highlight">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-foreground-secondary">Current Balance</p>
-                  <p className="mt-2 text-4xl font-bold text-foreground">{user?.credits || 0} <span className="text-lg font-normal text-foreground-secondary">credits</span></p>
+              <div className="flex items-center justify-between gap-4">
+                <div className="min-w-0 flex-1">
+                  <p className="text-xs sm:text-sm text-foreground-secondary">Current Balance</p>
+                  <p className="mt-2 text-3xl sm:text-4xl font-bold text-foreground">{user?.credits || 0} <span className="text-base sm:text-lg font-normal text-foreground-secondary">credits</span></p>
                 </div>
-                <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-orange-500/10">
-                  <Sparkles className="h-8 w-8 text-orange-400" />
+                <div className="flex h-12 w-12 sm:h-16 sm:w-16 items-center justify-center rounded-2xl bg-orange-500/10 shrink-0">
+                  <Sparkles className="h-6 w-6 sm:h-8 sm:w-8 text-orange-400" />
                 </div>
               </div>
             </div>
 
             {/* Credit Packs */}
             <div>
-              <h2 className="text-lg font-semibold text-foreground mb-6">Buy Credits</h2>
-              <div className="grid gap-4 md:grid-cols-3">
+              <h2 className="text-base sm:text-lg font-semibold text-foreground mb-4 sm:mb-6">Buy Credits</h2>
+              <div className="grid gap-3 sm:gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-3">
                 {creditPacks.map((pack) => (
                   <div 
                     key={pack.plan}
@@ -160,8 +166,8 @@ function BillingContent() {
 
             {/* Subscription Plans */}
             <div>
-              <h2 className="text-lg font-semibold text-foreground mb-6">Subscription Plans</h2>
-              <div className="grid gap-6 lg:grid-cols-3">
+              <h2 className="text-base sm:text-lg font-semibold text-foreground mb-4 sm:mb-6">Subscription Plans</h2>
+              <div className="grid gap-4 sm:gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
                 {plans.map((plan) => (
                   <div 
                     key={plan.name}
