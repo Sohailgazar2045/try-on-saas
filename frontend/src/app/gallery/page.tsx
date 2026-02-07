@@ -99,7 +99,7 @@ function GalleryContent() {
   ];
 
   return (
-    <div className="flex h-screen bg-[#0a0a0b]">
+    <div className="flex h-screen bg-surface">
       <Sidebar user={user} />
 
       <main className="flex-1 flex flex-col overflow-hidden">
@@ -120,8 +120,8 @@ function GalleryContent() {
                     onClick={() => setFilter(f.value as any)}
                     className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
                       filter === f.value
-                        ? 'bg-white/[0.08] text-white'
-                        : 'text-zinc-500 hover:text-white hover:bg-white/[0.04]'
+                        ? 'bg-overlay-8 text-foreground'
+                        : 'text-foreground-tertiary hover:text-foreground hover:bg-overlay-4'
                     }`}
                   >
                     {f.label}
@@ -130,7 +130,7 @@ function GalleryContent() {
               </div>
 
               <div className="relative">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-zinc-500" />
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-foreground-tertiary" />
                 <input
                   type="text"
                   placeholder="Search images..."
@@ -144,20 +144,20 @@ function GalleryContent() {
             {/* Gallery Grid */}
             {loading ? (
               <div className="flex items-center justify-center h-64">
-                <div className="text-zinc-500">Loading...</div>
+                <div className="text-foreground-tertiary">Loading...</div>
               </div>
             ) : filteredImages.length === 0 ? (
               <div className="flex flex-col items-center justify-center h-64 text-center">
-                <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-white/[0.04] mb-4">
-                  <ImageIcon className="h-8 w-8 text-zinc-600" />
+                <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-overlay-4 mb-4">
+                  <ImageIcon className="h-8 w-8 text-foreground-tertiary" />
                 </div>
-                <p className="text-zinc-400 font-medium">No images yet</p>
-                <p className="text-sm text-zinc-500 mt-1">Upload images or generate try-ons to get started</p>
+                <p className="text-foreground-secondary font-medium">No images yet</p>
+                <p className="text-sm text-foreground-tertiary mt-1">Upload images or generate try-ons to get started</p>
               </div>
             ) : (
               <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                 {filteredImages.map((image) => (
-                  <div key={image.id} className="group relative aspect-[3/4] rounded-xl overflow-hidden bg-white/[0.02] border border-white/[0.06]">
+                  <div key={image.id} className="group relative aspect-[3/4] rounded-xl overflow-hidden bg-overlay-2 border border-subtle">
                     <img
                       src={image.url}
                       alt={image.type}

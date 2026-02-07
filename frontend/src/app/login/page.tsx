@@ -31,7 +31,7 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex bg-[#0a0a0b]">
+    <div className="min-h-screen flex bg-surface">
       {/* Left Panel - Form */}
       <div className="flex-1 flex items-center justify-center p-8">
         <div className="w-full max-w-md">
@@ -40,13 +40,13 @@ export default function LoginPage() {
             <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-orange-500 to-orange-600">
               <Sparkles className="h-5 w-5 text-white" />
             </div>
-            <span className="text-lg font-bold text-white">Virtual Try-On</span>
+            <span className="text-lg font-bold text-foreground">Virtual Try-On</span>
           </Link>
 
           {/* Header */}
           <div className="mb-8">
-            <h1 className="text-3xl font-bold text-white">Welcome back</h1>
-            <p className="mt-2 text-zinc-500">
+            <h1 className="text-3xl font-bold text-foreground">Welcome back</h1>
+            <p className="mt-2 text-foreground-tertiary">
               Sign in to your account to continue
             </p>
           </div>
@@ -54,11 +54,11 @@ export default function LoginPage() {
           {/* Form */}
           <form onSubmit={handleSubmit} className="space-y-5">
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-zinc-400 mb-2">
+              <label htmlFor="email" className="block text-sm font-medium text-foreground-secondary mb-2">
                 Email address
               </label>
               <div className="relative">
-                <Mail className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-zinc-500" />
+                <Mail className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-foreground-tertiary" />
                 <input
                   id="email"
                   type="email"
@@ -73,7 +73,7 @@ export default function LoginPage() {
 
             <div>
               <div className="flex items-center justify-between mb-2">
-                <label htmlFor="password" className="block text-sm font-medium text-zinc-400">
+                <label htmlFor="password" className="block text-sm font-medium text-foreground-secondary">
                   Password
                 </label>
                 <Link href="/forgot-password" className="text-sm text-orange-400 hover:text-orange-300 transition-colors">
@@ -81,7 +81,7 @@ export default function LoginPage() {
                 </Link>
               </div>
               <div className="relative">
-                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-zinc-500" />
+                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-foreground-tertiary" />
                 <input
                   id="password"
                   type={showPassword ? 'text' : 'password'}
@@ -94,7 +94,7 @@ export default function LoginPage() {
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-4 top-1/2 -translate-y-1/2 text-zinc-500 hover:text-zinc-400 transition-colors"
+                  className="absolute right-4 top-1/2 -translate-y-1/2 text-foreground-tertiary hover:text-foreground-secondary transition-colors"
                 >
                   {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
                 </button>
@@ -125,9 +125,9 @@ export default function LoginPage() {
 
           {/* Divider */}
           <div className="my-8 flex items-center gap-4">
-            <div className="flex-1 h-px bg-white/[0.06]" />
-            <span className="text-sm text-zinc-500">or</span>
-            <div className="flex-1 h-px bg-white/[0.06]" />
+            <div className="flex-1 h-px bg-overlay-6" />
+            <span className="text-sm text-foreground-tertiary">or</span>
+            <div className="flex-1 h-px bg-overlay-6" />
           </div>
 
           {/* Demo Mode */}
@@ -144,7 +144,7 @@ export default function LoginPage() {
           </button>
 
           {/* Sign up link */}
-          <p className="mt-8 text-center text-sm text-zinc-500">
+          <p className="mt-8 text-center text-sm text-foreground-tertiary">
             Don't have an account?{' '}
             <Link href="/register" className="font-medium text-orange-400 hover:text-orange-300 transition-colors">
               Create one for free
@@ -154,17 +154,17 @@ export default function LoginPage() {
       </div>
 
       {/* Right Panel - Visual */}
-      <div className="hidden lg:flex flex-1 items-center justify-center bg-[#111113] border-l border-white/[0.06] p-12">
+      <div className="hidden lg:flex flex-1 items-center justify-center bg-surface-alt border-l border-subtle p-12">
         <div className="max-w-lg text-center">
           <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-2xl bg-gradient-to-br from-orange-500 to-orange-600 mb-8">
             <Sparkles className="h-10 w-10 text-white" />
           </div>
-          <h2 className="text-2xl font-bold text-white">AI-Powered Virtual Try-On</h2>
-          <p className="mt-4 text-zinc-400 leading-relaxed">
+          <h2 className="text-2xl font-bold text-foreground">AI-Powered Virtual Try-On</h2>
+          <p className="mt-4 text-foreground-secondary leading-relaxed">
             Transform your fashion workflow with our cutting-edge AI technology. 
             Upload photos, try on garments, and create stunning visuals in seconds.
           </p>
-          <div className="mt-8 flex items-center justify-center gap-6 text-sm text-zinc-500">
+          <div className="mt-8 flex items-center justify-center gap-6 text-sm text-foreground-tertiary">
             <div className="flex items-center gap-2">
               <div className="h-2 w-2 rounded-full bg-emerald-500" />
               99.9% Uptime

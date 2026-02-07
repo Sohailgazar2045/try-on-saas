@@ -14,11 +14,12 @@ export function AppWrapper({ children }: AppWrapperProps) {
         position="bottom-right"
         toastOptions={{
           style: {
-            background: '#18181b',
-            color: '#fafafa',
-            border: '1px solid rgba(255, 255, 255, 0.06)',
+            background: 'var(--bg-elevated)',
+            color: 'var(--text-primary)',
+            border: '1px solid var(--border-subtle)',
             borderRadius: '12px',
             fontSize: '14px',
+            boxShadow: '0 4px 12px rgba(0, 0, 0, 0.08)',
           },
           success: {
             iconTheme: {

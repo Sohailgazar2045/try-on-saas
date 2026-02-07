@@ -65,15 +65,15 @@ export default function PricingPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-[#0a0a0b]">
+    <div className="min-h-screen bg-surface">
       {/* Navigation */}
-      <nav className="border-b border-white/[0.06] bg-[#0a0a0b]/80 backdrop-blur-xl">
+      <nav className="border-b border-subtle bg-surface/80 backdrop-blur-xl">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
           <Link href="/" className="flex items-center gap-2.5">
             <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-orange-500 to-orange-600">
               <Sparkles className="h-5 w-5 text-white" />
             </div>
-            <span className="text-[15px] font-bold text-white">Virtual Try-On</span>
+            <span className="text-[15px] font-bold text-foreground">Virtual Try-On</span>
           </Link>
           <div className="flex items-center gap-2">
             <Link href="/login" className="btn-ghost">Sign in</Link>
@@ -86,8 +86,8 @@ export default function PricingPage() {
       <section className="py-20">
         <div className="mx-auto max-w-6xl px-6 text-center">
           <span className="text-sm font-semibold text-orange-400">PRICING</span>
-          <h1 className="mt-4 text-4xl font-bold text-white sm:text-5xl">Simple, transparent pricing</h1>
-          <p className="mt-4 text-lg text-zinc-400 max-w-xl mx-auto">
+          <h1 className="mt-4 text-4xl font-bold text-foreground sm:text-5xl">Simple, transparent pricing</h1>
+          <p className="mt-4 text-lg text-foreground-secondary max-w-xl mx-auto">
             Start free, upgrade when you need more. No hidden fees, cancel anytime.
           </p>
         </div>
@@ -107,24 +107,24 @@ export default function PricingPage() {
                 }`}
               >
                 {plan.highlight && (
-                  <div className="absolute -top-3 left-1/2 -translate-x-1/2">
+                  <div className="absolute top-2 left-1/2 -translate-x-1/2">
                     <span className="badge-accent">Most popular</span>
                   </div>
                 )}
                 
-                <h3 className="text-xl font-semibold text-white">{plan.name}</h3>
-                <p className="mt-1 text-sm text-zinc-500">{plan.description}</p>
+                <h3 className="text-xl font-semibold text-foreground">{plan.name}</h3>
+                <p className="mt-1 text-sm text-foreground-tertiary">{plan.description}</p>
                 
                 <div className="mt-6">
-                  <span className="text-5xl font-bold text-white">{plan.price}</span>
-                  {plan.period && <span className="text-zinc-400">{plan.period}</span>}
+                  <span className="text-5xl font-bold text-foreground">{plan.price}</span>
+                  {plan.period && <span className="text-foreground-secondary">{plan.period}</span>}
                 </div>
 
                 <ul className="mt-8 space-y-4">
                   {plan.features.map((feature, fIdx) => (
                     <li key={fIdx} className="flex items-center gap-3">
                       <CheckCircle2 className="h-5 w-5 text-emerald-500 shrink-0" />
-                      <span className="text-zinc-300">{feature}</span>
+                      <span className="text-foreground-secondary">{feature}</span>
                     </li>
                   ))}
                 </ul>
@@ -147,11 +147,11 @@ export default function PricingPage() {
       </section>
 
       {/* Credit Packs */}
-      <section className="py-20 border-t border-white/[0.06]">
+      <section className="py-20 border-t border-subtle">
         <div className="mx-auto max-w-6xl px-6">
           <div className="text-center mb-12">
-            <h2 className="text-2xl font-bold text-white">Need more credits?</h2>
-            <p className="mt-2 text-zinc-400">Purchase credit packs anytime, no subscription required</p>
+            <h2 className="text-2xl font-bold text-foreground">Need more credits?</h2>
+            <p className="mt-2 text-foreground-secondary">Purchase credit packs anytime, no subscription required</p>
           </div>
           
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
@@ -166,10 +166,10 @@ export default function PricingPage() {
                 <div className="flex h-14 w-14 items-center justify-center rounded-xl bg-orange-500/10 mx-auto">
                   <Zap className="h-7 w-7 text-orange-400" />
                 </div>
-                <p className="mt-4 text-3xl font-bold text-white">{pack.amount}</p>
-                <p className="text-sm text-zinc-500">credits</p>
-                <p className="mt-4 text-2xl font-bold text-white">{pack.price}</p>
-                <p className="text-xs text-zinc-500">{pack.perCredit} per credit</p>
+                <p className="mt-4 text-3xl font-bold text-foreground">{pack.amount}</p>
+                <p className="text-sm text-foreground-tertiary">credits</p>
+                <p className="mt-4 text-2xl font-bold text-foreground">{pack.price}</p>
+                <p className="text-xs text-foreground-tertiary">{pack.perCredit} per credit</p>
                 <Link href="/register" className="btn-secondary w-full justify-center mt-6">
                   Purchase
                 </Link>
@@ -180,9 +180,9 @@ export default function PricingPage() {
       </section>
 
       {/* FAQ */}
-      <section className="py-20 border-t border-white/[0.06]">
+      <section className="py-20 border-t border-subtle">
         <div className="mx-auto max-w-3xl px-6">
-          <h2 className="text-2xl font-bold text-white text-center mb-12">Frequently asked questions</h2>
+          <h2 className="text-2xl font-bold text-foreground text-center mb-12">Frequently asked questions</h2>
           
           <div className="space-y-6">
             {[
@@ -204,8 +204,8 @@ export default function PricingPage() {
               }
             ].map((faq, idx) => (
               <div key={idx} className="card">
-                <h3 className="font-semibold text-white">{faq.q}</h3>
-                <p className="mt-2 text-sm text-zinc-400">{faq.a}</p>
+                <h3 className="font-semibold text-foreground">{faq.q}</h3>
+                <p className="mt-2 text-sm text-foreground-secondary">{faq.a}</p>
               </div>
             ))}
           </div>
@@ -213,9 +213,9 @@ export default function PricingPage() {
       </section>
 
       {/* Footer */}
-      <footer className="border-t border-white/[0.06] py-12">
+      <footer className="border-t border-subtle py-12">
         <div className="mx-auto max-w-6xl px-6 text-center">
-          <p className="text-sm text-zinc-500">© 2024 Virtual Try-On. All rights reserved.</p>
+          <p className="text-sm text-foreground-tertiary">© 2024 Virtual Try-On. All rights reserved.</p>
         </div>
       </footer>
     </div>

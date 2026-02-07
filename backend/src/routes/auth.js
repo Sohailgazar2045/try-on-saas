@@ -38,7 +38,15 @@ const router = express.Router();
  *                 user: { $ref: '#/components/schemas/User' }
  *                 token: { type: string }
  *       400:
- *         description: Invalid input
+ *         $ref: '#/components/responses/ValidationError'
+ *       409:
+ *         description: User already exists
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ *             example:
+ *               message: 'User already exists'
  */
 router.post('/register', register);
 
@@ -73,7 +81,9 @@ router.post('/register', register);
  *                 user: { $ref: '#/components/schemas/User' }
  *                 token: { type: string }
  *       401:
- *         description: Invalid credentials
+ *         $ref: '#/components/responses/UnauthorizedError'
+ *       400:
+ *         $ref: '#/components/responses/ValidationError'
  */
 router.post('/login', login);
 
@@ -114,7 +124,9 @@ router.post('/logout', logout);
  *               properties:
  *                 user: { $ref: '#/components/schemas/User' }
  *       401:
- *         description: Unauthorized
+ *         $ref: '#/components/responses/UnauthorizedError'
+ *       404:
+ *         $ref: '#/components/responses/NotFoundError'
  */
 router.get('/profile', authenticate, getProfile);
 

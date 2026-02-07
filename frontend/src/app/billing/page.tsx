@@ -99,7 +99,7 @@ function BillingContent() {
   ];
 
   return (
-    <div className="flex h-screen bg-[#0a0a0b]">
+    <div className="flex h-screen bg-surface">
       <Sidebar user={user} />
 
       <main className="flex-1 flex flex-col overflow-hidden">
@@ -115,8 +115,8 @@ function BillingContent() {
             <div className="card-highlight">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-zinc-400">Current Balance</p>
-                  <p className="mt-2 text-4xl font-bold text-white">{user?.credits || 0} <span className="text-lg font-normal text-zinc-400">credits</span></p>
+                  <p className="text-sm text-foreground-secondary">Current Balance</p>
+                  <p className="mt-2 text-4xl font-bold text-foreground">{user?.credits || 0} <span className="text-lg font-normal text-foreground-secondary">credits</span></p>
                 </div>
                 <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-orange-500/10">
                   <Sparkles className="h-8 w-8 text-orange-400" />
@@ -126,7 +126,7 @@ function BillingContent() {
 
             {/* Credit Packs */}
             <div>
-              <h2 className="text-lg font-semibold text-white mb-6">Buy Credits</h2>
+              <h2 className="text-lg font-semibold text-foreground mb-6">Buy Credits</h2>
               <div className="grid gap-4 md:grid-cols-3">
                 {creditPacks.map((pack) => (
                   <div 
@@ -142,10 +142,10 @@ function BillingContent() {
                       <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-orange-500/10">
                         <Zap className="h-6 w-6 text-orange-400" />
                       </div>
-                      <span className="text-2xl font-bold text-white">{pack.price}</span>
+                      <span className="text-2xl font-bold text-foreground">{pack.price}</span>
                     </div>
-                    <p className="text-lg font-semibold text-white">{pack.amount} Credits</p>
-                    <p className="text-sm text-zinc-500 mt-1">${(parseFloat(pack.price.slice(1)) / pack.amount).toFixed(2)} per credit</p>
+                    <p className="text-lg font-semibold text-foreground">{pack.amount} Credits</p>
+                    <p className="text-sm text-foreground-tertiary mt-1">${(parseFloat(pack.price.slice(1)) / pack.amount).toFixed(2)} per credit</p>
                     <button
                       onClick={() => handlePurchase(pack.plan, 'credits')}
                       disabled={loading === pack.plan}
@@ -160,7 +160,7 @@ function BillingContent() {
 
             {/* Subscription Plans */}
             <div>
-              <h2 className="text-lg font-semibold text-white mb-6">Subscription Plans</h2>
+              <h2 className="text-lg font-semibold text-foreground mb-6">Subscription Plans</h2>
               <div className="grid gap-6 lg:grid-cols-3">
                 {plans.map((plan) => (
                   <div 
@@ -172,29 +172,29 @@ function BillingContent() {
                     } ${plan.current ? 'ring-2 ring-emerald-500/30' : ''}`}
                   >
                     {plan.popular && !plan.current && (
-                      <div className="absolute -top-3 left-1/2 -translate-x-1/2">
+                      <div className="absolute top-2 left-1/2 -translate-x-1/2">
                         <span className="badge-accent">Most popular</span>
                       </div>
                     )}
                     {plan.current && (
-                      <div className="absolute -top-3 left-1/2 -translate-x-1/2">
+                      <div className="absolute top-2 left-1/2 -translate-x-1/2">
                         <span className="badge-success">Current plan</span>
                       </div>
                     )}
                     
-                    <h3 className="text-lg font-semibold text-white">{plan.name}</h3>
-                    <p className="text-sm text-zinc-500 mt-1">{plan.description}</p>
+                    <h3 className="text-lg font-semibold text-foreground">{plan.name}</h3>
+                    <p className="text-sm text-foreground-tertiary mt-1">{plan.description}</p>
                     
                     <div className="mt-4">
-                      <span className="text-3xl font-bold text-white">{plan.price}</span>
-                      {plan.period && <span className="text-zinc-400">{plan.period}</span>}
+                      <span className="text-3xl font-bold text-foreground">{plan.price}</span>
+                      {plan.period && <span className="text-foreground-secondary">{plan.period}</span>}
                     </div>
 
                     <ul className="mt-6 space-y-3">
                       {plan.features.map((feature, idx) => (
                         <li key={idx} className="flex items-center gap-3 text-sm">
                           <CheckCircle2 className="h-4 w-4 text-emerald-500 shrink-0" />
-                          <span className="text-zinc-300">{feature}</span>
+                          <span className="text-foreground-secondary">{feature}</span>
                         </li>
                       ))}
                     </ul>
@@ -206,7 +206,7 @@ function BillingContent() {
                         plan.current 
                           ? 'bg-emerald-500/10 text-emerald-400 cursor-default'
                           : plan.plan === 'free'
-                          ? 'bg-white/[0.04] text-zinc-500 cursor-default'
+                          ? 'bg-overlay-4 text-foreground-tertiary cursor-default'
                           : plan.popular 
                           ? 'btn-primary justify-center' 
                           : 'btn-secondary justify-center'

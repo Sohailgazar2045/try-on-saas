@@ -41,7 +41,7 @@ export function UploadImage({ onUpload, currentImage }: UploadImageProps) {
 
   if (currentImage) {
     return (
-      <div className="relative aspect-[3/4] overflow-hidden rounded-xl border border-white/[0.06] bg-white/[0.02]">
+      <div className="relative aspect-[3/4] overflow-hidden rounded-xl border border-subtle bg-overlay-2">
         <img
           src={currentImage.url}
           alt="Uploaded"
@@ -74,22 +74,22 @@ export function UploadImage({ onUpload, currentImage }: UploadImageProps) {
       className={`relative aspect-[3/4] flex flex-col items-center justify-center rounded-xl border-2 border-dashed transition-all cursor-pointer ${
         isDragging
           ? 'border-orange-500 bg-orange-500/5'
-          : 'border-white/10 hover:border-white/20 hover:bg-white/[0.02]'
+          : 'border-overlay-10 hover:border-muted hover:bg-overlay-2'
       }`}
     >
       <div className="flex flex-col items-center text-center px-6">
         <div className={`flex h-14 w-14 items-center justify-center rounded-xl transition-colors ${
-          isDragging ? 'bg-orange-500/10' : 'bg-white/[0.04]'
+          isDragging ? 'bg-orange-500/10' : 'bg-overlay-4'
         }`}>
-          <ImageIcon className={`h-7 w-7 ${isDragging ? 'text-orange-400' : 'text-zinc-500'}`} />
+          <ImageIcon className={`h-7 w-7 ${isDragging ? 'text-orange-400' : 'text-foreground-tertiary'}`} />
         </div>
-        <p className="mt-4 text-sm font-medium text-white">
+        <p className="mt-4 text-sm font-medium text-foreground">
           {isDragging ? 'Drop image here' : 'Click to upload'}
         </p>
-        <p className="mt-1 text-xs text-zinc-500">
+        <p className="mt-1 text-xs text-foreground-tertiary">
           or drag and drop
         </p>
-        <p className="mt-3 text-xs text-zinc-600">
+        <p className="mt-3 text-xs text-foreground-tertiary">
           PNG, JPG up to 10MB
         </p>
       </div>

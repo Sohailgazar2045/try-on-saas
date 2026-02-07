@@ -16,10 +16,7 @@ const router = express.Router();
  *         content:
  *           application/json:
  *             schema:
- *               type: object
- *               properties:
- *                 subscriptions: { type: object }
- *                 creditPackages: { type: object }
+ *               $ref: '#/components/schemas/Pricing'
  */
 router.get('/pricing', getPricing);
 
@@ -56,8 +53,18 @@ router.get('/pricing', getPricing);
  *               properties:
  *                 sessionId: { type: string }
  *                 url: { type: string }
+ *       200:
+ *         description: Checkout session created
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/CheckoutSession'
  *       400:
- *         description: Invalid plan
+ *         $ref: '#/components/responses/ValidationError'
+ *       401:
+ *         $ref: '#/components/responses/UnauthorizedError'
+ *       500:
+ *         $ref: '#/components/responses/ServerError'
  */
 router.post('/checkout', authenticate, createCheckoutSession);
 

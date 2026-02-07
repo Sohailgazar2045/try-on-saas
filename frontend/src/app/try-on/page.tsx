@@ -187,7 +187,7 @@ function TryOnContent() {
   ];
 
   return (
-    <div className="flex h-screen bg-[#0a0a0b]">
+    <div className="flex h-screen bg-surface">
       <Sidebar user={user} />
 
       <main className="flex-1 flex flex-col overflow-hidden">
@@ -207,8 +207,8 @@ function TryOnContent() {
                   <div key={idx} className="flex items-center gap-3">
                     <div className={`flex items-center gap-2 rounded-full px-4 py-2 transition-all ${
                       step.complete 
-                        ? 'bg-emerald-500/10 text-emerald-400' 
-                        : 'bg-white/[0.04] text-zinc-500'
+                        ? 'bg-emerald-500/10 text-emerald-500 dark:text-emerald-400' 
+                        : 'bg-overlay-4 text-foreground-tertiary'
                     }`}>
                       {step.complete ? (
                         <Check className="h-4 w-4" />
@@ -219,7 +219,7 @@ function TryOnContent() {
                     </div>
                     {idx < steps.length - 1 && (
                       <div className={`w-12 h-px ${
-                        steps[idx + 1].complete || step.complete ? 'bg-emerald-500/30' : 'bg-white/[0.06]'
+                        steps[idx + 1].complete || step.complete ? 'bg-emerald-500/30' : 'bg-overlay-6'
                       }`} />
                     )}
                   </div>
@@ -237,11 +237,11 @@ function TryOnContent() {
                       <Upload className="h-5 w-5 text-orange-400" />
                     </div>
                     <div>
-                      <h2 className="font-semibold text-white">Your Photo</h2>
-                      <p className="text-xs text-zinc-500">Upload your photo or model image. Front-facing works best.</p>
+                      <h2 className="font-semibold text-foreground">Your Photo</h2>
+                      <p className="text-xs text-foreground-tertiary">Upload your photo or model image. Front-facing works best.</p>
                     </div>
                   </div>
-                  {personImage && <Check className="h-5 w-5 text-emerald-400" />}
+                  {personImage && <Check className="h-5 w-5 text-emerald-500 dark:text-emerald-400" />}
                 </div>
                 
                 <UploadImage
@@ -250,8 +250,8 @@ function TryOnContent() {
                 />
                 
                 {userPhotos.length > 0 && (
-                  <div className="mt-6 pt-6 border-t border-white/[0.06]">
-                    <p className="text-xs font-medium text-zinc-500 mb-3">Recent uploads</p>
+                  <div className="mt-6 pt-6 border-t border-subtle">
+                    <p className="text-xs font-medium text-foreground-tertiary mb-3">Recent uploads</p>
                     <div className="grid grid-cols-3 gap-2">
                       {userPhotos.slice(0, 3).map((img) => (
                         <button
@@ -260,7 +260,7 @@ function TryOnContent() {
                           className={`relative aspect-square overflow-hidden rounded-xl border-2 transition-all ${
                             personImage?.id === img.id
                               ? 'border-emerald-500 ring-2 ring-emerald-500/20'
-                              : 'border-transparent hover:border-white/10'
+                              : 'border-transparent hover:border-muted'
                           }`}
                         >
                           <img
@@ -270,7 +270,7 @@ function TryOnContent() {
                           />
                           {personImage?.id === img.id && (
                             <div className="absolute inset-0 flex items-center justify-center bg-emerald-500/20">
-                              <Check className="h-5 w-5 text-emerald-400" />
+                              <Check className="h-5 w-5 text-emerald-500 dark:text-emerald-400" />
                             </div>
                           )}
                         </button>
@@ -288,11 +288,11 @@ function TryOnContent() {
                       <Shirt className="h-5 w-5 text-blue-400" />
                     </div>
                     <div>
-                      <h2 className="font-semibold text-white">Clothing Item</h2>
-                      <p className="text-xs text-zinc-500">Select the garment you want to try on. Works with any clothing type.</p>
+                      <h2 className="font-semibold text-foreground">Clothing Item</h2>
+                      <p className="text-xs text-foreground-tertiary">Select the garment you want to try on. Works with any clothing type.</p>
                     </div>
                   </div>
-                  {outfitImage && <Check className="h-5 w-5 text-emerald-400" />}
+                  {outfitImage && <Check className="h-5 w-5 text-emerald-500 dark:text-emerald-400" />}
                 </div>
                 
                 <UploadImage
@@ -301,8 +301,8 @@ function TryOnContent() {
                 />
                 
                 {outfitPhotos.length > 0 && (
-                  <div className="mt-6 pt-6 border-t border-white/[0.06]">
-                    <p className="text-xs font-medium text-zinc-500 mb-3">Recent uploads</p>
+                  <div className="mt-6 pt-6 border-t border-subtle">
+                    <p className="text-xs font-medium text-foreground-tertiary mb-3">Recent uploads</p>
                     <div className="grid grid-cols-3 gap-2">
                       {outfitPhotos.slice(0, 3).map((img) => (
                         <button
@@ -311,7 +311,7 @@ function TryOnContent() {
                           className={`relative aspect-square overflow-hidden rounded-xl border-2 transition-all ${
                             outfitImage?.id === img.id
                               ? 'border-emerald-500 ring-2 ring-emerald-500/20'
-                              : 'border-transparent hover:border-white/10'
+                              : 'border-transparent hover:border-muted'
                           }`}
                         >
                           <img
@@ -321,7 +321,7 @@ function TryOnContent() {
                           />
                           {outfitImage?.id === img.id && (
                             <div className="absolute inset-0 flex items-center justify-center bg-emerald-500/20">
-                              <Check className="h-5 w-5 text-emerald-400" />
+                              <Check className="h-5 w-5 text-emerald-500 dark:text-emerald-400" />
                             </div>
                           )}
                         </button>
@@ -365,16 +365,16 @@ function TryOnContent() {
                 <div className="flex items-center justify-between mb-6">
                   <div className="flex items-center gap-3">
                     <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-500/10">
-                      <Check className="h-5 w-5 text-emerald-400" />
+                      <Check className="h-5 w-5 text-emerald-500 dark:text-emerald-400" />
                     </div>
                     <div>
-                      <h2 className="font-semibold text-white">Result Ready</h2>
-                      <p className="text-xs text-zinc-500">Your AI-generated try-on preview</p>
+                      <h2 className="font-semibold text-foreground">Result Ready</h2>
+                      <p className="text-xs text-foreground-tertiary">Your AI-generated try-on preview</p>
                     </div>
                   </div>
                 </div>
                 
-                <div className="rounded-xl overflow-hidden bg-white/[0.02] border border-white/[0.06]">
+                <div className="rounded-xl overflow-hidden bg-overlay-2 border border-subtle">
                   <ImagePreview image={resultImage} />
                 </div>
                 

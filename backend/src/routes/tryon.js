@@ -38,14 +38,32 @@ const router = express.Router();
  *                 message: { type: string }
  *                 image: { $ref: '#/components/schemas/Image' }
  *                 creditsRemaining: { type: integer }
+ *       200:
+ *         description: Try-on generated successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/TryOnResponse'
  *       400:
- *         description: Invalid request
+ *         $ref: '#/components/responses/ValidationError'
+ *       401:
+ *         $ref: '#/components/responses/UnauthorizedError'
  *       402:
- *         description: Insufficient credits
- *       404:
- *         description: Image not found
+ *         $ref: '#/components/responses/InsufficientCreditsError'
  *       403:
- *         description: Not authorized
+ *         description: Not authorized to use these images
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ *       404:
+ *         $ref: '#/components/responses/NotFoundError'
+ *       500:
+ *         description: AI generation failed
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
  */
 router.post('/generate', authenticate, generateTryOnImage);
 

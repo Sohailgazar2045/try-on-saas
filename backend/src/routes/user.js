@@ -22,8 +22,10 @@ const router = express.Router();
  *               type: object
  *               properties:
  *                 user: { $ref: '#/components/schemas/User' }
+ *       401:
+ *         $ref: '#/components/responses/UnauthorizedError'
  *       404:
- *         description: User not found
+ *         $ref: '#/components/responses/NotFoundError'
  */
 router.get('/profile', authenticate, getProfile);
 
@@ -55,8 +57,21 @@ router.get('/profile', authenticate, getProfile);
  *               properties:
  *                 message: { type: string }
  *                 user: { $ref: '#/components/schemas/User' }
+ *       200:
+ *         description: Profile updated successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message: { type: 'string' }
+ *                 user: { $ref: '#/components/schemas/User' }
  *       400:
- *         description: Invalid input
+ *         $ref: '#/components/responses/ValidationError'
+ *       401:
+ *         $ref: '#/components/responses/UnauthorizedError'
+ *       404:
+ *         $ref: '#/components/responses/NotFoundError'
  */
 router.put('/profile', authenticate, updateProfile);
 
@@ -72,8 +87,16 @@ router.put('/profile', authenticate, updateProfile);
  *     responses:
  *       200:
  *         description: Account deleted successfully
+ *       200:
+ *         description: Account deleted successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Success'
+ *       401:
+ *         $ref: '#/components/responses/UnauthorizedError'
  *       404:
- *         description: User not found
+ *         $ref: '#/components/responses/NotFoundError'
  */
 router.delete('/account', authenticate, deleteAccount);
 

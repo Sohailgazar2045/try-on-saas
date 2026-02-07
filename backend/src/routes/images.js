@@ -44,7 +44,11 @@ const router = express.Router();
  *                 message: { type: string }
  *                 image: { $ref: '#/components/schemas/Image' }
  *       400:
- *         description: Invalid input
+ *         $ref: '#/components/responses/ValidationError'
+ *       401:
+ *         $ref: '#/components/responses/UnauthorizedError'
+ *       500:
+ *         $ref: '#/components/responses/ServerError'
  */
 router.post('/upload', authenticate, uploadSingle, uploadImage);
 
@@ -76,7 +80,7 @@ router.post('/upload', authenticate, uploadSingle, uploadImage);
  *                   type: array
  *                   items: { $ref: '#/components/schemas/Image' }
  *       401:
- *         description: Unauthorized
+ *         $ref: '#/components/responses/UnauthorizedError'
  */
 router.get('/', authenticate, getUserImages);
 
@@ -99,10 +103,16 @@ router.get('/', authenticate, getUserImages);
  *     responses:
  *       200:
  *         description: Image deleted successfully
- *       404:
- *         description: Image not found
+ *       401:
+ *         $ref: '#/components/responses/UnauthorizedError'
  *       403:
- *         description: Not authorized
+ *         description: Not authorized to delete this image
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ *       404:
+ *         $ref: '#/components/responses/NotFoundError'
  */
 router.delete('/:id', authenticate, deleteImage);
 
@@ -132,7 +142,9 @@ router.delete('/:id', authenticate, deleteImage);
  *       201:
  *         description: Image saved successfully
  *       400:
- *         description: Invalid input
+ *         $ref: '#/components/responses/ValidationError'
+ *       401:
+ *         $ref: '#/components/responses/UnauthorizedError'
  */
 router.post('/save', authenticate, saveGeneratedImage);
 

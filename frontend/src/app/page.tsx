@@ -25,13 +25,17 @@ import {
   Menu,
   X,
   Shirt,
-  User
+  User,
+  Sun,
+  Moon
 } from 'lucide-react';
+import { useTheme } from '@/components/ThemeProvider';
 
 export default function Home() {
   const router = useRouter();
   const [mounted, setMounted] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const { theme, toggleTheme } = useTheme();
 
   useEffect(() => {
     setMounted(true);
@@ -43,24 +47,27 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen bg-[#0a0a0b]">
+    <div className="min-h-screen bg-surface">
       {/* Navigation */}
-      <nav className="fixed top-0 left-0 right-0 z-50 border-b border-white/[0.06] bg-[#0a0a0b]/80 backdrop-blur-xl">
+      <nav className="fixed top-0 left-0 right-0 z-50 border-b border-subtle bg-surface/80 backdrop-blur-xl">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
           <Link href="/" className="flex items-center gap-2.5">
             <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-orange-500 to-orange-600">
               <Sparkles className="h-5 w-5 text-white" />
             </div>
-            <span className="text-[15px] font-bold text-white">Virtual Try-On</span>
+            <span className="text-[15px] font-bold text-foreground">Virtual Try-On</span>
           </Link>
-
+          
           {/* Desktop Nav */}
           <div className="hidden items-center gap-1 md:flex">
             <Link href="#for-users" className="btn-ghost">For Shoppers</Link>
             <Link href="#for-business" className="btn-ghost">For Business</Link>
             <Link href="#pricing" className="btn-ghost">Pricing</Link>
             <Link href="/login" className="btn-ghost">Sign in</Link>
-            <Link href="/register" className="btn-primary ml-2">
+            <button onClick={toggleTheme} className="btn-ghost p-2" title={theme === 'dark' ? 'Light mode' : 'Dark mode'}>
+              {theme === 'dark' ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+            </button>
+            <Link href="/register" className="btn-primary ml-1">
               Get started free
               <ArrowRight className="h-4 w-4" />
             </Link>
@@ -69,7 +76,7 @@ export default function Home() {
           {/* Mobile Menu Button */}
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="rounded-lg p-2 text-zinc-400 hover:bg-white/5 md:hidden"
+            className="rounded-lg p-2 text-foreground-secondary hover:bg-overlay-4 md:hidden"
           >
             {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
           </button>
@@ -77,7 +84,7 @@ export default function Home() {
 
         {/* Mobile Menu */}
         {mobileMenuOpen && (
-          <div className="border-t border-white/[0.06] bg-[#0a0a0b] px-6 py-4 md:hidden">
+          <div className="border-t border-subtle bg-surface px-6 py-4 md:hidden">
             <div className="flex flex-col gap-2">
               <Link href="#for-users" className="btn-ghost justify-start">For Shoppers</Link>
               <Link href="#for-business" className="btn-ghost justify-start">For Business</Link>
@@ -111,7 +118,7 @@ export default function Home() {
             </h1>
 
             {/* Subheading */}
-            <p className={`mt-6 text-lg leading-relaxed text-zinc-400 max-w-2xl mx-auto ${mounted ? 'animate-fade-in-delay-2' : 'opacity-0'}`}>
+            <p className={`mt-6 text-lg leading-relaxed text-foreground-secondary max-w-2xl mx-auto ${mounted ? 'animate-fade-in-delay-2' : 'opacity-0'}`}>
               Whether you're shopping online or running a fashion business, see how clothes look in real-time. 
               Perfect for shoppers, fashion brands, e-commerce stores, and content creators.
             </p>
@@ -129,7 +136,7 @@ export default function Home() {
             </div>
 
             {/* Trust indicators */}
-            <div className={`mt-12 flex flex-wrap items-center justify-center gap-x-8 gap-y-4 text-sm text-zinc-500 ${mounted ? 'animate-fade-in-delay-3' : 'opacity-0'}`}>
+            <div className={`mt-12 flex flex-wrap items-center justify-center gap-x-8 gap-y-4 text-sm text-foreground-tertiary ${mounted ? 'animate-fade-in-delay-3' : 'opacity-0'}`}>
               <div className="flex items-center gap-2">
                 <CheckCircle2 className="h-4 w-4 text-emerald-500" />
                 No credit card required
@@ -149,37 +156,39 @@ export default function Home() {
           <div className={`mt-20 ${mounted ? 'animate-fade-in-delay-3' : 'opacity-0'}`}>
             <div className="relative mx-auto max-w-4xl">
               <div className="absolute -inset-4 rounded-3xl bg-gradient-to-r from-orange-500/20 via-orange-500/5 to-orange-500/20 blur-2xl" />
-              <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-[#111113]">
+              <div className="relative overflow-hidden rounded-2xl border border-muted bg-surface-alt">
                 {/* Window header */}
-                <div className="flex items-center gap-2 border-b border-white/[0.06] px-4 py-3">
+                <div className="flex items-center gap-2 border-b border-subtle px-4 py-3">
                   <div className="flex gap-1.5">
-                    <div className="h-3 w-3 rounded-full bg-white/10" />
-                    <div className="h-3 w-3 rounded-full bg-white/10" />
-                    <div className="h-3 w-3 rounded-full bg-white/10" />
+                    <div className="h-3 w-3 rounded-full bg-overlay-10" />
+                    <div className="h-3 w-3 rounded-full bg-overlay-10" />
+                    <div className="h-3 w-3 rounded-full bg-overlay-10" />
                   </div>
                   <div className="flex-1 text-center">
-                    <span className="text-xs text-zinc-500">Virtual Try-On Studio</span>
-                  </div>
+                    <span className="text-xs text-foreground-tertiary">Virtual Try-On Studio</span>
+              </div>
                 </div>
                 
                 {/* Preview content */}
                 <div className="grid gap-6 p-6 md:grid-cols-2 md:p-8">
                   <div className="space-y-3">
-                    <p className="text-xs font-medium text-zinc-400">Your Photo</p>
-                    <div className="aspect-[3/4] rounded-xl bg-gradient-to-br from-zinc-800 to-zinc-900 flex items-center justify-center">
-                      <div className="text-center">
-                        <User className="h-8 w-8 text-zinc-600 mx-auto" />
-                        <p className="mt-2 text-sm text-zinc-600">Upload your photo</p>
-                      </div>
+                    <p className="text-xs font-medium text-foreground-secondary">Before Outfit</p>
+                    <div className="aspect-[3/4] rounded-xl overflow-hidden bg-gradient-to-br from-zinc-100 to-zinc-200 dark:from-zinc-800 dark:to-zinc-900">
+                      <img 
+                        src="https://outfitters.com.pk/cdn/shop/files/F0307101901.jpg?v=1763374335&width=1946" 
+                        alt="Before outfit" 
+                        className="w-full h-full object-cover"
+                      />
                     </div>
                   </div>
                   <div className="space-y-3">
-                    <p className="text-xs font-medium text-zinc-400">AI Try-On Result</p>
-                    <div className="aspect-[3/4] rounded-xl bg-gradient-to-br from-orange-500/20 via-orange-500/10 to-amber-500/20 flex items-center justify-center">
-                      <div className="text-center">
-                        <Shirt className="h-8 w-8 text-orange-400 mx-auto" />
-                        <p className="mt-2 text-sm text-orange-400/80">See how it fits</p>
-                      </div>
+                    <p className="text-xs font-medium text-foreground-secondary">After Try-On</p>
+                    <div className="aspect-[3/4] rounded-xl overflow-hidden bg-gradient-to-br from-orange-500/20 via-orange-500/10 to-amber-500/20">
+                      <img 
+                        src="https://outfitters.com.pk/cdn/shop/files/F0547107901.jpg?v=1764849680&width=1946" 
+                        alt="After try-on" 
+                        className="w-full h-full object-cover"
+                      />
                     </div>
                   </div>
                 </div>
@@ -190,12 +199,12 @@ export default function Home() {
       </section>
 
       {/* Use Cases Section */}
-      <section className="py-24 border-y border-white/[0.06]">
+      <section className="py-24 border-y border-subtle">
         <div className="mx-auto max-w-6xl px-6">
           <div className="text-center mb-16">
             <span className="text-sm font-semibold text-orange-400">WHO IT'S FOR</span>
             <h2 className="mt-4 heading-lg">Built for shoppers and fashion businesses</h2>
-            <p className="mt-4 text-zinc-400 max-w-xl mx-auto">
+            <p className="mt-4 text-foreground-secondary max-w-xl mx-auto">
               From personal shopping to enterprise fashion brands, Virtual Try-On works for everyone
             </p>
           </div>
@@ -208,12 +217,12 @@ export default function Home() {
                   <ShoppingBag className="h-7 w-7 text-blue-400" />
                 </div>
                 <div>
-                  <h3 className="text-xl font-semibold text-white">For Shoppers</h3>
-                  <p className="text-sm text-zinc-500">Personal use</p>
+                  <h3 className="text-xl font-semibold text-foreground">For Shoppers</h3>
+                  <p className="text-sm text-foreground-tertiary">Personal use</p>
                 </div>
               </div>
               
-              <p className="text-zinc-400 mb-6">
+              <p className="text-foreground-secondary mb-6">
                 Shop with confidence. See exactly how clothes will look on you before making a purchase. 
                 Reduce returns, find your perfect fit, and discover new styles that work for your body type.
               </p>
@@ -228,7 +237,7 @@ export default function Home() {
                 ].map((feature, idx) => (
                   <li key={idx} className="flex items-start gap-3">
                     <CheckCircle2 className="h-5 w-5 text-emerald-500 shrink-0 mt-0.5" />
-                    <span className="text-sm text-zinc-300">{feature}</span>
+                    <span className="text-sm text-foreground-secondary">{feature}</span>
                   </li>
                 ))}
               </ul>
@@ -246,12 +255,12 @@ export default function Home() {
                   <Store className="h-7 w-7 text-orange-400" />
                 </div>
                 <div>
-                  <h3 className="text-xl font-semibold text-white">For Fashion Business</h3>
-                  <p className="text-sm text-zinc-500">E-commerce & brands</p>
+                  <h3 className="text-xl font-semibold text-foreground">For Fashion Business</h3>
+                  <p className="text-sm text-foreground-tertiary">E-commerce & brands</p>
                 </div>
               </div>
               
-              <p className="text-zinc-400 mb-6">
+              <p className="text-foreground-secondary mb-6">
                 Transform your fashion business with AI-powered virtual try-on. Increase conversions, 
                 reduce returns, and create stunning product visuals without expensive photo shoots.
               </p>
@@ -266,7 +275,7 @@ export default function Home() {
                 ].map((feature, idx) => (
                   <li key={idx} className="flex items-start gap-3">
                     <CheckCircle2 className="h-5 w-5 text-emerald-500 shrink-0 mt-0.5" />
-                    <span className="text-sm text-zinc-300">{feature}</span>
+                    <span className="text-sm text-foreground-secondary">{feature}</span>
                   </li>
                 ))}
               </ul>
@@ -321,8 +330,8 @@ export default function Home() {
                   <div className={`flex h-12 w-12 items-center justify-center rounded-xl ${colorClasses[item.color as keyof typeof colorClasses]} mx-auto mb-4`}>
                     <Icon className="h-6 w-6" />
                   </div>
-                  <h3 className="text-lg font-semibold text-white mb-2">{item.title}</h3>
-                  <p className="text-sm text-zinc-400 leading-relaxed">{item.description}</p>
+                  <h3 className="text-lg font-semibold text-foreground mb-2">{item.title}</h3>
+                  <p className="text-sm text-foreground-secondary leading-relaxed">{item.description}</p>
                 </div>
               );
             })}
@@ -336,7 +345,7 @@ export default function Home() {
           <div className="text-center">
             <span className="text-sm font-semibold text-orange-400">HOW IT WORKS</span>
             <h2 className="mt-4 heading-lg">Three simple steps to perfect fit</h2>
-            <p className="mt-4 text-zinc-400 max-w-xl mx-auto">
+            <p className="mt-4 text-foreground-secondary max-w-xl mx-auto">
               Our AI-powered platform makes virtual try-on effortless. No technical skills required.
             </p>
           </div>
@@ -367,10 +376,10 @@ export default function Home() {
                   <div className="icon-container h-12 w-12">
                     <item.icon className="h-6 w-6 text-orange-400" />
                   </div>
-                  <span className="text-4xl font-bold text-zinc-800">{item.step}</span>
+                  <span className="text-4xl font-bold text-zinc-200 dark:text-zinc-800">{item.step}</span>
                 </div>
                 <h3 className="mt-6 heading-md">{item.title}</h3>
-                <p className="mt-3 text-sm text-zinc-400 leading-relaxed">{item.description}</p>
+                <p className="mt-3 text-sm text-foreground-secondary leading-relaxed">{item.description}</p>
               </div>
             ))}
           </div>
@@ -384,7 +393,7 @@ export default function Home() {
             <div>
               <span className="text-sm font-semibold text-orange-400">FEATURES</span>
               <h2 className="mt-4 heading-lg">Everything you need to shop smarter and grow your business</h2>
-              <p className="mt-4 text-zinc-400">
+              <p className="mt-4 text-foreground-secondary">
                 Built for both individual shoppers and fashion businesses that care about customer experience and reducing returns.
               </p>
 
@@ -413,11 +422,11 @@ export default function Home() {
                 ].map((feature, idx) => (
                   <div key={idx} className="flex gap-4 group">
                     <div className="icon-container-neutral h-10 w-10 shrink-0 group-hover:bg-orange-500/10 transition-colors">
-                      <feature.icon className="h-5 w-5 text-zinc-400 group-hover:text-orange-400 transition-colors" />
+                      <feature.icon className="h-5 w-5 text-foreground-secondary group-hover:text-orange-400 transition-colors" />
                     </div>
                     <div>
-                      <h3 className="font-semibold text-white">{feature.title}</h3>
-                      <p className="mt-1 text-sm text-zinc-400">{feature.description}</p>
+                      <h3 className="font-semibold text-foreground">{feature.title}</h3>
+                      <p className="mt-1 text-sm text-foreground-secondary">{feature.description}</p>
                     </div>
                   </div>
                 ))}
@@ -434,7 +443,7 @@ export default function Home() {
               ].map((stat, idx) => (
                 <div key={idx} className="card text-center py-8">
                   <div className="text-4xl font-bold gradient-text">{stat.value}</div>
-                  <p className="mt-2 text-sm text-zinc-400">{stat.label}</p>
+                  <p className="mt-2 text-sm text-foreground-secondary">{stat.label}</p>
                 </div>
               ))}
             </div>
@@ -443,12 +452,12 @@ export default function Home() {
       </section>
 
       {/* Pricing Section */}
-      <section id="pricing" className="py-24 border-t border-white/[0.06]">
+      <section id="pricing" className="py-24 border-t border-subtle">
         <div className="mx-auto max-w-6xl px-6">
           <div className="text-center">
             <span className="text-sm font-semibold text-orange-400">PRICING</span>
             <h2 className="mt-4 heading-lg">Simple, transparent pricing</h2>
-            <p className="mt-4 text-zinc-400">Start free, upgrade when you need more.</p>
+            <p className="mt-4 text-foreground-secondary">Start free, upgrade when you need more.</p>
           </div>
 
           <div className="mt-16 grid gap-6 lg:grid-cols-3">
@@ -493,29 +502,29 @@ export default function Home() {
                 }`}
               >
                 {plan.highlight && (
-                  <div className="absolute -top-3 left-1/2 -translate-x-1/2">
+                  <div className="absolute top-2 left-1/2 -translate-x-1/2">
                     <span className="badge-accent">Most popular</span>
                   </div>
                 )}
                 
                 <h3 className="text-lg font-semibold">{plan.name}</h3>
-                <p className="mt-1 text-sm text-zinc-500">{plan.description}</p>
+                <p className="mt-1 text-sm text-foreground-tertiary">{plan.description}</p>
                 
                 <div className="mt-6">
-                  <span className="text-5xl font-bold text-white">{plan.price}</span>
-                  {plan.period && <span className="text-zinc-400">{plan.period}</span>}
+                  <span className="text-5xl font-bold text-foreground">{plan.price}</span>
+                  {plan.period && <span className="text-foreground-secondary">{plan.period}</span>}
                 </div>
 
                 <ul className="mt-8 space-y-4">
                   {plan.features.map((feature, fIdx) => (
                     <li key={fIdx} className="flex items-center gap-3">
                       <CheckCircle2 className="h-5 w-5 text-emerald-500 shrink-0" />
-                      <span className="text-zinc-300">{feature}</span>
-                    </li>
-                  ))}
-                </ul>
+                      <span className="text-foreground-secondary">{feature}</span>
+                      </li>
+                    ))}
+                  </ul>
 
-                <Link 
+                  <Link
                   href={plan.href}
                   className={`mt-8 flex w-full items-center justify-center gap-2 py-3.5 rounded-xl font-semibold transition-all ${
                     plan.highlight 
@@ -525,7 +534,7 @@ export default function Home() {
                 >
                   {plan.cta}
                   <ArrowRight className="h-4 w-4" />
-                </Link>
+          </Link>
               </div>
             ))}
           </div>
@@ -539,14 +548,14 @@ export default function Home() {
             <div className="absolute inset-0 bg-grid opacity-30" />
             <div className="relative">
               <h2 className="heading-lg">Ready to transform your fashion experience?</h2>
-              <p className="mt-4 text-zinc-400 max-w-xl mx-auto">
+              <p className="mt-4 text-foreground-secondary max-w-xl mx-auto">
                 Whether you're shopping online or running a fashion business, Virtual Try-On helps you make better decisions.
               </p>
               <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4">
                 <Link href="/register" className="btn-primary px-8 py-3.5 text-base">
                   Start free trial
                   <ArrowRight className="h-5 w-5" />
-                </Link>
+            </Link>
                 <button onClick={handleDemoClick} className="btn-secondary px-8 py-3.5 text-base">
                   <Play className="h-4 w-4" />
                   Try live demo
@@ -558,7 +567,7 @@ export default function Home() {
       </section>
 
       {/* Footer */}
-      <footer className="border-t border-white/[0.06] py-16">
+      <footer className="border-t border-subtle py-16">
         <div className="mx-auto max-w-6xl px-6">
           <div className="grid gap-12 md:grid-cols-4">
             <div>
@@ -566,9 +575,9 @@ export default function Home() {
                 <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-orange-500 to-orange-600">
                   <Sparkles className="h-5 w-5 text-white" />
                 </div>
-                <span className="text-[15px] font-bold text-white">Virtual Try-On</span>
+                <span className="text-[15px] font-bold text-foreground">Virtual Try-On</span>
               </Link>
-              <p className="mt-4 text-sm text-zinc-500 leading-relaxed">
+              <p className="mt-4 text-sm text-foreground-tertiary leading-relaxed">
                 AI-powered virtual fitting room for shoppers and fashion businesses.
               </p>
             </div>
@@ -603,28 +612,28 @@ export default function Home() {
               }
             ].map((section, idx) => (
               <div key={idx}>
-                <h4 className="font-semibold text-white">{section.title}</h4>
+                <h4 className="font-semibold text-foreground">{section.title}</h4>
                 <ul className="mt-4 space-y-3">
                   {section.links.map((link, lIdx) => (
                     <li key={lIdx}>
-                      <Link href={link.href} className="text-sm text-zinc-500 hover:text-white transition-colors">
+                      <Link href={link.href} className="text-sm text-foreground-tertiary hover:text-foreground transition-colors">
                         {link.label}
                       </Link>
                     </li>
                   ))}
                 </ul>
-              </div>
+          </div>
             ))}
           </div>
 
-          <div className="mt-16 flex flex-col md:flex-row items-center justify-between gap-4 pt-8 border-t border-white/[0.06]">
-            <p className="text-sm text-zinc-500">© 2024 Virtual Try-On. All rights reserved.</p>
+          <div className="mt-16 flex flex-col md:flex-row items-center justify-between gap-4 pt-8 border-t border-subtle">
+            <p className="text-sm text-foreground-tertiary">© 2024 Virtual Try-On. All rights reserved.</p>
             <div className="flex items-center gap-6">
-              <Link href="#" className="text-zinc-500 hover:text-white transition-colors">
+              <Link href="#" className="text-foreground-tertiary hover:text-foreground transition-colors">
                 <span className="sr-only">Twitter</span>
                 <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24"><path d="M8.29 20.251c7.547 0 11.675-6.253 11.675-11.675 0-.178 0-.355-.012-.53A8.348 8.348 0 0022 5.92a8.19 8.19 0 01-2.357.646 4.118 4.118 0 001.804-2.27 8.224 8.224 0 01-2.605.996 4.107 4.107 0 00-6.993 3.743 11.65 11.65 0 01-8.457-4.287 4.106 4.106 0 001.27 5.477A4.072 4.072 0 012.8 9.713v.052a4.105 4.105 0 003.292 4.022 4.095 4.095 0 01-1.853.07 4.108 4.108 0 003.834 2.85A8.233 8.233 0 012 18.407a11.616 11.616 0 006.29 1.84" /></svg>
               </Link>
-              <Link href="#" className="text-zinc-500 hover:text-white transition-colors">
+              <Link href="#" className="text-foreground-tertiary hover:text-foreground transition-colors">
                 <span className="sr-only">GitHub</span>
                 <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24"><path fillRule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" clipRule="evenodd" /></svg>
               </Link>

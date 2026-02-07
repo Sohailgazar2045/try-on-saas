@@ -101,7 +101,7 @@ function ProfileContent() {
   };
 
   return (
-    <div className="flex h-screen bg-[#0a0a0b]">
+    <div className="flex h-screen bg-surface">
       <Sidebar user={user} />
 
       <main className="flex-1 flex flex-col overflow-hidden">
@@ -122,8 +122,8 @@ function ProfileContent() {
                   </span>
                 </div>
                 <div>
-                  <h2 className="text-xl font-semibold text-white">{user?.name || 'User'}</h2>
-                  <p className="text-sm text-zinc-500">{user?.email}</p>
+                  <h2 className="text-xl font-semibold text-foreground">{user?.name || 'User'}</h2>
+                  <p className="text-sm text-foreground-tertiary">{user?.email}</p>
                   <div className="flex items-center gap-2 mt-2">
                     <span className="badge-accent capitalize">{user?.subscription || 'Free'} Plan</span>
                     <span className="badge">{user?.credits || 0} credits</span>
@@ -134,13 +134,13 @@ function ProfileContent() {
 
             {/* Profile Info */}
             <div className="card">
-              <h3 className="text-base font-semibold text-white mb-6 flex items-center gap-2">
-                <User className="h-5 w-5 text-zinc-500" />
+              <h3 className="text-base font-semibold text-foreground mb-6 flex items-center gap-2">
+                <User className="h-5 w-5 text-foreground-tertiary" />
                 Personal Information
               </h3>
               <form onSubmit={handleUpdateProfile} className="space-y-5">
                 <div>
-                  <label className="block text-sm font-medium text-zinc-400 mb-2">Full name</label>
+                  <label className="block text-sm font-medium text-foreground-secondary mb-2">Full name</label>
                   <input
                     type="text"
                     value={name}
@@ -150,7 +150,7 @@ function ProfileContent() {
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-zinc-400 mb-2">Email address</label>
+                  <label className="block text-sm font-medium text-foreground-secondary mb-2">Email address</label>
                   <input
                     type="email"
                     value={email}
@@ -168,13 +168,13 @@ function ProfileContent() {
 
             {/* Change Password */}
             <div className="card">
-              <h3 className="text-base font-semibold text-white mb-6 flex items-center gap-2">
-                <Lock className="h-5 w-5 text-zinc-500" />
+              <h3 className="text-base font-semibold text-foreground mb-6 flex items-center gap-2">
+                <Lock className="h-5 w-5 text-foreground-tertiary" />
                 Change Password
               </h3>
               <form onSubmit={handleChangePassword} className="space-y-5">
                 <div>
-                  <label className="block text-sm font-medium text-zinc-400 mb-2">Current password</label>
+                  <label className="block text-sm font-medium text-foreground-secondary mb-2">Current password</label>
                   <div className="relative">
                     <input
                       type={showCurrentPassword ? 'text' : 'password'}
@@ -186,14 +186,14 @@ function ProfileContent() {
                     <button
                       type="button"
                       onClick={() => setShowCurrentPassword(!showCurrentPassword)}
-                      className="absolute right-4 top-1/2 -translate-y-1/2 text-zinc-500 hover:text-zinc-400"
+                      className="absolute right-4 top-1/2 -translate-y-1/2 text-foreground-tertiary hover:text-foreground-secondary"
                     >
                       {showCurrentPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
                     </button>
                   </div>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-zinc-400 mb-2">New password</label>
+                  <label className="block text-sm font-medium text-foreground-secondary mb-2">New password</label>
                   <div className="relative">
                     <input
                       type={showNewPassword ? 'text' : 'password'}
@@ -205,7 +205,7 @@ function ProfileContent() {
                     <button
                       type="button"
                       onClick={() => setShowNewPassword(!showNewPassword)}
-                      className="absolute right-4 top-1/2 -translate-y-1/2 text-zinc-500 hover:text-zinc-400"
+                      className="absolute right-4 top-1/2 -translate-y-1/2 text-foreground-tertiary hover:text-foreground-secondary"
                     >
                       {showNewPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
                     </button>
@@ -221,7 +221,7 @@ function ProfileContent() {
             {/* Danger Zone */}
             <div className="card border-red-500/20">
               <h3 className="text-base font-semibold text-red-400 mb-2">Danger Zone</h3>
-              <p className="text-sm text-zinc-500 mb-4">
+              <p className="text-sm text-foreground-tertiary mb-4">
                 Once you delete your account, there is no going back. Please be certain.
               </p>
               <button className="px-4 py-2 rounded-lg text-sm font-medium text-red-400 bg-red-500/10 hover:bg-red-500/20 transition-colors">

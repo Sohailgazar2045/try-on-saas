@@ -2,8 +2,8 @@
 
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { CreditCounter } from './CreditCounter';
 import { authAPI } from '@/lib/api';
+import { useTheme } from './ThemeProvider';
 import {
   LayoutDashboard,
   Sparkles,
@@ -12,7 +12,8 @@ import {
   User,
   LogOut,
   ChevronRight,
-  Settings,
+  Sun,
+  Moon,
 } from 'lucide-react';
 
 interface SidebarProps {
@@ -22,6 +23,7 @@ interface SidebarProps {
 export function Sidebar({ user }: SidebarProps) {
   const pathname = usePathname();
   const router = useRouter();
+  const { theme, toggleTheme } = useTheme();
 
   const navItems = [
     { href: '/dashboard', icon: LayoutDashboard, label: 'Dashboard' },
@@ -35,38 +37,35 @@ export function Sidebar({ user }: SidebarProps) {
   ];
 
   return (
-    <aside className="flex h-screen w-64 flex-col bg-[#111113] border-r border-white/[0.06]">
+    <aside className="flex h-screen w-60 flex-col bg-surface-alt border-r border-subtle">
       {/* Logo */}
-      <div className="flex h-16 items-center gap-3 px-6 border-b border-white/[0.06]">
-        <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-orange-500 to-orange-600">
-          <Sparkles className="h-5 w-5 text-white" />
+      <div className="flex h-12 items-center gap-2.5 px-4 border-b border-subtle shrink-0">
+        <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-gradient-to-br from-orange-500 to-orange-600">
+          <Sparkles className="h-4 w-4 text-white" />
         </div>
-        <div className="flex flex-col">
-          <span className="text-sm font-bold text-white">Virtual Try-On</span>
-          <span className="text-[10px] font-medium text-zinc-500">Studio</span>
-        </div>
+        <span className="text-sm font-bold text-foreground">Virtual Try-On</span>
       </div>
 
       {/* Main Navigation */}
-      <nav className="flex-1 px-3 py-4 space-y-1 overflow-y-auto">
+      <nav className="flex-1 px-2 py-2 space-y-0.5">
         {navItems.map((item) => {
           const Icon = item.icon;
           const isActive = pathname === item.href;
-          
+
           return (
             <Link
               key={item.href}
               href={item.href}
-              className={`flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-all duration-150 ${
+              className={`flex items-center gap-2.5 rounded-lg px-2.5 py-2 text-[13px] font-medium transition-colors ${
                 isActive
-                  ? 'bg-orange-500/10 text-orange-400'
-                  : 'text-zinc-400 hover:bg-white/[0.04] hover:text-white'
+                  ? 'bg-orange-500/10 text-orange-500 dark:text-orange-400'
+                  : 'text-foreground-secondary hover:bg-overlay-4 hover:text-foreground'
               }`}
             >
-              <Icon className={`h-5 w-5 ${isActive ? 'text-orange-400' : ''}`} />
+              <Icon className={`h-4 w-4 ${isActive ? 'text-orange-500 dark:text-orange-400' : ''}`} />
               <span>{item.label}</span>
               {isActive && (
-                <ChevronRight className="h-4 w-4 ml-auto text-orange-400/50" />
+                <ChevronRight className="h-3.5 w-3.5 ml-auto text-orange-500/50 dark:text-orange-400/50" />
               )}
             </Link>
           );
@@ -74,72 +73,70 @@ export function Sidebar({ user }: SidebarProps) {
       </nav>
 
       {/* Bottom Section */}
-      <div className="border-t border-white/[0.06] p-4 space-y-4">
-        {/* Credits Card */}
-        <div className="rounded-xl bg-gradient-to-br from-orange-500/10 to-orange-500/5 border border-orange-500/10 p-4">
-          <div className="flex items-center justify-between">
-            <span className="text-xs font-medium text-zinc-400">Credits</span>
-            <Sparkles className="h-4 w-4 text-orange-400" />
+      <div className="border-t border-subtle px-2 py-2 space-y-1.5 shrink-0">
+        {/* Credits */}
+        <div className="flex items-center justify-between rounded-lg bg-gradient-to-br from-orange-500/10 to-orange-500/5 border border-orange-500/10 px-3 py-2">
+          <div className="flex items-center gap-2">
+            <Sparkles className="h-3.5 w-3.5 text-orange-500 dark:text-orange-400" />
+            <span className="text-xs font-medium text-foreground-secondary">Credits</span>
           </div>
-          <p className="mt-2 text-2xl font-bold text-white">{user?.credits || 0}</p>
-          <Link 
-            href="/billing" 
-            className="mt-3 flex items-center gap-1 text-xs font-medium text-orange-400 hover:text-orange-300 transition-colors"
-          >
-            Buy more credits
-            <ChevronRight className="h-3 w-3" />
-          </Link>
+          <span className="text-sm font-bold text-foreground">{user?.credits || 0}</span>
         </div>
 
-        {/* Profile & Settings */}
+        {/* Profile */}
         {bottomItems.map((item) => {
           const Icon = item.icon;
           const isActive = pathname === item.href;
-          
+
           return (
             <Link
               key={item.href}
               href={item.href}
-              className={`flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-all duration-150 ${
+              className={`flex items-center gap-2.5 rounded-lg px-2.5 py-2 text-[13px] font-medium transition-colors ${
                 isActive
-                  ? 'bg-white/[0.06] text-white'
-                  : 'text-zinc-400 hover:bg-white/[0.04] hover:text-white'
+                  ? 'bg-overlay-6 text-foreground'
+                  : 'text-foreground-secondary hover:bg-overlay-4 hover:text-foreground'
               }`}
             >
-              <Icon className="h-5 w-5" />
+              <Icon className="h-4 w-4" />
               <span>{item.label}</span>
             </Link>
           );
         })}
 
-        {/* User Info */}
-        <div className="flex items-center gap-3 rounded-xl bg-white/[0.02] border border-white/[0.06] p-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-orange-400 to-orange-600">
-            <span className="text-sm font-bold text-white">
+        {/* User Info + Theme Toggle + Sign Out */}
+        <div className="flex items-center gap-2 rounded-lg bg-overlay-2 border border-subtle px-2.5 py-2">
+          <div className="flex h-7 w-7 items-center justify-center rounded-full bg-gradient-to-br from-orange-400 to-orange-600 shrink-0">
+            <span className="text-xs font-bold text-white">
               {(user?.name || user?.email || 'U')[0].toUpperCase()}
             </span>
           </div>
           <div className="flex-1 min-w-0">
-            <p className="text-sm font-medium text-white truncate">
+            <p className="text-xs font-medium text-foreground truncate">
               {user?.name || 'User'}
             </p>
-            <p className="text-xs text-zinc-500 truncate">
+            <p className="text-[10px] text-foreground-tertiary truncate">
               {user?.email || 'demo@tryon.dev'}
             </p>
           </div>
+          <button
+            onClick={toggleTheme}
+            className="shrink-0 rounded-md p-1 text-foreground-tertiary hover:bg-overlay-6 hover:text-foreground transition-colors"
+            title={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
+          >
+            {theme === 'dark' ? <Sun className="h-3.5 w-3.5" /> : <Moon className="h-3.5 w-3.5" />}
+          </button>
+          <button
+            onClick={async () => {
+              await authAPI.logout();
+              router.push('/');
+            }}
+            className="shrink-0 rounded-md p-1 text-foreground-tertiary hover:bg-red-500/10 hover:text-red-400 transition-colors"
+            title="Sign out"
+          >
+            <LogOut className="h-3.5 w-3.5" />
+          </button>
         </div>
-
-        {/* Sign Out */}
-        <button
-          onClick={async () => {
-            await authAPI.logout();
-            router.push('/');
-          }}
-          className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-zinc-400 transition-all duration-150 hover:bg-red-500/10 hover:text-red-400"
-        >
-          <LogOut className="h-5 w-5" />
-          <span>Sign out</span>
-        </button>
       </div>
     </aside>
   );
