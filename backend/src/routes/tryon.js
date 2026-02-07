@@ -33,16 +33,6 @@ const router = express.Router();
  *         content:
  *           application/json:
  *             schema:
- *               type: object
- *               properties:
- *                 message: { type: string }
- *                 image: { $ref: '#/components/schemas/Image' }
- *                 creditsRemaining: { type: integer }
- *       200:
- *         description: Try-on generated successfully
- *         content:
- *           application/json:
- *             schema:
  *               $ref: '#/components/schemas/TryOnResponse'
  *       400:
  *         $ref: '#/components/responses/ValidationError'

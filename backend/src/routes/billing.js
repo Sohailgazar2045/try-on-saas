@@ -49,15 +49,6 @@ router.get('/pricing', getPricing);
  *         content:
  *           application/json:
  *             schema:
- *               type: object
- *               properties:
- *                 sessionId: { type: string }
- *                 url: { type: string }
- *       200:
- *         description: Checkout session created
- *         content:
- *           application/json:
- *             schema:
  *               $ref: '#/components/schemas/CheckoutSession'
  *       400:
  *         $ref: '#/components/responses/ValidationError'

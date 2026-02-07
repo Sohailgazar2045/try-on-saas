@@ -1,4 +1,16 @@
 import swaggerJsdoc from 'swagger-jsdoc';
+import { fileURLToPath } from 'url';
+import { dirname, join } from 'path';
+import { readdirSync } from 'fs';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
+// Get all route files dynamically
+const routesDir = join(__dirname, '../routes');
+const routeFiles = readdirSync(routesDir)
+  .filter(file => file.endsWith('.js'))
+  .map(file => join(routesDir, file));
 
 const options = {
   definition: {
@@ -353,7 +365,10 @@ const options = {
       }
     ]
   },
-  apis: ['./src/routes/*.js', './src/server.js']
+  apis: [
+    ...routeFiles,
+    join(__dirname, '../server.js')
+  ]
 };
 
 export const specs = swaggerJsdoc(options);

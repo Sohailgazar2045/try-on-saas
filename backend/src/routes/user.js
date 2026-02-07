@@ -57,15 +57,6 @@ router.get('/profile', authenticate, getProfile);
  *               properties:
  *                 message: { type: string }
  *                 user: { $ref: '#/components/schemas/User' }
- *       200:
- *         description: Profile updated successfully
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 message: { type: 'string' }
- *                 user: { $ref: '#/components/schemas/User' }
  *       400:
  *         $ref: '#/components/responses/ValidationError'
  *       401:
@@ -85,8 +76,6 @@ router.put('/profile', authenticate, updateProfile);
  *       - bearerAuth: []
  *       - cookieAuth: []
  *     responses:
- *       200:
- *         description: Account deleted successfully
  *       200:
  *         description: Account deleted successfully
  *         content:
